@@ -1,0 +1,716 @@
+{% extends 'myApp/base.html' %}
+{% block content %}
+{% load static %}
+{% load tz %}
+
+<style>
+  /* Custom CSS with Real Estate Color Scheme */
+  :root {
+    --primary: #214063;
+    --primary-dark: #082939;
+    --primary-light: #2a6486;
+    --accent: #d4a574;
+    --accent-dark: #b88a5e;
+    --neutral-dark: #3c3c3c;
+    --neutral-medium: #6c757d;
+    --neutral-light: #f8f9fa;
+    --success: #28a745;
+    --warning: #ffc107;
+    --danger: #dc3545;
+    --shadow: rgba(0, 0, 0, 0.08);
+    --shadow-hover: rgba(0, 0, 0, 0.12);
+  }
+  
+  .dashboard-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 20px;
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background-color: #f5f7f6;
+  }
+  
+  /* Status Card with Real Estate Design */
+  .status-card {
+    background: linear-gradient(135deg, #ffffff 0%, #fde89d3f 100%);
+    border-radius: 16px;
+    padding: 28px;
+    margin-bottom: 30px;
+    box-shadow: 0 6px 25px var(--shadow);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .status-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 120px;
+    height: 120px;
+    
+    border-radius: 0 0 0 100%;
+  }
+  
+  .status-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px var(--shadow-hover);
+  }
+  
+  /* Enhanced Status Badges */
+  .status-badge {
+    padding: 0.6rem 1.4rem;
+    border-radius: 50px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    display: inline-flex;
+    align-items: center;
+    box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+  }
+  
+  .status-badge.active {
+    background: linear-gradient(135deg, var(--success) 0%, #20c997 100%);
+    color: white;
+  }
+  
+  .status-badge.trial {
+    background: linear-gradient(135deg, var(--warning) 0%, #fd7e14 100%);
+    color: white;
+  }
+  
+  .status-badge.inactive {
+    background: linear-gradient(135deg, var(--danger) 0%, #e83e8c 100%);
+    color: white;
+  }
+  
+  .status-badge:hover {
+    transform: scale(1.05);
+  }
+  
+  /* Plan Card Styling */
+  .plan-card {
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    margin-top: 20px;
+    box-shadow: 0 3px 15px rgba(0,0,0,0.05);
+    border: 1px solid #e9ecef;
+    transition: all 0.3s ease;
+  }
+  
+  .plan-card:hover {
+    box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+  }
+  
+  /* Navigation Styling */
+  .nav-container {
+    background: white;
+    border-radius: 16px;
+    padding: 25px;
+    margin-bottom: 30px;
+    box-shadow: 0 6px 25px var(--shadow);
+    position: relative;
+    overflow: hidden;
+  }
+  
+ 
+  
+  .nav-buttons {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 18px;
+  }
+  
+  .nav-btn {
+    padding: 18px 22px;
+    border-radius: 12px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    box-shadow: 0 3px 10px var(--shadow);
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .nav-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    transition: left 0.5s;
+  }
+  
+  .nav-btn:hover::before {
+    left: 100%;
+  }
+  
+  .nav-btn-primary {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+    color: white;
+    border: none;
+  }
+  
+  .nav-btn-primary:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 20px rgba(42, 110, 63, 0.3);
+  }
+  
+  .nav-btn-outline {
+    background: white;
+    color: var(--primary);
+    border: 2px solid #e0e6e2;
+  }
+  
+  .nav-btn-outline:hover {
+    background: rgba(42, 110, 63, 0.05);
+    border-color: var(--primary);
+    transform: translateY(-4px);
+    box-shadow: 0 8px 20px rgba(42, 110, 63, 0.15);
+  }
+  
+  .nav-btn i {
+    margin-right: 12px;
+    font-size: 20px;
+    width: 24px;
+    text-align: center;
+  }
+  
+  /* Chart Containers */
+  .chart-wrapper {
+    background: white;
+    border-radius: 16px;
+    padding: 28px;
+    margin-bottom: 30px;
+    box-shadow: 0 6px 25px var(--shadow);
+    height: 100%;
+    transition: transform 0.3s ease;
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .chart-wrapper::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: linear-gradient(90deg, var(--primary) 0%, var(--accent) 100%);
+  }
+  
+  .chart-wrapper:hover {
+    transform: translateY(-5px);
+  }
+  
+  .chart-container {
+    position: relative;
+    height: 300px;
+    width: 100%;
+  }
+  
+  .chart-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+  }
+  
+  .chart-title {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--neutral-dark);
+    margin: 0;
+    display: flex;
+    align-items: center;
+  }
+  
+  .chart-title i {
+    color: var(--primary);
+    margin-right: 10px;
+  }
+  
+  /* Stats Cards */
+  .stats-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 25px;
+    margin-bottom: 30px;
+  }
+  
+  .stat-card {
+    background: white;
+    border-radius: 16px;
+    padding: 25px;
+    box-shadow: 0 6px 25px var(--shadow);
+    text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .stat-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: linear-gradient(90deg, var(--primary) 0%, var(--accent) 100%);
+  }
+  
+  .stat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px var(--shadow-hover);
+  }
+  
+  .stat-value {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: var(--primary);
+    margin: 15px 0;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  }
+  
+  .stat-label {
+    font-size: 1rem;
+    color: var(--neutral-medium);
+    font-weight: 600;
+    letter-spacing: 0.5px;
+  }
+  
+  .stat-icon {
+    font-size: 2.2rem;
+    color: var(--primary);
+    margin-bottom: 15px;
+    background: rgba(42, 110, 63, 0.1);
+    width: 70px;
+    height: 70px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    margin: 0 auto 15px;
+  }
+  
+  /* Activity Table */
+  .activity-section {
+    background: white;
+    border-radius: 16px;
+    padding: 28px;
+    margin-bottom: 30px;
+    box-shadow: 0 6px 25px var(--shadow);
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .activity-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: linear-gradient(90deg, var(--primary) 0%, var(--accent) 100%);
+  }
+  
+  .section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+  }
+  
+  .section-title {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--neutral-dark);
+    margin: 0;
+    display: flex;
+    align-items: center;
+  }
+  
+  .section-title i {
+    color: var(--primary);
+    margin-right: 10px;
+  }
+  
+
+  
+
+  /* Badge Styles */
+  .badge {
+    padding: 0.4rem 0.8rem;
+    border-radius: 50px;
+    font-weight: 600;
+    font-size: 0.8rem;
+  }
+  
+  .badge.bg-success {
+    background: linear-gradient(135deg, var(--success) 0%, #20c997 100%) !important;
+  }
+  
+  .badge.bg-warning {
+    background: linear-gradient(135deg, var(--warning) 0%, #fd7e14 100%) !important;
+  }
+  
+  /* Responsive */
+  @media (max-width: 768px) {
+    .nav-buttons {
+      grid-template-columns: 1fr;
+    }
+    
+    .stats-container {
+      grid-template-columns: 1fr;
+    }
+    
+    .chart-container {
+      height: 250px;
+    }
+    
+    .section-header {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 15px;
+    }
+    
+    .dashboard-container {
+      padding: 15px;
+    }
+  }
+
+  /* Animation */
+  .fade-in {
+    animation: fadeIn 0.6s ease-in-out;
+  }
+  
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(15px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  
+  /* Expiry Info Styling */
+  .expiry-info {
+    background: rgba(42, 110, 63, 0.05);
+    border-radius: 10px;
+    padding: 15px 20px;
+    display: inline-block;
+    
+  }
+  
+  .expiry-date {
+    font-weight: 700;
+    color: var(--neutral-dark);
+    font-size: 1.2rem;
+  }
+  
+  /* Text Colors */
+  .text-success {
+    color: var(--success) !important;
+  }
+  
+  .text-muted {
+    color: var(--neutral-medium) !important;
+  }
+</style>
+
+<div class="dashboard-container fade-in">
+
+  <!-- Status Card -->
+  <div class="status-card">
+    <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between">
+      <div class="status-info mb-3 mb-md-0">
+        <!-- Check Free Trial Status and if landlord is paid -->
+        {% if landlord.is_paid %}
+          <span class="status-badge active mb-3">
+            <i class="fas fa-credit-card me-2"></i><strong>Subscription Status:</strong> Active
+          </span>
+        {% elif landlord.is_free_trial %}
+          <span class="status-badge trial mb-3">
+            <i class="fas fa-credit-card me-2"></i><strong>Subscription Status:</strong> Free Trial
+          </span>
+        {% else %}
+          <span class="status-badge inactive mb-3">
+            <i class="fas fa-credit-card me-2"></i><strong>Subscription Status:</strong> Inactive
+          </span>
+          <div class="mt-2 text-muted">
+            Your subscription is inactive. Please renew to continue enjoying our services.
+          </div>
+        {% endif %}
+
+        <!-- Plan Information -->
+        <div class="plan-card">
+          <div class="d-flex justify-content-between align-items-center flex-wrap">
+            <div class="mt-2 mt-md-0">
+              <p class="text-success mb-1 fw-bold">Plan: {{ landlord.get_landlord_type_display }}</p>
+              <strong class="text-muted">Subscription Fee: Ksh.{{ amount }}</strong>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      {% if expiry_date %}
+        <div class="expiry-info text-md-end">
+          <small class="text-muted d-block">Expires on</small>
+          <p class="expiry-date mb-0">{{ expiry_date|date:"F j, Y, g:i a" }}</p>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+
+   <!-- Navigation -->
+  <div class="nav-container">
+    <div class="nav-buttons">
+      <a href="{% url 'new_property' %}" class="nav-btn nav-btn-primary">
+        <i class="fas fa-plus"></i>
+        <span class="btn-text">Post New Property</span>
+      </a>
+      <a href="{% url 'my_properties' %}" class="nav-btn nav-btn-outline">
+        <i class="fas fa-home"></i>
+        <span class="btn-text">My Properties</span>
+      </a>
+      <a href="{% url 'invoice_list' %}" class="nav-btn nav-btn-outline">
+        <i class="fas fa-file-invoice"></i>
+        <span class="btn-text">Receipts</span>
+      </a>
+      <a href="{% url 'landlord_profile' %}" class="nav-btn nav-btn-outline">
+        <i class="fas fa-user-cog"></i>
+        <span class="btn-text">Profile</span>
+      </a>
+    </div>
+  </div>
+  
+  <!-- Stats Overview -->
+  <div class="stats-container">
+    <div class="stat-card">
+      <div class="stat-icon">
+        <i class="fas fa-home"></i>
+      </div>
+      <div class="stat-value">{{ total_properties }}</div>
+      <div class="stat-label">Total Properties</div>
+    </div>
+    
+    <div class="stat-card">
+      <div class="stat-icon">
+        <i class="fas fa-door-open"></i>
+      </div>
+      <div class="stat-value">{{ available_properties }}</div>
+      <div class="stat-label">Available Properties</div>
+    </div>
+    
+    <div class="stat-card">
+      <div class="stat-icon">
+        <i class="fas fa-user-check"></i>
+      </div>
+      <div class="stat-value">{{ occupied_properties }}</div>
+      <div class="stat-label">Occupied Properties</div>
+    </div>
+    
+    <div class="stat-card">
+      <div class="stat-icon">
+        <i class="fas fa-chart-line"></i>
+      </div>
+      <div class="stat-value">{{ total_views }}</div>
+      <div class="stat-label">Total Views</div>
+    </div>
+  </div>
+
+ 
+
+  <!-- Charts Section -->
+  <div class="row">
+    <div class="col-lg-6">
+      <div class="chart-wrapper">
+        <div class="chart-header">
+          <h5 class="chart-title"><i class="fas fa-chart-pie me-2"></i>Property Status</h5>
+        </div>
+        <div class="chart-container">
+          <canvas id="propertyChart"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-6">
+      <div class="chart-wrapper">
+        <div class="chart-header">
+          <h5 class="chart-title"><i class="fas fa-chart-bar me-2"></i>Property Views</h5>
+        </div>
+        <div class="chart-container">
+          <canvas id="propertyViewChart"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  // Initialize charts after page load
+  document.addEventListener('DOMContentLoaded', function() {
+    // Property Distribution Chart (Doughnut)
+    const propertyChart = new Chart(
+      document.getElementById('propertyChart'),
+      {
+        type: 'doughnut',
+        data: {
+          labels: ['Available', 'Occupied'],
+          datasets: [{
+            data: [{{ available_properties }}, {{ occupied_properties }}],
+            backgroundColor: ['#3a8c54', '#d4a574'],
+            borderWidth: 0,
+            hoverOffset: 15
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              position: 'bottom',
+              labels: {
+                padding: 20,
+                usePointStyle: true,
+                font: {
+                  size: 13,
+                  family: 'Segoe UI, system-ui, sans-serif'
+                }
+              }
+            },
+            tooltip: {
+              bodyFont: {
+                family: 'Segoe UI, system-ui, sans-serif'
+              },
+              titleFont: {
+                family: 'Segoe UI, system-ui, sans-serif'
+              }
+            }
+          },
+          cutout: '70%'
+        }
+      }
+    );
+
+   // Property Views Chart - Line Graph Version
+const ctxView = document.getElementById('propertyViewChart').getContext('2d');
+new Chart(ctxView, {
+    type: 'line',
+    data: {
+        labels: {{ chart_labels|safe }},
+        datasets: [{
+            label: 'Property Views',
+            data: {{ chart_data|safe }},
+            backgroundColor: 'rgba(42, 110, 63, 0.1)',
+            borderColor: 'rgba(42, 110, 63, 1)',
+            borderWidth: 3,
+            pointBackgroundColor: 'rgba(42, 110, 63, 1)',
+            pointBorderColor: '#ffffff',
+            pointBorderWidth: 2,
+            pointRadius: 6,
+            pointHoverRadius: 8,
+            pointHoverBackgroundColor: 'rgba(42, 110, 63, 1)',
+            pointHoverBorderColor: '#ffffff',
+            pointHoverBorderWidth: 3,
+            fill: true,
+            tension: 0.3, // Smooth curves
+            hoverBackgroundColor: 'rgba(42, 110, 63, 0.9)'
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            legend: { 
+                display: true,
+                position: 'top',
+                labels: {
+                    color: '#3c3c3c',
+                    font: {
+                        family: 'Segoe UI, system-ui, sans-serif',
+                        size: 12,
+                        weight: '600'
+                    },
+                    padding: 20,
+                    usePointStyle: true
+                }
+            },
+            tooltip: {
+                backgroundColor: 'rgba(255, 255, 255, 0.95)',
+                titleColor: '#2a6e3f',
+                bodyColor: '#3c3c3c',
+                borderColor: 'rgba(42, 110, 63, 0.2)',
+                borderWidth: 1,
+                cornerRadius: 8,
+                displayColors: false,
+                callbacks: {
+                    label: function(context) {
+                        return `Views: ${context.parsed.y}`;
+                    },
+                    title: function(context) {
+                        return context[0].label;
+                    }
+                },
+                bodyFont: {
+                    family: 'Segoe UI, system-ui, sans-serif',
+                    size: 12,
+                    weight: '600'
+                },
+                titleFont: {
+                    family: 'Segoe UI, system-ui, sans-serif',
+                    size: 11,
+                    weight: 'normal'
+                }
+            }
+        },
+        scales: {
+            x: {
+                grid: { 
+                    display: true,
+                    color: 'rgba(0, 0, 0, 0.05)',
+                    drawBorder: false
+                },
+                ticks: {
+                    color: '#6c757d',
+                    font: {
+                        family: 'Segoe UI, system-ui, sans-serif',
+                        size: 11
+                    },
+                    maxRotation: 45
+                }
+            },
+            y: {
+                beginAtZero: true,
+                grid: { 
+                    color: 'rgba(0, 0, 0, 0.05)',
+                    drawBorder: false
+                },
+                ticks: { 
+                    precision: 0,
+                    color: '#6c757d',
+                    font: {
+                        family: 'Segoe UI, system-ui, sans-serif',
+                        size: 11
+                    }
+                }
+            }
+        },
+        interaction: {
+            intersect: false,
+            mode: 'index'
+        },
+        elements: {
+            line: {
+                tension: 0.3 // Smooth line
+            }
+        }
+    }
+});
+  });
+</script>
+{% endblock %}

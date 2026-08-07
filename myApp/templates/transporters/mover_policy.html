@@ -1,0 +1,217 @@
+{% extends 'myApp/base.html' %}
+{% load static %}
+
+{% block title %}Mover Verification Policy - XbomaSwift{% endblock %}
+
+{% block content %}
+<div class="policy-container">
+    <header class="policy-header">
+        <h1>Mover Verification Policy</h1>
+        <div class="divider"></div>
+        <p class="effective-date">Effective Date: <strong>August 2, 2025</strong></p>
+    </header>
+
+    <div class="policy-content">
+        <section class="policy-section">
+            <h2>1. Purpose</h2>
+            <p>This policy establishes requirements, verification procedures, and responsibilities for movers registered on XbomaSwift. It ensures transparency, trust, and clarifies XbomaSwift's legal role.</p>
+        </section>
+
+        <section class="policy-section">
+            <h2>2. Scope</h2>
+            <p>This policy applies to all movers offering relocation or transport services via XbomaSwift. It does not apply to tenants or landlords, except in their interactions with movers.</p>
+        </section>
+
+        <section class="policy-section">
+            <h2>3. Definitions</h2>
+            <ul>
+                <li><strong>Mover:</strong> An independent service provider offering relocation services.</li>
+                <li><strong>Verified Mover:</strong> A mover who has submitted all required regulatory documents, approved by XbomaSwift.</li>
+                <li><strong>Not Verified Mover:</strong> A mover who has incomplete or unapproved documents.</li>
+            </ul>
+        </section>
+
+        <section class="policy-section">
+            <h2>4. Verification Requirements</h2>
+            <ul>
+                <li>Commercial Vehicle License (CVL) or Operator’s License issued by NTSA.</li>
+                <li>Valid driver credentials (license and ID).</li>
+            </ul>
+            <p><strong>Note:</strong> Submission of documents does not transfer legal liability to XbomaSwift.</p>
+        </section>
+
+        <section class="policy-section">
+            <h2>5. Verification Process</h2>
+            <ol>
+                <li>Movers upload documents during registration or in their account dashboard.</li>
+                <li>XbomaSwift reviews documents for completeness and validity.</li>
+                <li>Movers with all valid documents receive a <span class="badge verified">Verified</span> badge.</li>
+                <li>Movers with missing or unapproved documents receive a <span class="badge not-verified">Not Verified</span> badge.</li>
+                <li>Verification status is displayed on mover profiles for tenant review before hiring.</li>
+            </ol>
+        </section>
+
+        <section class="policy-section">
+            <h2>6. Responsibilities</h2>
+            <ul>
+                <li><strong>Movers:</strong> Maintain compliance with NTSA and insurance requirements, operate safely, and respond professionally to requests.</li>
+                <li><strong>Tenants:</strong> Review mover verification status and conduct due diligence before hiring.</li>
+            </ul>
+        </section>
+
+        <section class="policy-section">
+            <h2>7. XbomaSwift Role</h2>
+            <ul>
+                <li>Acts solely as a digital connection platform between tenants and movers.</li>
+                <li>Does not own, operate, or employ moving vehicles or personnel.</li>
+                <li>Provides verification badges for transparency only.</li>
+                <li>Reserves the right to suspend or remove movers who fail compliance, submit fraudulent documents, or engage in unsafe practices.</li>
+            </ul>
+        </section>
+
+        <section class="policy-section">
+            <h2>8. Limitation of Liability</h2>
+            <p>XbomaSwift is not liable for accidents, damages, loss, or legal claims arising from moving services. All legal and operational responsibilities remain with the mover. Tenants hire movers at their own discretion.</p>
+        </section>
+
+        <section class="policy-section">
+            <h2>9. Enforcement</h2>
+            <p>Non-compliant movers may be removed, suspended, or reported to authorities. Compliance monitoring is ongoing to ensure platform safety.</p>
+        </section>
+
+        <section class="policy-section">
+            <h2>10. Policy Updates</h2>
+            <p>This policy may be revised periodically. Updated versions will be posted with a new effective date. Continued use of XbomaSwift constitutes acceptance of updates.</p>
+        </section>
+
+        <section class="policy-section">
+            <h2>11. Contact</h2>
+            <ul class="contact-list">
+                <li><i class="fas fa-envelope"></i> <a href="mailto:kipsangmoses@outlook.com">kipsangmoses@outlook.com</a></li>
+                <li><i class="fas fa-globe"></i> <a href="https://www.xbomaswift.com">www.xbomaswift.com</a></li>
+            </ul>
+        </section>
+    </div>
+
+    <footer class="policy-footer">
+        <p>&copy; 2025 XbomaSwift. All rights reserved.</p>
+    </footer>
+</div>
+
+<style>
+:root {
+    --green: #2a5a78;
+    --gold: #c8a173;
+    --light-bg: #f9f9f9;
+    --text-dark: #333;
+    --text-gray: #555;
+    --verified: #28a745;
+    --not-verified: #ff9800;
+}
+
+.policy-container {
+    max-width: 1000px;
+    margin: auto;
+    padding: 20px;
+    font-family: "Segoe UI", Roboto, sans-serif;
+    color: var(--text-dark);
+}
+
+.policy-header {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.policy-header h1 {
+    color: var(--green);
+    font-size: 2rem;
+    font-weight: 700;
+}
+
+.divider {
+    width: 70px;
+    height: 3px;
+    margin: 10px auto;
+    background: linear-gradient(90deg, var(--green), var(--gold));
+    border-radius: 2px;
+}
+
+.policy-content {
+    background: white;
+    border-radius: 10px;
+    padding: 25px;
+    box-shadow: 0 3px 15px rgba(0,0,0,0.05);
+}
+
+.policy-section {
+    margin-bottom: 20px;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 15px;
+}
+
+.policy-section h2 {
+    font-size: 1.3rem;
+    color: var(--green);
+    margin-bottom: 10px;
+}
+
+.policy-section p, .policy-section li {
+    font-size: 0.95rem;
+    color: var(--text-gray);
+    line-height: 1.5;
+}
+
+.badge {
+    font-weight: 600;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 0.85rem;
+}
+
+.badge.verified {
+    background-color: var(--verified);
+    color: white;
+}
+
+.badge.not-verified {
+    background-color: var(--not-verified);
+    color: white;
+}
+
+.contact-list {
+    list-style: none;
+    padding-left: 0;
+}
+
+.contact-list li {
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+}
+
+.contact-list i {
+    color: var(--gold);
+    margin-right: 10px;
+}
+
+.policy-footer {
+    text-align: center;
+    color: var(--text-gray);
+    margin-top: 25px;
+    font-size: 0.85rem;
+    border-top: 1px solid #eee;
+    padding-top: 15px;
+}
+
+@media (max-width:768px){
+    .policy-header h1 { font-size: 1.7rem; }
+    .policy-section h2 { font-size: 1.1rem; }
+    .policy-section p, .policy-section li { font-size: 0.9rem; }
+}
+
+@media (max-width:480px){
+    .policy-header h1 { font-size: 1.5rem; }
+    .policy-content { padding: 15px; box-shadow: none; }
+}
+</style>
+{% endblock %}

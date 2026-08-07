@@ -1,0 +1,225 @@
+{% extends 'myApp/base.html' %}
+{% block content %}
+{% load static %}
+
+<style>
+  /* ===== XbomaSwift Brand Palette ===== */
+  :root {
+    --xboma-primary: #0F3C4C;       /* Deep Blue */
+    --xboma-secondary: #1E566B;     /* Lighter Blue for gradients */
+    --xboma-accent: #D9A441;        /* Gold Accent */
+    --xboma-accent-light: #EABF69;  /* Light Gold Hover */
+    --xboma-light: #F8F9FA;         /* Light text on dark bg */
+    --xboma-gray: #E9ECEF;          /* Neutral gray backgrounds */
+  }
+
+  .payment-container {
+    max-width: 800px;
+    margin: 0 auto;
+  }
+
+  /* ===== Plan Card ===== */
+  .plan-card {
+    background: linear-gradient(135deg, var(--xboma-gray) 0%, #ffffff 100%);
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+    border-left: 5px solid var(--xboma-accent);
+  }
+
+  /* ===== Instruction Card ===== */
+  .instruction-card {
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    margin-bottom: 2rem;
+  }
+
+  .instruction-header {
+    background: linear-gradient(135deg, var(--xboma-primary) 0%, var(--xboma-secondary) 100%);
+    color: var(--xboma-light);
+    padding: 1.25rem;
+    font-size: 1.25rem;
+    font-weight: 600;
+  }
+
+  .instruction-body {
+    padding: 1.5rem;
+    background-color: var(--xboma-gray);
+  }
+
+  .instruction-body li {
+    margin-bottom: 0.75rem;
+    line-height: 1.6;
+  }
+
+  /* ===== Payment Form ===== */
+  .payment-form {
+    background: #fff;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  }
+
+  .form-group {
+    margin-bottom: 1.5rem;
+  }
+
+  .form-control {
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
+    border: 1px solid #ced4da;
+    transition: all 0.3s;
+  }
+
+  .form-control:focus {
+    border-color: var(--xboma-accent);
+    box-shadow: 0 0 0 0.2rem rgba(217,164,65,0.25);
+  }
+
+  /* ===== Pay Button ===== */
+  .btn-pay {
+    background: linear-gradient(135deg, var(--xboma-accent) 0%, var(--xboma-accent-light) 100%);
+    border: none;
+    color: var(--xboma-primary);
+    padding: 0.75rem 2rem;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    border-radius: 8px;
+    transition: all 0.3s;
+  }
+
+  .btn-pay:hover {
+    transform: translateY(-2px);
+    background: linear-gradient(135deg, var(--xboma-accent-light) 0%, var(--xboma-accent) 100%);
+    box-shadow: 0 4px 15px rgba(217,164,65,0.4);
+  }
+
+  /* ===== Navigation ===== */
+  .nav-link {
+    color: var(--xboma-primary);
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    transition: all 0.3s;
+    display: inline-flex;
+    align-items: center;
+    font-weight: 500;
+  }
+
+  .nav-link:hover {
+    color: var(--xboma-light);
+    background-color: var(--xboma-primary);
+    text-decoration: none;
+  }
+
+  .nav-link i {
+    margin-right: 0.5rem;
+  }
+
+  /* ===== Alerts ===== */
+  .alert-messages {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1000;
+    max-width: 400px;
+  }
+
+  @media (max-width: 768px) {
+    .payment-container {
+      padding: 0 15px;
+    }
+    .payment-form {
+      padding: 1.5rem;
+    }
+  }
+</style>
+
+<div class="payment-container">
+  <!-- Back Navigation -->
+  <a href="{% url 'landlord_dashboard' %}" class="nav-link mb-4">
+    <i class="fas fa-arrow-left"></i> Back to Dashboard
+  </a>
+  
+  <!-- Messages Display -->
+  {% if messages %}
+  <div class="alert-messages">
+    {% for message in messages %}
+    <div class="alert alert-dismissible fade show {% if message.tags %}{{ message.tags }}{% else %}alert-info{% endif %}" role="alert">
+      {{ message }}
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+  
+  <!-- Plan Information -->
+  <div class="plan-card">
+    <div class="d-flex justify-content-between align-items-center flex-wrap">
+      <div>
+        <h2 class="mb-1 text-dark">Make Payment</h2>
+        <h4 class="text-muted mb-0"><i class="fas fa-crown me-2"></i> Your Plan: {{ landlord.get_landlord_type_display }}</h4>
+      </div>
+      <div class="mt-2 mt-md-0 text-end">
+        <h3 class="mb-0" style="color: var(--xboma-primary);">Ksh. {{ amount }}</h3>
+        <small class="text-muted">Subscription Fee</small>
+      </div>
+    </div>
+  </div>
+
+  <!-- Payment Instructions -->
+  <div class="instruction-card">
+    <div class="instruction-header">
+      <i class="fas fa-mobile-alt mr-2"></i> MPESA Payment
+    </div>
+  </div>
+
+  <!-- Payment Form -->
+  <div class="payment-form">
+    <h4 class="mb-4" style="color: var(--xboma-primary);"><i class="fas fa-credit-card mr-2"></i> Payment Details</h4>
+
+    <form method="post" action="{% url 'mpesa:landlord_payment' %}">
+      {% csrf_token %}
+      
+      <div class="form-group">
+        <label for="id_amount" class="font-weight-bold">Amount (Ksh)</label>
+        <input type="text" class="form-control" id="id_amount" name="amount" value="{{ amount }}" readonly>
+        <small class="form-text text-muted">
+          Subscription amount for {{ landlord.get_landlord_type_display }} plan
+        </small>
+      </div>
+
+      <div class="form-group">
+        <label for="id_phone" class="font-weight-bold">MPESA Phone Number</label>
+        <input type="text" class="form-control" id="id_phone" name="phone_number" placeholder="e.g. 2547XXXXXXXX" required>
+        <small class="form-text text-muted">
+          Enter your Safaricom phone number to receive STK push
+        </small>
+      </div>
+
+      <button type="submit" class="btn btn-pay">
+        <i class="fas fa-coins me-2"></i> Pay with M-Pesa
+      </button>
+    </form>
+
+    <div class="mt-4 pt-3 border-top">
+      <p class="text-muted small mb-1">
+        <i class="fas fa-question-circle mr-1"></i> Need help with payment?
+      </p>
+      <a href="mailto:support@xbomaswift.com" style="color: var(--xboma-accent);">Contact our support team</a>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Auto-dismiss alerts after 5 seconds
+  $(document).ready(function() {
+    setTimeout(function() {
+      $('.alert').alert('close');
+    }, 5000);
+  });
+</script>
+{% endblock %}

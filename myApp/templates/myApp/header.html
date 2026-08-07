@@ -1,0 +1,36 @@
+{% extends 'myApp/base.html' %}
+{% load static %}
+
+<section>
+      <article>
+          {% if user.is_authenticated and current_landlord %}
+  <nav>
+    <a href="{% url 'landlord_dashboard' %}">Dashboard</a>
+    
+    {% if current_landlord.landlord_type == 'individual' %}
+        <a href="{% url 'post_property' %}">Post Property</a>
+        <a href="{% url 'my_properties' %}">My Properties</a>
+        <a href="#">My Rent Collection</a>
+    
+    {% elif current_landlord.landlord_type == 'company' %}
+        <a href="{% url 'post_property' %}">Add Listing</a>
+        <a href="{% url 'my_properties' %}">Manage Listings</a>
+        <a href="#">View Reports</a>
+    
+    {% elif current_landlord.landlord_type == 'agent' %}
+        <a href="{% url 'post_property' %}">Add Property</a>
+        <a href="{% url 'my_properties' %}">Manage Properties</a>
+    {% endif %}
+    
+    <span>Welcome, <strong>{{ current_landlord.full_name }}</strong></span> |
+    <a href="{% url 'logout' %}">Logout</a>
+  </nav>
+{% else %}
+  <nav>
+    <a href="{% url 'login' %}">Login</a>
+    <a href="{% url 'register' %}">Register</a>
+  </nav>
+{% endif %}
+      </article>
+    </section>
+

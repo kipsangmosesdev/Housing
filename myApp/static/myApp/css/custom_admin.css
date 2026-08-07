@@ -1,0 +1,21 @@
+/* Change the top admin header color */
+#header {
+    background-color: #583015 !important;  /* Navy Blue */
+}
+
+#header h1, #user-tools a {
+    color: #ecf0f1 !important;  /* Light Text */
+}
+
+/* Sidebar or module title colors */
+.module h2 {
+    background-color: #3498db !important;  /* Sky Blue */
+    color: #fff;
+    padding: 8px;
+    border-radius: 5px;
+}
+
+/* Login page background */
+body.login {
+    background-color: #105da9;
+}

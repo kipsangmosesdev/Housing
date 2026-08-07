@@ -1,0 +1,238 @@
+{% extends 'myApp/base.html' %}
+{% block content %}
+
+<style>
+  :root {
+    --primary: #4361ee;
+    --primary-light: #eef1fe;
+    --secondary: #3a0ca3;
+    --success: #4cc9f0;
+    --warning: #f8961e;
+    --danger: #f94144;
+    --dark: #212529;
+    --light: #f8f9fa;
+  }
+  
+  .subscription-card {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+    border: none;
+    overflow: hidden;
+  }
+  
+  .subscription-header {
+    background: linear-gradient(135deg, #4361ee 0%, #3a0ca3 100%);
+    color: white;
+    padding: 2rem;
+    position: relative;
+  }
+  
+  .subscription-header::before {
+    content: "";
+    position: absolute;
+    top: -50%;
+    right: -50%;
+    width: 100%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+    transform: rotate(30deg);
+  }
+  
+  .feature-list {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .feature-list li {
+    padding: 0.75rem 0;
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+    display: flex;
+    align-items: center;
+  }
+  
+  .feature-list li:last-child {
+    border-bottom: none;
+  }
+  
+  .feature-list i {
+    width: 30px;
+    height: 30px;
+    background: var(--primary-light);
+    color: var(--primary);
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 1rem;
+  }
+  
+  .price-tag {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--primary);
+  }
+  
+  .btn-subscribe {
+    background: linear-gradient(135deg, #4cc9f0 0%, #4361ee 100%);
+    color: white;
+    border: none;
+    padding: 0.75rem 2rem;
+    border-radius: 50px;
+    font-weight: 600;
+    transition: all 0.3s;
+    box-shadow: 0 4px 15px rgba(67, 97, 238, 0.3);
+  }
+  
+  .btn-subscribe:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(67, 97, 238, 0.4);
+    color: white;
+  }
+  
+  .benefit-badge {
+    background: rgba(76, 201, 240, 0.1);
+    color: var(--success);
+    padding: 0.5rem 1rem;
+    border-radius: 50px;
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+  }
+</style>
+
+<div class="container py-5">
+  <!-- Navigation -->
+  <div class="mb-4">
+    <a href="{% url 'tenant_landing' %}" class="btn btn-outline-secondary">
+      <i class="fas fa-arrow-left me-2"></i> Back to Properties
+    </a>
+  </div>
+
+  <!-- Subscription Card -->
+  <div class="subscription-card">
+    <!-- Header -->
+    <div class="subscription-header text-center">
+      <h2 class="mb-3"><i class="fas fa-crown me-2"></i> Premium Membership</h2>
+      <p class="lead mb-0">Hello <strong>{{ tenant.user.first_name }}</strong>, unlock your full potential</p>
+    </div>
+    
+    <!-- Body -->
+    <div class="p-4 p-md-5">
+      <div class="row">
+        <div class="col-lg-6">
+          <h4 class="mb-4">Subscription Benefits:</h4>
+          <ul class="feature-list">
+            <li>
+              <i class="fas fa-tachometer-alt"></i>
+              <span>Personalized dashboard with analytics</span>
+            </li>
+            <li>
+              <i class="fas fa-heart"></i>
+              <span>Save unlimited favorite properties</span>
+            </li>
+            <li>
+              <i class="fas fa-history"></i>
+              <span>Track your property viewing history</span>
+            </li>
+            <li>
+              <i class="fas fa-bell"></i>
+              <span>Get instant notifications for new listings</span>
+            </li>
+            <li>
+              <i class="fas fa-star"></i>
+              <span>Priority access to premium properties</span>
+            </li>
+          </ul>
+        </div>
+        
+        <div class="col-lg-6">
+          <div class="bg-light p-4 rounded-3 h-100">
+            <div class="text-center mb-4">
+              <span class="benefit-badge mb-2">
+                <i class="fas fa-calendar-check me-2"></i> 30 Day Access
+              </span>
+              <h3 class="price-tag my-3">KES {{ amount }}</h3>
+              <p class="text-muted">One-time payment, no hidden fees</p>
+            </div>
+            
+            <div class="d-grid gap-3">
+              <a href="{% url 'tenant_mpesa_subscription' %}" class="btn btn-subscribe">
+                <i class="fas fa-mobile-alt me-2"></i> Subscribe via MPESA
+              </a>
+              
+              <a href="{% url 'tenant_dashboard' %}" class="btn btn-outline-secondary">
+                <i class="fas fa-arrow-left me-2"></i> Maybe Later
+              </a>
+              
+              <div class="text-center mt-3">
+                <small class="text-muted">
+                  <i class="fas fa-lock me-1"></i> Secure payment processing
+                </small>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Testimonials Section -->
+  <div class="row mt-5">
+    <div class="col-md-4 mb-4">
+      <div class="card h-100 border-0 shadow-sm">
+        <div class="card-body text-center">
+          <img src="https://ui-avatars.com/api/?name=John+Doe&background=4361ee&color=fff" 
+               class="rounded-circle mb-3" width="80" alt="User">
+          <h5 class="mb-2">John Doe</h5>
+          <div class="text-warning mb-2">
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+          </div>
+          <p class="text-muted">"Found my dream apartment within days of subscribing. Worth every shilling!"</p>
+        </div>
+      </div>
+    </div>
+    
+    <div class="col-md-4 mb-4">
+      <div class="card h-100 border-0 shadow-sm">
+        <div class="card-body text-center">
+          <img src="https://ui-avatars.com/api/?name=Jane+Smith&background=3a0ca3&color=fff" 
+               class="rounded-circle mb-3" width="80" alt="User">
+          <h5 class="mb-2">Jane Smith</h5>
+          <div class="text-warning mb-2">
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+          </div>
+          <p class="text-muted">"The priority notifications helped me secure a great deal before others saw it."</p>
+        </div>
+      </div>
+    </div>
+    
+    <div class="col-md-4 mb-4">
+      <div class="card h-100 border-0 shadow-sm">
+        <div class="card-body text-center">
+          <img src="https://ui-avatars.com/api/?name=Mike+Johnson&background=4cc9f0&color=fff" 
+               class="rounded-circle mb-3" width="80" alt="User">
+          <h5 class="mb-2">Mike Johnson</h5>
+          <div class="text-warning mb-2">
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star-half-alt"></i>
+          </div>
+          <p class="text-muted">"Saved so much time with the favorites feature. Highly recommended!"</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

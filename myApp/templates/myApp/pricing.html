@@ -1,0 +1,622 @@
+{% extends 'myApp/base.html' %}
+{% load static %}
+
+{% block title %}Landlord Plans - XbomaSwift{% endblock %}
+
+{% block content %}
+
+  <!-- <link rel="stylesheet" href="{% static 'myapp/css/pricing.css' %}"> -->
+   <style>
+     :root {
+    --primary: #214063;
+    --primary-dark: #082939;
+    --accent: #d4a574;
+    --accent-dark: #b88a5e;
+    --neutral-light: #f7fafc;
+    --gradient-primary: linear-gradient(135deg, #214063 0%, #082939 100%);
+    --gradient-accent: linear-gradient(135deg, #d4a574 0%, #b88a5e 100%);
+    --gradient-card: linear-gradient(135deg, #ffffff 0%, #f7fafc 100%);
+    --shadow-light: 0 4px 20px rgba(0,0,0,0.08);
+    --shadow-medium: 0 8px 30px rgba(0,0,0,0.12);
+    --shadow-accent: 0 8px 25px rgba(212,165,116,0.25);
+  }
+
+  /* ---------- HERO SECTION ---------- */
+  .pricing-hero {
+    text-align: center;
+    padding: 100px 20px 80px;
+    background: linear-gradient(135deg, rgba(33,64,99,0.92) 0%, rgba(8,41,57,0.95) 100%),
+                url("{% static 'images/hero-bg.jpg' %}") center/cover no-repeat;
+    color: white;
+    border-radius: 0 0 60px 60px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .pricing-hero::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Ccircle cx='30' cy='30' r='2'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    z-index: 0;
+  }
+
+  .pricing-hero-content {
+    position: relative;
+    z-index: 1;
+    max-width: 800px;
+    margin: 0 auto;
+  }
+
+  .pricing-hero h1 {
+    font-size: 3rem;
+    font-weight: 800;
+    margin-bottom: 20px;
+    letter-spacing: -0.5px;
+    background: linear-gradient(to right, #ffffff, #f0f0f0);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  }
+
+  .pricing-hero p {
+    font-size: 1.25rem;
+    line-height: 1.7;
+    max-width: 750px;
+    margin: 0 auto 30px;
+    opacity: 0.9;
+  }
+
+  .hero-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--accent);
+    color: white;
+    padding: 12px 28px;
+    border-radius: 50px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(212,165,116,0.3);
+  }
+
+  .hero-cta:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(212,165,116,0.4);
+    background: var(--accent-dark);
+  }
+
+  /* ---------- PRICING GRID ---------- */
+  .plans-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 30px;
+    padding: 100px 20px;
+    max-width: 1300px;
+    margin: 0 auto;
+    position: relative;
+  }
+
+  .plan-card {
+    position: relative;
+    background: var(--gradient-card);
+    border-radius: 24px;
+    box-shadow: var(--shadow-light);
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    padding: 40px 25px;
+    overflow: hidden;
+    border: 1px solid rgba(0,0,0,0.03);
+    max-width: 380px;
+    margin: 0 auto;
+  }
+
+  .plan-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 5px;
+    background: var(--gradient-primary);
+  }
+
+  .plan-card:hover {
+    transform: translateY(-12px);
+    box-shadow: var(--shadow-medium);
+  }
+
+  .plan-card:hover .cta-button {
+    transform: scale(1.05);
+  }
+
+  /* ---------- RECOMMENDED RIBBON ---------- */
+  .recommended {
+    position: absolute;
+    top: 20px;
+    right: -30px;
+    background: var(--gradient-accent);
+    color: white;
+    font-weight: 700;
+    font-size: 0.85rem;
+    padding: 8px 35px;
+    transform: rotate(45deg);
+    box-shadow: 0 3px 10px rgba(0,0,0,0.15);
+    z-index: 2;
+  }
+
+  /* ---------- PLAN HEADER ---------- */
+  .plan-header {
+    text-align: center;
+    margin-bottom: 30px;
+    position: relative;
+  }
+
+  .plan-icon {
+    font-size: 2.5rem;
+    margin-bottom: 15px;
+    display: block;
+  }
+
+  .plan-header h2 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--primary);
+    margin-bottom: 15px;
+  }
+
+  .plan-header .price {
+    font-size: 2.2rem;
+    font-weight: 800;
+    color: var(--accent);
+    margin: 15px 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+  }
+
+  .price-period {
+    font-size: 1rem;
+    font-weight: 500;
+    color: #777;
+  }
+
+  .plan-header p {
+    color: #666;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    margin-top: 10px;
+  }
+
+  /* ---------- FEATURES ---------- */
+  .plan-features {
+    list-style: none;
+    padding: 0;
+    margin-bottom: 30px;
+  }
+
+  .plan-features li {
+    margin: 14px 0;
+    font-size: 1rem;
+    display: flex;
+    align-items: flex-start;
+    padding: 8px 0;
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+  }
+
+  .plan-features li:last-child {
+    border-bottom: none;
+  }
+
+  .plan-features li::before {
+    content: "✓";
+    color: var(--accent);
+    font-weight: bold;
+    margin-right: 12px;
+    font-size: 1.1rem;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  /* ---------- CTA BUTTONS ---------- */
+  .cta-button {
+    display: inline-block;
+    text-align: center;
+    width: 100%;
+    padding: 16px 22px;
+    border-radius: 14px;
+    font-weight: 700;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    position: relative;
+    overflow: hidden;
+    border: none;
+    cursor: pointer;
+    font-size: 1rem;
+  }
+
+  .cta-button::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 5px;
+    height: 5px;
+    background: rgba(255, 255, 255, 0.5);
+    opacity: 0;
+    border-radius: 100%;
+    transform: scale(1, 1) translate(-50%);
+    transform-origin: 50% 50%;
+  }
+
+  .cta-button:focus:not(:active)::after {
+    animation: ripple 1s ease-out;
+  }
+
+  @keyframes ripple {
+    0% {
+      transform: scale(0, 0);
+      opacity: 0.5;
+    }
+    100% {
+      transform: scale(20, 20);
+      opacity: 0;
+    }
+  }
+
+  .cta-premium {
+    background: var(--gradient-accent);
+    color: white;
+    box-shadow: 0 4px 15px rgba(212,165,116,0.3);
+  }
+
+  .cta-premium:hover {
+    background: var(--accent-dark);
+    box-shadow: 0 6px 20px rgba(212,165,116,0.4);
+  }
+
+  .cta-standard {
+    background: var(--gradient-primary);
+    color: white;
+    box-shadow: 0 4px 15px rgba(33,64,99,0.3);
+  }
+
+  .cta-standard:hover {
+    background: var(--primary-dark);
+    box-shadow: 0 6px 20px rgba(33,64,99,0.4);
+  }
+
+  .cta-basic {
+    background: #2a6486;
+    color: white;
+    box-shadow: 0 4px 15px rgba(42,100,134,0.3);
+  }
+
+  .cta-basic:hover {
+    background: #1c4e68;
+    box-shadow: 0 6px 20px rgba(42,100,134,0.4);
+  }
+
+  /* ---------- WHY SECTION ---------- */
+  .why-section {
+    text-align: center;
+    background: var(--neutral-light);
+    padding: 80px 20px;
+    border-radius: 30px;
+    max-width: 1200px;
+    margin: 60px auto;
+    box-shadow: var(--shadow-light);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .why-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 5px;
+    background: var(--gradient-primary);
+  }
+
+  .why-section h2 {
+    color: var(--primary);
+    font-weight: 800;
+    margin-bottom: 40px;
+    font-size: 2.2rem;
+  }
+
+  .why-features {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 30px;
+    max-width: 1000px;
+    margin: 0 auto;
+  }
+
+  .why-feature {
+    background: white;
+    padding: 25px;
+    border-radius: 16px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    transition: transform 0.3s ease;
+  }
+
+  .why-feature:hover {
+    transform: translateY(-5px);
+  }
+
+  .why-feature p {
+    font-size: 1.05rem;
+    line-height: 1.6;
+    margin: 0;
+    text-align: left;
+  }
+
+  /* ---------- FAQ SECTION ---------- */
+  .faq-section {
+    max-width: 1000px;
+    margin: 80px auto;
+    padding: 0 20px;
+  }
+
+  .faq-section h2 {
+    text-align: center;
+    color: var(--primary);
+    font-weight: 800;
+    margin-bottom: 40px;
+    font-size: 2.2rem;
+  }
+
+  .faq-container {
+    display: grid;
+    gap: 20px;
+  }
+
+  .faq-item {
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  }
+
+  .faq-question {
+    padding: 20px;
+    background: var(--neutral-light);
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: var(--primary);
+  }
+
+  .faq-answer {
+    padding: 0 20px;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease, padding 0.3s ease;
+  }
+
+  .faq-item.active .faq-answer {
+    padding: 20px;
+    max-height: 500px;
+  }
+
+  /* ---------- RESPONSIVE ---------- */
+  @media (max-width: 768px) {
+    .pricing-hero {
+      padding: 80px 20px 60px;
+      border-radius: 0 0 40px 40px;
+    }
+    
+    .pricing-hero h1 {
+      font-size: 2.2rem;
+    }
+    
+    .pricing-hero p {
+      font-size: 1.1rem;
+    }
+    
+    .plans-container {
+      grid-template-columns: 1fr;
+      gap: 25px;
+      padding: 60px 20px;
+    }
+    
+    .plan-card {
+      padding: 30px 20px;
+      max-width: 100%;
+    }
+    
+    .plan-header h2 {
+      font-size: 1.6rem;
+    }
+    
+    .plan-header .price {
+      font-size: 1.8rem;
+    }
+    
+    .why-section {
+      padding: 60px 20px;
+    }
+    
+    .why-section h2 {
+      font-size: 1.8rem;
+    }
+    
+    .why-features {
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .pricing-hero h1 {
+      font-size: 1.8rem;
+    }
+    
+    .pricing-hero p {
+      font-size: 1rem;
+    }
+    
+    .plan-header .price {
+      font-size: 1.6rem;
+    }
+    
+    .plan-features li {
+      font-size: 0.95rem;
+    }
+    
+    .why-feature p {
+      font-size: 1rem;
+    }
+  }
+   </style>
+
+
+<div class="pricing-hero">
+  <div class="pricing-hero-content">
+    <h1>Landlord Subscription Plans</h1>
+    <p>Your property deserves the spotlight. Let's get you seen, trusted, and booked faster on <strong>XbomaSwift</strong>.</p>
+    <a href="#plans" class="hero-cta">
+      View Plans
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M8 0L6.59 1.41L12.17 7H0V9H12.17L6.59 14.59L8 16L16 8L8 0Z" fill="currentColor"/>
+      </svg>
+    </a>
+  </div>
+</div>
+
+<div class="plans-container" id="plans">
+  <!-- Premium / Agent Plan -->
+  <div class="plan-card">
+    <div class="plan-header">
+      <span class="plan-icon"><i style="color: #1b4988;" class="fas fa-crown"></i></span>
+      <h2>Premium / Agent Plan</h2>
+        
+      <div class="price">Ksh. {{ plans.0.price }} <span class="price-period">/ month</span></div>
+      <p><em>For landlords and agents who want dominance, prestige, and performance.</em></p>
+    </div>
+    <ul class="plan-features">
+      <li>List up to 5 properties</li>
+      <li>Top-tier map visibility</li>
+      <li>Nearby priority in tenant searches</li>
+      <li>AI-powered property search</li>
+      <li>Golden badge for instant trust</li>
+      <li>Featured section placement</li>
+      <li>Analytics dashboard (total & recent views)</li>
+      <li>Per-property analytics graph</li>
+      <li>Recent tenant activity</li>
+      <li>Total & recent property views</li>
+      <li>Reviews and average ratings display</li>
+    </ul>
+    <a href="{% url 'register' %}" class="cta-button cta-premium">Choose Premium</a>
+  </div>
+
+  <!-- Standard Plan (Recommended) -->
+  <div class="plan-card" style="border: 2px solid var(--accent); box-shadow: var(--shadow-accent);">
+    <span class="recommended">Popular</span>
+    <div class="plan-header">
+      <span class="plan-icon"><i style="color: #e0a906;" class="fas fa-star"></i></span>
+      <h2>Standard Plan</h2>
+        <div class="price">Ksh. {{ plans.1.price }} <span class="price-period">/ month</span></div>
+      <p><em>Perfect for ambitious landlords ready to expand and compete.</em></p>
+    </div>
+    <ul class="plan-features">
+      <li>List up to 3 properties</li>
+      <li>Map visibility</li>
+      <li>Nearby priority placement</li>
+      <li>AI search inclusion</li>
+      <li>Silver badge for credibility</li>
+      <li>Featured section visibility</li>
+      <li>Total & recent property views</li>
+      <li>Property analytics graph (views per property)</li>
+    </ul>
+    <a href="{% url 'register' %}" class="cta-button cta-standard">Choose Standard</a>
+  </div>
+
+  <!-- Basic Plan -->
+  <div class="plan-card">
+    <div class="plan-header">
+      <span class="plan-icon"><i style="color: rgb(47, 181, 47);" class="fas fa-leaf"></i></span>
+      <h2>Basic Plan</h2>
+        <div class="price">Ksh. {{ plans.2.price }} <span class="price-period">/ month</span></div>
+      <p><em>Simple start for individual landlords taking the digital leap.</em></p>
+    </div>
+    <ul class="plan-features">
+      <li>List 1 property</li>
+      <li>Map visibility</li>
+      <li>AI-powered search</li>
+      <li>Total property views</li>
+      <li>Performance trend graph</li>
+    </ul>
+    <a href="{% url 'register' %}" class="cta-button cta-basic">Start with Basic</a>
+  </div>
+</div>
+
+<!-- Why Choose XbomaSwift -->
+<div class="why-section">
+  <h2>Why Choose XbomaSwift?</h2>
+  <div class="why-features">
+    <div class="why-feature">
+      <p>🌍 Your properties appear on a live tenant map — right where people are searching.</p>
+    </div>
+    <div class="why-feature">
+      <p>⚙️ AI automatically recommends your listings to the right tenants.</p>
+    </div>
+    <div class="why-feature">
+      <p>📊 Analytics show which properties attract the most attention.</p>
+    </div>
+    <div class="why-feature">
+      <p>💬 Badges and reviews build your professional image and trust.</p>
+    </div>
+    <div class="why-feature">
+      <p>🎯 The higher your plan, the greater your visibility and occupancy success.</p>
+    </div>
+  </div>
+</div>
+
+<!-- FAQ Section -->
+<div class="faq-section">
+  <h2>Frequently Asked Questions</h2>
+  <div class="faq-container">
+    <div class="faq-item">
+      <div class="faq-question">
+        <span>Can I change my plan later?</span>
+        <span>+</span>
+      </div>
+      <div class="faq-answer">
+        <p>Yes, you can upgrade or downgrade your plan at any time. Changes will be reflected in your next billing cycle.</p>
+      </div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-question">
+        <span>Is there a long-term contract?</span>
+        <span>+</span>
+      </div>
+      <div class="faq-answer">
+        <p>No, all our plans are month-to-month with no long-term commitment. You can cancel anytime.</p>
+      </div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-question">
+        <span>How does the AI-powered search work?</span>
+        <span>+</span>
+      </div>
+      <div class="faq-answer">
+        <p>Our AI analyzes tenant preferences and behavior to match them with your properties, increasing the chances of successful rentals.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+  <script src="{% static 'myApp/js/pricing.js' %}"></script>
+
+{% endblock %}

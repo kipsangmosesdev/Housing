@@ -1,0 +1,13 @@
+{% extends 'myApp/base.html' %}
+{% block content %}
+
+<h3>Activate Tenant Subscription</h3>
+<p><strong>{{ tenant.user.username }}</strong></p>
+
+<form method="post">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <button type="submit" class="btn btn-success">Save Subscription</button>
+</form>
+
+{% endblock content %}

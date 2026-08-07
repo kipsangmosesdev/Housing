@@ -1,0 +1,242 @@
+{% extends 'myApp/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <!-- Login Card -->
+            <div class="card border-0 shadow-sm" style="border: 1px solid #c8e6c9;">
+                <div class="card-body p-4 p-md-5">
+                    <!-- Brand Logo -->
+                    <div class="text-center mb-4">
+                        <img src="{% static 'images/logo.png' %}" alt="Logo" height="50" class="mb-3">
+                        <h3 class="fw-bold" style="color: #2e7d32;">Tenant Login</h3>
+                        <p class="text-muted">Access your tenant account</p>
+                    </div>
+
+                    <!-- Login Form -->
+                    <form method="post" novalidate class="needs-validation">
+                        {% csrf_token %}
+                        
+                        {% if form.non_field_errors %}
+                        <div class="alert alert-danger">
+                            {% for error in form.non_field_errors %}
+                                <i class="fas fa-exclamation-circle me-2"></i>{{ error }}
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+
+                        <!-- Username/Email Field -->
+                        <div class="mb-4">
+                            <label for="{{ form.username.id_for_label }}" class="form-label">
+                                <i class="fas fa-user me-2" style="color: #388e3c;"></i>{{ form.username.label }}
+                            </label>
+                            <div class="input-group">
+                                <span class="input-group-text" style="background-color: #e8f5e9;">
+                                    <i class="fas fa-envelope" style="color: #388e3c;"></i>
+                                </span>
+                                {{ form.username }}
+                            </div>
+                            {% for error in form.username.errors %}
+                                <div class="invalid-feedback d-block">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+
+                        <!-- Password Field -->
+                        <div class="mb-4">
+                            <label for="{{ form.password.id_for_label }}" class="form-label">
+                                <i class="fas fa-lock me-2" style="color: #388e3c;"></i>{{ form.password.label }}
+                            </label>
+                            <div class="input-group">
+                                <span class="input-group-text" style="background-color: #e8f5e9;">
+                                    <i class="fas fa-key" style="color: #388e3c;"></i>
+                                </span>
+                                {{ form.password }}
+                                <button class="btn btn-outline-secondary toggle-password" type="button" style="border-color: #c8e6c9;">
+                                    <i class="fas fa-eye" style="color: #388e3c;"></i>
+                                </button>
+                            </div>
+                            {% for error in form.password.errors %}
+                                <div class="invalid-feedback d-block">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+
+                        <!-- Remember Me & Forgot Password -->
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="rememberMe" name="remember_me" style="border-color: #388e3c;">
+                                <label class="form-check-label" for="rememberMe">Remember me</label>
+                            </div>
+                        </div>
+
+                        <!-- Submit Button -->
+                        <div class="d-grid mb-3">
+                            <button type="submit" class="btn py-2" style="background-color: #2e7d32; color: white;">
+                                <i class="fas fa-sign-in-alt me-2"></i>Login
+                            </button>
+                            <p class="mt-2">
+                                Forgot password? <a href="{% url 'accounts:password_reset' %}" class="text-decoration-none fw-bold" style="color: #388e3c;">Reset</a>
+                            </p>
+                        </div>
+
+                        <!-- Social Login (Optional) -->
+                        <div class="text-center mb-4">
+                            <p class="text-muted mb-2">Or login with</p>
+                            <div class="d-flex justify-content-center gap-3">
+                                <a href="#" class="btn btn-outline-secondary" style="border-color: #c8e6c9; color: #388e3c;">
+                                    <i class="fab fa-google"></i>
+                                </a>
+                                <a href="#" class="btn btn-outline-secondary" style="border-color: #c8e6c9; color: #388e3c;">
+                                    <i class="fab fa-facebook-f"></i>
+                                </a>
+                            </div>
+                        </div>
+
+                        <!-- Registration Link -->
+                        <div class="text-center">
+                            <p class="mb-0">Don't have an account?
+                                <a href="{% url 'tenant_register' %}" class="text-decoration-none fw-bold" style="color: #388e3c;">Register here</a>
+                            </p>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .card {
+        border-radius: 0.75rem;
+        background-color: #ffffff;
+        border: 1px solid #e0e6ed;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        transition: all 0.3s ease;
+    }
+    
+    .card:hover {
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+        transform: translateY(-2px);
+    }
+    
+    .form-control, .btn {
+        border-radius: 0.5rem;
+        transition: all 0.2s ease;
+    }
+    
+    .form-control {
+        border: 1px solid #d1d9e6;
+        padding: 0.5rem 1rem;
+    }
+    
+    .form-control:focus {
+        border-color: #2a5a78;
+        box-shadow: 0 0 0 0.25rem rgba(42, 90, 120, 0.15);
+    }
+    
+    .input-group-text {
+        background-color: #f5f7fa;
+        border-color: #e0e6ed;
+        color: #2a5a78;
+        font-weight: 500;
+    }
+    
+    .toggle-password {
+        border-top-right-radius: 0.5rem !important;
+        border-bottom-right-radius: 0.5rem !important;
+        background-color: #f5f7fa;
+        cursor: pointer;
+    }
+    
+    .toggle-password:hover {
+        background-color: #e0e6ed;
+    }
+    
+    .form-check-input:checked {
+        background-color: #2a5a78;
+        border-color: #2a5a78;
+    }
+    
+    .btn-primary {
+        background-color: #2a5a78;
+        border-color: #2a5a78;
+    }
+    
+    .btn-primary:hover {
+        background-color: #1d3c54;
+        border-color: #1d3c54;
+    }
+    
+    .btn-outline-primary {
+        color: #2a5a78;
+        border-color: #2a5a78;
+    }
+    
+    .btn-outline-primary:hover {
+        background-color: #2a5a78;
+        color: #ffffff;
+    }
+    
+    .alert-danger {
+        background-color: #fff5f5;
+        border-color: #ffd1d1;
+        color: #c62828;
+        border-left: 4px solid #c62828;
+    }
+    
+    /* Additional real estate themed elements */
+    .property-badge {
+        background-color: #c8a173;
+        color: #ffffff;
+        font-weight: 600;
+        padding: 0.25rem 0.75rem;
+        border-radius: 50px;
+    }
+    
+    .price-tag {
+        background-color: #2a5a78;
+        color: white;
+        padding: 0.5rem 1rem;
+        border-radius: 0.5rem;
+        font-weight: 700;
+        display: inline-block;
+    }
+</style>
+
+<script>
+    // Toggle password visibility
+    document.querySelectorAll('.toggle-password').forEach(function(button) {
+        button.addEventListener('click', function() {
+            const passwordInput = this.parentElement.querySelector('input');
+            const icon = this.querySelector('i');
+            
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            } else {
+                passwordInput.type = 'password';
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+            }
+        });
+    });
+    
+    // Form validation
+    (function() {
+        'use strict';
+        const forms = document.querySelectorAll('.needs-validation');
+        
+        Array.prototype.slice.call(forms).forEach(function(form) {
+            form.addEventListener('submit', function(event) {
+                if (!form.checkValidity()) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+                form.classList.add('was-validated');
+            }, false);
+        });
+    })();
+</script>
+{% endblock content %}

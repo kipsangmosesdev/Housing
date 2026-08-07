@@ -1,0 +1,295 @@
+{% extends "myApp/base.html" %}
+{% load static %}
+{% block content %}
+<div class="container py-5">
+    <!-- Header Section -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{% url 'transporter_dashboard' %}" class="text-decoration-none">Dashboard</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Payment History</li>
+                </ol>
+            </nav>
+            
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h2 class="h3 fw-bold text-dark mb-1">
+                        <i class="fas fa-wallet text-success me-2"></i>Payment History
+                    </h2>
+                    <p class="text-muted mb-0">Track your subscription payments and transactions</p>
+                </div>
+                
+                <!-- Summary Card -->
+                <div class="bg-light rounded-3 p-3 d-none d-md-block">
+                    <div class="d-flex align-items-center">
+                        <div class="bg-success rounded-circle p-2 me-2">
+                            <i class="fas fa-receipt text-white"></i>
+                        </div>
+                        <div>
+                            <small class="text-muted d-block">Total Payments</small>
+                            <strong class="text-dark">{{ history.count }}</strong>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="row mb-4">
+        <div class="col-md-4 mb-3">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body text-center p-4">
+                    <div class="bg-primary bg-opacity-10 rounded-circle p-3 d-inline-flex mb-3">
+                        <i class="fas fa-check-circle fa-2x text-primary"></i>
+                    </div>
+                    <h3 class="fw-bold text-dark mb-1">{{ total_successful_payments }}</h3>
+                    <p class="text-muted mb-0">Successful Subscriptions</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4 mb-3">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body text-center p-4">
+                    <div class="bg-success bg-opacity-10 rounded-circle p-3 d-inline-flex mb-3">
+                        <i class="fas fa-coins fa-2x text-success"></i>
+                    </div>
+                    <h3 class="fw-bold text-dark mb-1">KES {{ total_earnings }}</h3>
+                    <p class="text-muted mb-0">Total Earned</p>
+                    <i class="fas fa-eye text-success"></i> <a class="btn btn success" href="{% url 'transporter_earnings_list' %}">More</a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4 mb-3">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body text-center p-4">
+                    <div class="bg-warning bg-opacity-10 rounded-circle p-3 d-inline-flex mb-3">
+                        <i class="fas fa-clock fa-2x text-warning"></i>
+                    </div>
+                    <h3 class="fw-bold text-dark mb-1">{{ active_subscriptions }}</h3>
+                    <p class="text-muted mb-0">Active Subscriptions</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Payment History Table -->
+    <div class="card border-0 shadow-lg rounded-4">
+        <div class="card-header bg-white py-3 border-0 rounded-top-4">
+            <h5 class="mb-0 fw-semibold text-dark">
+                <i class="fas fa-history me-2 text-primary"></i>Transaction History
+            </h5>
+        </div>
+        
+        <div class="card-body p-0">
+            {% if history %}
+            <div class="table-responsive">
+                <h5 class="fw-semibold text-success mb-3">
+                    <i class="fas fa-check-circle me-2"></i>Successful Subscriptions: {{ total_successful_payments }}
+                </h5>
+                <hr>
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th class="ps-4">#</th>
+                            <th>Receipt Number</th>
+                            <th>Amount</th>
+                            <th>Status</th>
+                            <th>Subscription Period</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for payment in history %}
+                        <tr class="border-bottom">
+                            <td class="ps-4 fw-semibold text-muted">{{ forloop.counter }}</td>
+                            <td>
+                                <div class="d-flex align-items-center">
+                                    <div class="bg-primary bg-opacity-10 rounded-circle p-2 me-3">
+                                        <i class="fas fa-receipt text-primary"></i>
+                                    </div>
+                                    <div>
+                                        <span class="fw-semibold text-dark">{{ payment.mpesa_receipt }}</span>
+                                        <br>
+                                        <small class="text-muted">{{ payment.start_date|date:"M d, Y H:i" }}</small>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <span class="fw-bold text-success">KES {{ payment.amount }}</span>
+                            </td>
+                            <td>
+                                {% if payment.is_paid %}
+                                <span class="badge bg-success rounded-pill px-3 py-2">
+                                    <i class="fas fa-check-circle me-1"></i>Paid
+                                </span>
+                                {% else %}
+                                <span class="badge bg-danger rounded-pill px-3 py-2">
+                                    <i class="fas fa-times-circle me-1"></i>Failed
+                                </span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <div class="text-muted">
+                                    <small>{{ payment.start_date|date:"M d, Y H:i" }}</small>
+                                    <br>
+                                    <small class="fw-semibold">{{ payment.end_date|date:"M d, Y H:i" }}</small>
+                                </div>
+                            </td>
+                            
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+
+               
+                 
+                
+            </div>
+            {% else %}
+            <!-- Empty State -->
+            <div class="text-center py-5">
+                <div class="mb-4">
+                    <i class="fas fa-wallet fa-4x text-muted opacity-25"></i>
+                </div>
+                <h5 class="text-muted mb-3">No Payment History Yet</h5>
+                <p class="text-muted mb-4">You haven't made any payments yet. Your payment history will appear here.</p>
+                <a href="#" class="btn btn-primary">
+                    <i class="fas fa-plus me-2"></i>Make Your First Payment
+                </a>
+            </div>
+            {% endif %}
+
+
+             <hr>
+                <!-- Failed payments -->
+                {% if failed_payments %}
+                <div class="p-4">
+                    <h5 class="fw-semibold text-danger mb-3">
+                        <i class="fas fa-exclamation-triangle me-2"></i>Failed Subscriptions: {{ failed_count }}
+                    </h5>
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th class="ps-4">#</th>
+                                    <th>Receipt Number</th>
+                                    <th>Amount</th>
+                                    <th>Status</th>
+                                    <th>Failed Date</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for payment in failed_payments %}
+                                <tr class="border-bottom">
+                                    <td class="ps-4 fw-semibold text-muted">{{ forloop.counter }}</td>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <div class="bg-primary bg-opacity-10 rounded-circle p-2 me-3">
+                                                <i class="fas fa-receipt text-primary"></i>
+                                            </div>
+                                            <div>
+                                                <h6 class="fw-semibold mb-1">Receipt #{{ payment.id }}</h6>
+                                            
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <span class="fw-semibold text-danger">KSH {{ payment.amount|floatformat:2 }}</span>
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-danger rounded-pill px-3 py-2">
+                                            <i class="fas fa-times-circle me-1"></i>Failed
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span class="text-muted small">{{ payment.created_at|date:"M d, Y H:i" }}</span>
+                                    </td>
+
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+
+
+                    </div>
+                </div>
+                {% endif %}
+
+                <!-- Pagination -->
+                {% if history.has_other_pages %}
+                <div class="card-footer bg-white border-0 rounded-bottom-4">
+            <nav aria-label="Payment history pagination">
+                <ul class="pagination justify-content-center mb-0">
+                    {% if history.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ history.previous_page_number }}" aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+                    {% endif %}
+
+                    {% for i in history.paginator.page_range %}
+                    <li class="page-item {% if history.number == i %}active{% endif %}">
+                        <a class="page-link" href="?page={{ i }}">{{ i }}</a>
+                    </li>
+                    {% endfor %}
+
+                    {% if history.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ history.next_page_number }}" aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </nav>
+        </div>
+        {% endif %}
+    </div>
+
+    
+</div>
+
+<style>
+    .card {
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    
+    .card:hover {
+        transform: translateY(-2px);
+    }
+    
+    .table-hover tbody tr:hover {
+        background-color: rgba(8, 65, 94, 0.03);
+    }
+    
+    .badge {
+        font-size: 0.8rem;
+    }
+    
+    .dropdown-toggle::after {
+        display: none;
+    }
+    
+    .bg-opacity-10 {
+        background-color: rgba(var(--bs-primary-rgb), 0.1) !important;
+    }
+    
+    @media (max-width: 768px) {
+        .d-none.d-md-block {
+            display: none !important;
+        }
+        
+        .table-responsive {
+            font-size: 0.9rem;
+        }
+        
+        .card-body.p-4 {
+            padding: 1.5rem !important;
+        }
+    }
+</style>
+{% endblock %}

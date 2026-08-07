@@ -1,0 +1,231 @@
+{% extends 'myApp/base.html' %}
+{% load static %}
+
+{% block content %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Nearby Vehicles</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            font-family: "Segoe UI", Roboto, sans-serif;
+            background: #f9f9f9;
+        }
+
+        /* Header */
+        .header {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 12px 20px;
+            background: linear-gradient(90deg, #dc3545, #ff7043);
+            color: #fff;
+            font-size: 20px;
+            font-weight: 600;
+            z-index: 1000;
+            text-align: center;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+        }
+
+        #map {
+            height: 100vh;
+            width: 100%;
+        }
+
+        /* Floating legend card */
+        .map-legend {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            background: #fff;
+            padding: 12px 16px;
+            border-radius: 10px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+            font-size: 14px;
+            color: #444;
+            z-index: 1000;
+        }
+
+        .map-legend strong {
+            display: block;
+            margin-bottom: 6px;
+            color: #dc3545;
+        }
+
+        /* Popup Styling */
+        .leaflet-popup-content-wrapper {
+            border-radius: 10px;
+            background: #fff;
+            border: 1px solid #ddd;
+            box-shadow: 0px 3px 12px rgba(0,0,0,0.2);
+        }
+
+        .leaflet-popup-content {
+            font-size: 14px;
+            font-weight: 500;
+            color: #333;
+        }
+
+        .leaflet-popup-content img {
+            margin-top: 6px;
+            border-radius: 6px;
+        }
+
+        /* Marker hover animation */
+        .leaflet-marker-icon {
+            transition: transform 0.2s ease-in-out;
+        }
+        .leaflet-marker-icon:hover {
+            transform: scale(1.2);
+        }
+
+        /* Cluster colors */
+        .marker-cluster-small {
+            background-color: rgba(244, 67, 54, 0.8);
+            color: white;
+        }
+        .marker-cluster-medium {
+            background-color: rgba(255, 152, 0, 0.8);
+            color: white;
+        }
+        .marker-cluster-large {
+            background-color: rgba(76, 175, 80, 0.8);
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <!-- Fancy Header -->
+    <div class="header">🚗 Nearby Vehicles</div>
+
+    <!-- Map -->
+    <div id="map"></div>
+
+    <!-- Legend Card -->
+    <div class="map-legend">
+        <strong>Legend:</strong>
+        <div>📍 <span style="color:#dc3545;">Vehicle</span></div>
+        <div>👤 <span style="color:#007bff;">You</span></div>
+    </div>
+
+<script src="https://maps.googleapis.com/maps/api/js?key={{ GOOGLE_MAPS_API_KEY }}&libraries=visualization,places"></script>
+<script src="https://unpkg.com/@googlemaps/markerclusterer/dist/index.min.js"></script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const defaultLat = -1.286389;  // Nairobi fallback
+    const defaultLng = 36.817223;
+
+    // Initialize map with mapTypeControl enabled
+    const map = new google.maps.Map(document.getElementById("map"), {
+        center: { lat: defaultLat, lng: defaultLng },
+        zoom: 12,
+        mapTypeId: google.maps.MapTypeId.ROADMAP,
+        mapTypeControl: true,
+        mapTypeControlOptions: {
+            style: google.maps.MapTypeControlStyle.HORIZONTAL_BAR, // dropdown style
+            position: google.maps.ControlPosition.TOP_RIGHT,       // position like Leaflet
+            mapTypeIds: [
+                google.maps.MapTypeId.ROADMAP,
+                google.maps.MapTypeId.SATELLITE,
+                google.maps.MapTypeId.HYBRID,
+                google.maps.MapTypeId.TERRAIN
+            ]
+        }
+    });
+
+    // Icons
+    const vehicleIcon = {
+        url: "{% static 'myApp/images/red-pin.png' %}",
+        scaledSize: new google.maps.Size(38, 38),
+        anchor: new google.maps.Point(19, 38)
+    };
+
+    const userIcon = {
+        url: "https://cdn-icons-png.flaticon.com/512/149/149071.png",
+        scaledSize: new google.maps.Size(30, 30),
+        anchor: new google.maps.Point(15, 30)
+    };
+
+    // Marker storage for clustering
+    let markers = [];
+    let markerCluster = null;
+
+    // Load vehicles API
+    function loadNearbyVehicles(lat, lng) {
+        fetch(`/Near_vehicles/nearby_vehicles_api/?lat=${lat}&lng=${lng}&radius=5`)
+            .then(response => response.json())
+            .then(data => {
+                // Clear old markers
+                if (markerCluster) {
+                    markerCluster.clearMarkers();
+                }
+                markers.forEach(m => m.setMap(null));
+                markers = [];
+
+                data.vehicles.forEach(vehicle => {
+                    const marker = new google.maps.Marker({
+                        position: { lat: vehicle.lat, lng: vehicle.lng },
+                        map: map,
+                        icon: vehicleIcon,
+                    });
+
+                    const content = `
+                        <b>${vehicle.name}</b><br>
+                        Plate: ${vehicle.plate}<br>
+                        Capacity: ${vehicle.capacity} ${vehicle.capacity_type}<br>
+                        Phone: <a href="tel:${vehicle.phone}">${vehicle.phone}</a><br>
+                        Distance: ${vehicle.distance} km<br>
+                        ${vehicle.image_url ? `<img src="${vehicle.image_url}" width="140"/>` : ""}
+                    `;
+
+                    const infowindow = new google.maps.InfoWindow({ content });
+                    marker.addListener("click", () => {
+                        infowindow.open(map, marker);
+                    });
+
+                    markers.push(marker);
+                });
+
+                // Rebuild cluster
+                markerCluster = new markerClusterer.MarkerClusterer({ map, markers });
+            })
+            .catch(err => console.error("Error loading vehicles:", err));
+    }
+
+    // User geolocation
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+            pos => {
+                const lat = pos.coords.latitude;
+                const lng = pos.coords.longitude;
+                map.setCenter({ lat, lng });
+                map.setZoom(14);
+
+                loadNearbyVehicles(lat, lng);
+
+                new google.maps.Marker({
+                    position: { lat, lng },
+                    map: map,
+                    icon: userIcon,
+                    title: "You are here"
+                });
+            },
+            () => {
+                alert("Unable to get your location. Showing Nairobi.");
+                loadNearbyVehicles(defaultLat, defaultLng);
+            }
+        );
+    } else {
+        loadNearbyVehicles(defaultLat, defaultLng);
+    }
+});
+</script>
+
+</body>
+</html>
+{% endblock content %}

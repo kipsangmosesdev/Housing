@@ -1,0 +1,7552 @@
+[
+{
+    "model": "contenttypes.contenttype",
+    "fields": {
+        "app_label": "admin",
+        "model": "logentry"
+    }
+},
+{
+    "model": "contenttypes.contenttype",
+    "fields": {
+        "app_label": "auth",
+        "model": "permission"
+    }
+},
+{
+    "model": "contenttypes.contenttype",
+    "fields": {
+        "app_label": "auth",
+        "model": "group"
+    }
+},
+{
+    "model": "contenttypes.contenttype",
+    "fields": {
+        "app_label": "auth",
+        "model": "user"
+    }
+},
+{
+    "model": "contenttypes.contenttype",
+    "fields": {
+        "app_label": "contenttypes",
+        "model": "contenttype"
+    }
+},
+{
+    "model": "contenttypes.contenttype",
+    "fields": {
+        "app_label": "sessions",
+        "model": "session"
+    }
+},
+{
+    "model": "contenttypes.contenttype",
+    "fields": {
+        "app_label": "myApp",
+        "model": "registeruser"
+    }
+},
+{
+    "model": "contenttypes.contenttype",
+    "fields": {
+        "app_label": "myApp",
+        "model": "property"
+    }
+},
+{
+    "model": "contenttypes.contenttype",
+    "fields": {
+        "app_label": "myApp",
+        "model": "location"
+    }
+},
+{
+    "model": "contenttypes.contenttype",
+    "fields": {
+        "app_label": "myApp",
+        "model": "amenity"
+    }
+},
+{
+    "model": "contenttypes.contenttype",
+    "fields": {
+        "app_label": "myApp",
+        "model": "propertyimage"
+    }
+},
+{
+    "model": "contenttypes.contenttype",
+    "fields": {
+        "app_label": "myApp",
+        "model": "propertytype"
+    }
+},
+{
+    "model": "contenttypes.contenttype",
+    "fields": {
+        "app_label": "myApp",
+        "model": "payment"
+    }
+},
+{
+    "model": "contenttypes.contenttype",
+    "fields": {
+        "app_label": "myApp",
+        "model": "tenant"
+    }
+},
+{
+    "model": "contenttypes.contenttype",
+    "fields": {
+        "app_label": "myApp",
+        "model": "favoriteproperty"
+    }
+},
+{
+    "model": "contenttypes.contenttype",
+    "fields": {
+        "app_label": "myApp",
+        "model": "propertyview"
+    }
+},
+{
+    "model": "contenttypes.contenttype",
+    "fields": {
+        "app_label": "myApp",
+        "model": "tenantpayment"
+    }
+},
+{
+    "model": "contenttypes.contenttype",
+    "fields": {
+        "app_label": "myApp",
+        "model": "comment"
+    }
+},
+{
+    "model": "contenttypes.contenttype",
+    "fields": {
+        "app_label": "myApp",
+        "model": "rating"
+    }
+},
+{
+    "model": "contenttypes.contenttype",
+    "fields": {
+        "app_label": "myApp",
+        "model": "systemrating"
+    }
+},
+{
+    "model": "contenttypes.contenttype",
+    "fields": {
+        "app_label": "myApp",
+        "model": "tokenwallet"
+    }
+},
+{
+    "model": "contenttypes.contenttype",
+    "fields": {
+        "app_label": "myApp",
+        "model": "tokentransaction"
+    }
+},
+{
+    "model": "contenttypes.contenttype",
+    "fields": {
+        "app_label": "myApp",
+        "model": "adminupdate"
+    }
+},
+{
+    "model": "contenttypes.contenttype",
+    "fields": {
+        "app_label": "myApp",
+        "model": "subscriptionplan"
+    }
+},
+{
+    "model": "contenttypes.contenttype",
+    "fields": {
+        "app_label": "mpesa",
+        "model": "tokenprice"
+    }
+},
+{
+    "model": "contenttypes.contenttype",
+    "fields": {
+        "app_label": "myApp",
+        "model": "referralsubmission"
+    }
+},
+{
+    "model": "sessions.session",
+    "pk": "0hkdf3v7w07a7vd9tl1c3ou33etybzhu",
+    "fields": {
+        "session_data": ".eJxVjEEOwiAQRe_C2pCpkDK4dO8ZyDAwUjWQlHbVeHdt0oVu_3vvbyrQupSw9jyHKamLGpw6_Y6R-JnrTtKD6r1pbnWZp6h3RR-061tL-XU93L-DQr18axjRMoOxw5kJBofgyURk5yDaLA5ZAIVjYiAQ9ozWIMjoZLSeJav3B__OOGw:1uiH81:Fbf8fZA97eJ1F3puKRinmCbqfWqC2Goh6G8rSdaIs2w",
+        "expire_date": "2025-08-16T18:38:45.609Z"
+    }
+},
+{
+    "model": "sessions.session",
+    "pk": "1ims2ewf2wwukxj82o5k8eejju0zosbo",
+    "fields": {
+        "session_data": ".eJxVjDsOwyAQBe9CHSHAyy9lep8BLQsOTiKQjF1FuXtsyUXSvpl5bxZwW0vYel7CnNiVWXb53SLSM9cDpAfWe-PU6rrMkR8KP2nnY0v5dTvdv4OCvew1ReUkDBom4x0BuKyENyb7aJ0BUiKTR9IacIo-7SRJr-QgtBV6IIvs8wXIQjb-:1up7Pl:hqQ5ZeWvl86aJfEx8I21scxq2zGoee0ml1pDBX_H07A",
+        "expire_date": "2025-09-04T15:41:21.502Z"
+    }
+},
+{
+    "model": "sessions.session",
+    "pk": "1jo7bxhdvyzsllw1td2kbxzooxbbcps4",
+    "fields": {
+        "session_data": ".eJxVjDsOwjAQBe_iGlmxE_8o6TmDtetd4wCypTipEHeHSCmgfTPzXiLCtpa4dV7iTOIsnDj9bgjpwXUHdId6azK1ui4zyl2RB-3y2oifl8P9OyjQy7fmYBN41llZ0i54UugHQxNjGtzkcvDBomFGYsBsfaCclNLg3Ggw-VG8PwLfOLc:1uau5w:PRIEBMa-7P2MAiwV69c21N0tmtNe6HK6B-pihxoYuoE",
+        "expire_date": "2025-07-27T10:38:08.182Z"
+    }
+},
+{
+    "model": "sessions.session",
+    "pk": "1rdil9777lgt7lyvni78s5jr2u61d11u",
+    "fields": {
+        "session_data": ".eJxVjDkOwjAQAP_iGln2-thASc8brF0fOIAcKU4qxN-RpRTQzozmLQLtWw17z2uYk7gIL06_jCk-cxsiPajdFxmXtq0zy5HIw3Z5W1J-XY_2b1Cp17EFDzwpxQQUUTMCRnb6XEAXrVTWRQFrm7wDhwiGJ0C20RpUNhlg8fkCw3w2ug:1ugswD:cjfTSZuWfeMdp68qjZEV6mxKeUydqaA8cfXDQu8g8Tk",
+        "expire_date": "2025-08-12T22:36:49.663Z"
+    }
+},
+{
+    "model": "sessions.session",
+    "pk": "1scev429a4ozrz0q12tbdv0ufeuda9ju",
+    "fields": {
+        "session_data": ".eJxVjEEOwiAQRe_C2hCgjIBL9z0DYQZGqoYmpV0Z765NutDtf-_9l4hpW2vcelnilMVF6CBOvyMmepS2k3xP7TZLmtu6TCh3RR60y3HO5Xk93L-Dmnr91pY0k7foLOZiDHsEQsbiECl7UCWgUzadOZMP5CgkAMUwgB7QsCPx_gBHPTlh:1up74C:4995FR0MnRoUMTp8rLB3KFGhBjAGH4wKXczIvqEuVSk",
+        "expire_date": "2025-09-04T15:19:04.077Z"
+    }
+},
+{
+    "model": "sessions.session",
+    "pk": "2v629xqiaun9nmf9tmzpo2ua8qmlujbr",
+    "fields": {
+        "session_data": ".eJxVjEEOwiAQRe_C2hAqUBiX7nsGMjCDVA0kpV0Z765NutDtf-_9lwi4rSVsnZcwk7gIL06_W8T04LoDumO9NZlaXZc5yl2RB-1yasTP6-H-HRTs5VsDZHCMaDNQIqdVHiwYdjGngR1a0NqDx3hm443Kloj1CIksKzUiOPH-AAJAOGM:1ukL05:jpuX4IErWXSXWM6quwyrVEZew75GykwQnepTWZTUfUw",
+        "expire_date": "2025-08-22T11:11:05.795Z"
+    }
+},
+{
+    "model": "sessions.session",
+    "pk": "2w2w9h6leetmnh3jbumc6w9sub2v3hll",
+    "fields": {
+        "session_data": ".eJxVjEEOwiAQRe_C2hAK06G4dO8ZyBRmpGpoUtqV8e7apAvd_vfef6lI21ri1niJU1ZnZdXpdxspPbjuIN-p3mad5rou06h3RR-06euc-Xk53L-DQq18655d543tQZC8R8BgAg8SPKDzxBnQihHLCRJRCOiMM1nIYecEBwL1_gC8sjcm:1uqUmn:eyNhlVCJV5aAd0cPJdqTo9K0eBmqysJMNmYWf_dBjLw",
+        "expire_date": "2025-09-08T10:50:49.522Z"
+    }
+},
+{
+    "model": "sessions.session",
+    "pk": "2ytplhjb47gfyseosz8i7gf1706rtdte",
+    "fields": {
+        "session_data": ".eJxVjEEOwiAQRe_C2hAqUBiX7nsGMjCDVA0kpV0Z765NutDtf-_9lwi4rSVsnZcwk7gIL06_W8T04LoDumO9NZlaXZc5yl2RB-1yasTP6-H-HRTs5VsDZHCMaDNQIqdVHiwYdjGngR1a0NqDx3hm443Kloj1CIksKzUiOPH-AAJAOGM:1uefTu:PwNDOQ2mopOoqaNhRxOa-hqqGRNQUJ5ed_HZHYwKdro",
+        "expire_date": "2025-08-06T19:50:26.160Z"
+    }
+},
+{
+    "model": "sessions.session",
+    "pk": "32oi7g3m1i4e2lwd4n48yx7mb1tq34n1",
+    "fields": {
+        "session_data": ".eJxVjDkOwjAQAP_iGln2-thASc8brF0fOIAcKU4qxN-RpRTQzozmLQLtWw17z2uYk7gIL06_jCk-cxsiPajdFxmXtq0zy5HIw3Z5W1J-XY_2b1Cp17EFDzwpxQQUUTMCRnb6XEAXrVTWRQFrm7wDhwiGJ0C20RpUNhlg8fkCw3w2ug:1ugsoH:PyidH1CO26n2RcXKHEhTVVHuOwquUJc7w0PdcVhxkys",
+        "expire_date": "2025-08-12T22:28:37.164Z"
+    }
+},
+{
+    "model": "sessions.session",
+    "pk": "3oewoq337v6bwws9sy5356k8smm4ypix",
+    "fields": {
+        "session_data": ".eJxVjEsOwiAUAO_C2hAonwcu3fcM5AEPqRqalHZlvLsh6UK3M5N5s4DHXsPRaQtLZlcm2eWXRUxPakPkB7b7ytPa9m2JfCT8tJ3Pa6bX7Wz_BhV7HVutigYN2YAW4JyZJi9BAUZC75BQR0XWGkM6ZuEgSYFFWEFA1qtY2OcLt8c3Tw:1uZlil:1AO_Yxo0Fx6DpwnYubW4-S1mRSeldO5eH_CLyPKw4xo",
+        "expire_date": "2025-07-24T07:29:31.488Z"
+    }
+},
+{
+    "model": "sessions.session",
+    "pk": "3srsfu22bs0wtta13w0fcvwiz953wc1s",
+    "fields": {
+        "session_data": ".eJxVjEEOwiAQRe_C2hAqUBiX7nsGMjCDVA0kpV0Z765NutDtf-_9lwi4rSVsnZcwk7gIL06_W8T04LoDumO9NZlaXZc5yl2RB-1yasTP6-H-HRTs5VsDZHCMaDNQIqdVHiwYdjGngR1a0NqDx3hm443Kloj1CIksKzUiOPH-AAJAOGM:1uk6rX:NXNYwnWYHmspcNbI-mRgifIQnOpdlbVBh6zso8Oj7x0",
+        "expire_date": "2025-08-21T20:05:19.346Z"
+    }
+},
+{
+    "model": "sessions.session",
+    "pk": "3vrtpmv6ylc9tae4f5gyftkj06ln7tjm",
+    "fields": {
+        "session_data": ".eJxVjDsOwjAQBe_iGllr_FtT0ucM1vqHA8iW4qRC3B0ipYD2zcx7MU_bWv028uLnxC7szE6_W6D4yG0H6U7t1nnsbV3mwHeFH3Twqaf8vB7u30GlUb-10hqFSgVdgQBWojFFiYxgowsYXRZAVmcptU0GyBgr0GEhQQ5cUoa9P72CNtY:1uaLWC:aZOlzsEtlmXi55oj7GlUCcxaIUfAki16roagxtd8tmc",
+        "expire_date": "2025-07-25T21:42:56.194Z"
+    }
+},
+{
+    "model": "sessions.session",
+    "pk": "3ygl16tqgj7jryg9vb8npt99kdw8c0kp",
+    "fields": {
+        "session_data": ".eJxVjDsOwjAQBe_iGlmxE_8o6TmDtetd4wCypTipEHeHSCmgfTPzXiLCtpa4dV7iTOIsnDj9bgjpwXUHdId6azK1ui4zyl2RB-3y2oifl8P9OyjQy7fmYBN41llZ0i54UugHQxNjGtzkcvDBomFGYsBsfaCclNLg3Ggw-VG8PwLfOLc:1uagpX:meKDET2HPj2msGqT0bq05WtllMciIcrEeKUiMzcDpgs",
+        "expire_date": "2025-07-26T20:28:19.718Z"
+    }
+},
+{
+    "model": "sessions.session",
+    "pk": "403j0vqd60t97a8o7thumacdu0xe20gg",
+    "fields": {
+        "session_data": ".eJxVjEEOwiAQRe_C2hCgjIBL9z0DYQZGqoYmpV0Z765NutDtf-_9l4hpW2vcelnilMVF6CBOvyMmepS2k3xP7TZLmtu6TCh3RR60y3HO5Xk93L-Dmnr91pY0k7foLOZiDHsEQsbiECl7UCWgUzadOZMP5CgkAMUwgB7QsCPx_gBHPTlh:1uqVxH:h-kldxSF7IGxocTa5_tweulBJ91_s2UGafpFoPFw15c",
+        "expire_date": "2025-09-08T12:05:43.484Z"
+    }
+},
+{
+    "model": "sessions.session",
+    "pk": "43pm2uhpap3qfk8na9oxtlizp3ijy4nx",
+    "fields": {
+        "session_data": ".eJxVjEsOwiAUAO_C2hAonwcu3fcM5AEPqRqalHZlvLsh6UK3M5N5s4DHXsPRaQtLZlcm2eWXRUxPakPkB7b7ytPa9m2JfCT8tJ3Pa6bX7Wz_BhV7HVutigYN2YAW4JyZJi9BAUZC75BQR0XWGkM6ZuEgSYFFWEFA1qtY2OcLt8c3Tw:1uY1iE:GF-ICmjZWzIvtDhRM9kG9LJ8gzWn4m5nlDf3HsZA-IY",
+        "expire_date": "2025-07-19T12:09:46.246Z"
+    }
+},
+{
+    "model": "sessions.session",
+    "pk": "4cm762nltz5dhkn81astghmw9th4h37r",
+    "fields": {
+        "session_data": ".eJxVjEsOwiAUAO_C2hAonwcu3fcM5AEPqRqalHZlvLsh6UK3M5N5s4DHXsPRaQtLZlcm2eWXRUxPakPkB7b7ytPa9m2JfCT8tJ3Pa6bX7Wz_BhV7HVutigYN2YAW4JyZJi9BAUZC75BQR0XWGkM6ZuEgSYFFWEFA1qtY2OcLt8c3Tw:1uYoMf:5YVoJt4eJVB8CNOUnVZJkyni0ZwD6BhOroSigM3eJ3g",
+        "expire_date": "2025-07-21T16:06:45.597Z"
+    }
+},
+{
+    "model": "sessions.session",
+    "pk": "4osq8n4za51gveywvl46rk9j1lsd8q0g",
+    "fields": {
+        "session_data": ".eJxVjDsOwjAQBe_iGlnrT9Y2JX3OEG28XhxAiZRPhbg7spQC2jcz760GOvY6HFtZh4nVVRmnLr_jSPlZ5kb4QfN90XmZ93UadVP0STfdL1xet9P9O6i01VYzRJeKuCTeJbSMQGwg-lgsQpdDB4LBC-IoECWEYAqSBSYQGyOrzxfzNjeK:1ufBId:gTyBZwCTakQyRD4Sjp7npn2r36IJtxAEpscpHItbuDU",
+        "expire_date": "2025-08-08T05:48:55.754Z"
+    }
+},
+{
+    "model": "sessions.session",
+    "pk": "4pcwyjyo3aof5cdlsaea83vbl64s8ebi",
+    "fields": {
+        "session_data": ".eJxVjEEOwiAQRe_C2hAqUBiX7nsGMjCDVA0kpV0Z765NutDtf-_9lwi4rSVsnZcwk7gIL06_W8T04LoDumO9NZlaXZc5yl2RB-1yasTP6-H-HRTs5VsDZHCMaDNQIqdVHiwYdjGngR1a0NqDx3hm443Kloj1CIksKzUiOPH-AAJAOGM:1ugNDz:ffxfnzZzZtXRG4RqYu1knMzWcQeXUOHa2dWY6W1h1lM",
+        "expire_date": "2025-08-11T12:45:03.592Z"
+    }
+},
+{
+    "model": "sessions.session",
+    "pk": "6rxusphimuserb11uegblgn9xhnzz0ho",
+    "fields": {
+        "session_data": "e30:1uYiq1:Io1SMh69Ab4BbE2ydF1b_4JsxxmqSMvYUZispUQYjCE",
+        "expire_date": "2025-07-21T10:12:41.981Z"
+    }
+},
+{
+    "model": "sessions.session",
+    "pk": "7c6gp05h5djo7eq820poi6hwvyghn2ip",
+    "fields": {
+        "session_data": ".eJxVjEsOwiAUAO_C2hAonwcu3fcM5AEPqRqalHZlvLsh6UK3M5N5s4DHXsPRaQtLZlcm2eWXRUxPakPkB7b7ytPa9m2JfCT8tJ3Pa6bX7Wz_BhV7HVutigYN2YAW4JyZJi9BAUZC75BQR0XWGkM6ZuEgSYFFWEFA1qtY2OcLt8c3Tw:1uZvNA:MTtrDxR_wupRjNieBTtrA_wkzEynjTAlleUTYryxr-4",
+        "expire_date": "2025-07-24T17:47:52.338Z"
+    }
+},
+{
+    "model": "sessions.session",
+    "pk": "7e5v97esmk16mc9wsegrdpphwdanfmmy",
+    "fields": {
+        "session_data": ".eJxVjsEOwiAQRP-FszZAtwU8evcbyMJubdUUU2g0Mf67mPTS67x5k_kI_8ScX2khv3Dm4ku68yxOIpb5Te0xQDC27a0Gi0YGKTtqFYKxQ9_CwEYchMe1jH7NvPiJqqnkPgwY6-Sf0A3na2pimssyheZfaTaam0sifpy37m5gxDxW24FSEbWRqCCQsgBUv0hGQ6Q7FyOESix2Tqp6VsdOs2MbnIzMvXLi-wPClkxp:1ugPh8:OZ4IPTOZbqvEALkgYVvpsf2xV9GlD3ovfztgRxSydCo",
+        "expire_date": "2025-08-11T15:23:18.143Z"
+    }
+},
+{
+    "model": "sessions.session",
+    "pk": "7km2lw0osvi5w3m8ubpjgzhnvbejudka",
+    "fields": {
+        "session_data": ".eJxVjEEOwiAQRe_C2hCgjIBL9z0DYQZGqoYmpV0Z765NutDtf-_9l4hpW2vcelnilMVF6CBOvyMmepS2k3xP7TZLmtu6TCh3RR60y3HO5Xk93L-Dmnr91pY0k7foLOZiDHsEQsbiECl7UCWgUzadOZMP5CgkAMUwgB7QsCPx_gBHPTlh:1upYxO:nqA_PehC0Kj_FGwNGnVNsRU5s7CHldtSZ-eJaqNQxuA",
+        "expire_date": "2025-09-05T21:05:54.278Z"
+    }
+},
+{
+    "model": "sessions.session",
+    "pk": "7weyjim8417dcc0i4kl2yvvkotcvfy5r",
+    "fields": {
+        "session_data": ".eJxVjDsOwjAQBe_iGllr_FtT0ucM1vqHA8iW4qRC3B0ipYD2zcx7MU_bWv028uLnxC7szE6_W6D4yG0H6U7t1nnsbV3mwHeFH3Twqaf8vB7u30GlUb-10hqFSgVdgQBWojFFiYxgowsYXRZAVmcptU0GyBgr0GEhQQ5cUoa9P72CNtY:1uaVhY:ViLYQ2VVdg9XwmWHe9cwZnY7Leah-CuEYPfuzQaXgg0",
+        "expire_date": "2025-07-26T08:35:20.634Z"
+    }
+},
+{
+    "model": "sessions.session",
+    "pk": "8ptghe6w9hh9zlxvo1ouh9g1arq1jn9l",
+    "fields": {
+        "session_data": ".eJxVjEEOwiAQRe_C2hAqUBiX7nsGMjCDVA0kpV0Z765NutDtf-_9lwi4rSVsnZcwk7gIL06_W8T04LoDumO9NZlaXZc5yl2RB-1yasTP6-H-HRTs5VsDZHCMaDNQIqdVHiwYdjGngR1a0NqDx3hm443Kloj1CIksKzUiOPH-AAJAOGM:1ujjUW:fLhll8KwwDOaJGh3a-TwKqGqa0BauBcOy5hwCRwFK6c",
+        "expire_date": "2025-08-20T19:08:00.166Z"
+    }
+},
+{
+    "model": "sessions.session",
+    "pk": "93zjzlhx5yjpl6ww1db12rcxx0yh5nbo",
+    "fields": {
+        "session_data": ".eJxVjDsOwyAQBe9CbSF-BpMyfc6AFtgNTiKQjF1FuXtiyUXcvpl5bxZgW0vYOi5hzuzCDBv-twjpiXUH-QH13nhqdV3myHeFH7TzW8v4uh7u6aBAL78aQGovjYSR0CVjvNIEEUed0BFqa0UGBIokshAko1M-kSc7OTMpjYJ9vgGROJA:1uZBOp:ZXkaweTamMtwSu4uxKC-VhMmmCZ-NJnknFZZLNtO7Zw",
+        "expire_date": "2025-07-22T16:42:31.010Z"
+    }
+},
+{
+    "model": "sessions.session",
+    "pk": "9voou14omdkabgvrkpgwfpjcrvzfoop8",
+    "fields": {
+        "session_data": ".eJxVjEEOwiAURO_C2hCopPBduvcM5A_wbdWUpLSrxrtrky50O--92VTkdRni2socx6wu6qxOvxs4Pcu0g_zg6V51qtMyj9C7og_a9K3m8roe7t_BwG341kmYfDFEzgmbLojAIXSWfOIC9nCpB8FkCb0HetsFWOsJ3jgIFfX-AAXNOKI:1uYg8y:35fUIUi-cmuhIlgzEcMJaqS_ulTRfjAQddDA0Bfi7jQ",
+        "expire_date": "2025-07-21T07:20:04.919Z"
+    }
+},
+{
+    "model": "sessions.session",
+    "pk": "9wq4o4ymnnk6uu654rqt5bg7q37n0sec",
+    "fields": {
+        "session_data": ".eJxVjDsOwjAQBe_iGllr_FtT0ucM1vqHA8iW4qRC3B0ipYD2zcx7MU_bWv028uLnxC7szE6_W6D4yG0H6U7t1nnsbV3mwHeFH3Twqaf8vB7u30GlUb-10hqFSgVdgQBWojFFiYxgowsYXRZAVmcptU0GyBgr0GEhQQ5cUoa9P72CNtY:1uYV1P:ZXtINXBzKsV652EzzWa2gJdEc1eRWGuDTpEWLhlxRY4",
+        "expire_date": "2025-07-20T19:27:31.541Z"
+    }
+},
+{
+    "model": "sessions.session",
+    "pk": "afnbd1wznm4dbv5dn8o6yhc587ujnuu2",
+    "fields": {
+        "session_data": ".eJxVjDsOwjAQBe_iGllr_FtT0ucM1vqHA8iW4qRC3B0ipYD2zcx7MU_bWv028uLnxC7szE6_W6D4yG0H6U7t1nnsbV3mwHeFH3Twqaf8vB7u30GlUb-10hqFSgVdgQBWojFFiYxgowsYXRZAVmcptU0GyBgr0GEhQQ5cUoa9P72CNtY:1uhDS4:8aGYwIQA25FYSqxFNKRgdfIcmy-LA6XbrfCO0ZYrcNk",
+        "expire_date": "2025-08-13T20:31:04.754Z"
+    }
+},
+{
+    "model": "sessions.session",
+    "pk": "ah6pu5257ki2jt7u3xskbsp8l6fobchk",
+    "fields": {
+        "session_data": ".eJxVjDkOwjAQAP_iGln2-thASc8brF0fOIAcKU4qxN-RpRTQzozmLQLtWw17z2uYk7gIL06_jCk-cxsiPajdFxmXtq0zy5HIw3Z5W1J-XY_2b1Cp17EFDzwpxQQUUTMCRnb6XEAXrVTWRQFrm7wDhwiGJ0C20RpUNhlg8fkCw3w2ug:1uefGG:TXIdvulAKAuappOswD5jeMPcCGjm2PcV1zyFd2QFJkI",
+        "expire_date": "2025-08-06T19:36:20.561Z"
+    }
+},
+{
+    "model": "sessions.session",
+    "pk": "bwxy2uzhof1pkua0yscdon1vek1psj1p",
+    "fields": {
+        "session_data": ".eJxVjDsOwyAQBe9CbSF-BpMyfc6AFtgNTiKQjF1FuXtiyUXcvpl5bxZgW0vYOi5hzuzCDBv-twjpiXUH-QH13nhqdV3myHeFH7TzW8v4uh7u6aBAL78aQGovjYSR0CVjvNIEEUed0BFqa0UGBIokshAko1M-kSc7OTMpjYJ9vgGROJA:1uaLyO:Xyq6AcQ_keEdGl1LZV03sz3mzFnqDjqjEqHu5sS2uTI",
+        "expire_date": "2025-07-25T22:12:04.815Z"
+    }
+},
+{
+    "model": "sessions.session",
+    "pk": "ca1sd4wb1yb1sh3sz8h4flz4pfylb68a",
+    "fields": {
+        "session_data": ".eJxVjEEOwiAQRe_C2hCgjIBL9z0DYQZGqoYmpV0Z765NutDtf-_9l4hpW2vcelnilMVF6CBOvyMmepS2k3xP7TZLmtu6TCh3RR60y3HO5Xk93L-Dmnr91pY0k7foLOZiDHsEQsbiECl7UCWgUzadOZMP5CgkAMUwgB7QsCPx_gBHPTlh:1umIM2:ZQMAMe_y68h17PNo04ZMF7ml_JHGwceT0E4j3uuD2Zc",
+        "expire_date": "2025-08-27T20:45:50.621Z"
+    }
+},
+{
+    "model": "sessions.session",
+    "pk": "do79500y2u2gey0af47s190u0jdozt7w",
+    "fields": {
+        "session_data": ".eJxVjEEOwiAURO_C2hCopPBduvcM5A_wbdWUpLSrxrtrky50O--92VTkdRni2socx6wu6qxOvxs4Pcu0g_zg6V51qtMyj9C7og_a9K3m8roe7t_BwG341kmYfDFEzgmbLojAIXSWfOIC9nCpB8FkCb0HetsFWOsJ3jgIFfX-AAXNOKI:1ueKjX:tRUpNPTanor6znT1ixRkUU_hGc_OqAhC3Z4thHOrguc",
+        "expire_date": "2025-08-05T21:41:11.816Z"
+    }
+},
+{
+    "model": "sessions.session",
+    "pk": "ewjr1xz3p9jy2md98rvz0pjpo7o58c3c",
+    "fields": {
+        "session_data": ".eJxVjEEOwiAURO_C2hCopPBduvcM5A_wbdWUpLSrxrtrky50O--92VTkdRni2socx6wu6qxOvxs4Pcu0g_zg6V51qtMyj9C7og_a9K3m8roe7t_BwG341kmYfDFEzgmbLojAIXSWfOIC9nCpB8FkCb0HetsFWOsJ3jgIFfX-AAXNOKI:1uZ1UZ:Ggm_ysC4xalLRx5TasuPjw91y4WRw3S25xrZe7rHjY8",
+        "expire_date": "2025-07-22T06:07:47.376Z"
+    }
+},
+{
+    "model": "sessions.session",
+    "pk": "f5k2h0uxq5kvkkmf3vf1ji03ix5qiejd",
+    "fields": {
+        "session_data": ".eJxVjEEOwiAQRe_C2pCpkDK4dO8ZyDAwUjWQlHbVeHdt0oVu_3vvbyrQupSw9jyHKamLGpw6_Y6R-JnrTtKD6r1pbnWZp6h3RR-061tL-XU93L-DQr18axjRMoOxw5kJBofgyURk5yDaLA5ZAIVjYiAQ9ozWIMjoZLSeJav3B__OOGw:1uomtK:YReI_SFe-EBvjWobk9Wj_L9CAOvdvLDhjt3FxUu-wck",
+        "expire_date": "2025-09-03T17:46:30.900Z"
+    }
+},
+{
+    "model": "sessions.session",
+    "pk": "fwbaoyrnekgk7dyz5oz3tbr5njase5u8",
+    "fields": {
+        "session_data": ".eJxVjEEOwiAURO_C2hCopPBduvcM5A_wbdWUpLSrxrtrky50O--92VTkdRni2socx6wu6qxOvxs4Pcu0g_zg6V51qtMyj9C7og_a9K3m8roe7t_BwG341kmYfDFEzgmbLojAIXSWfOIC9nCpB8FkCb0HetsFWOsJ3jgIFfX-AAXNOKI:1uZBc0:tsG39xPYbWlN2mapgdx7k2EJdRVqk3xEzaHX3U9bHRI",
+        "expire_date": "2025-07-22T16:56:08.599Z"
+    }
+},
+{
+    "model": "sessions.session",
+    "pk": "fz7imwrxhvnrg0nxew3vav24olr1wl63",
+    "fields": {
+        "session_data": ".eJxVjDsOwjAQBe_iGllr_FtT0ucM1vqHA8iW4qRC3B0ipYD2zcx7MU_bWv028uLnxC7szE6_W6D4yG0H6U7t1nnsbV3mwHeFH3Twqaf8vB7u30GlUb-10hqFSgVdgQBWojFFiYxgowsYXRZAVmcptU0GyBgr0GEhQQ5cUoa9P72CNtY:1uZvEv:HZbLuzuFybW7X2YNkfx6QMRfsKm-3dz68FzGJnhYeqU",
+        "expire_date": "2025-07-24T17:39:21.870Z"
+    }
+},
+{
+    "model": "sessions.session",
+    "pk": "hix4x6c28da9l2kfjridlnn7h6gthkvw",
+    "fields": {
+        "session_data": ".eJxVjEsOwiAUAO_C2hAonwcu3fcM5AEPqRqalHZlvLsh6UK3M5N5s4DHXsPRaQtLZlcm2eWXRUxPakPkB7b7ytPa9m2JfCT8tJ3Pa6bX7Wz_BhV7HVutigYN2YAW4JyZJi9BAUZC75BQR0XWGkM6ZuEgSYFFWEFA1qtY2OcLt8c3Tw:1uY6dM:gtjBns66pmgLhDIPwDIryGAKAWEa2t7cuxNMO4yct-U",
+        "expire_date": "2025-07-19T17:25:04.412Z"
+    }
+},
+{
+    "model": "sessions.session",
+    "pk": "igahca4wnir9pa4d4358te8cwp47uplm",
+    "fields": {
+        "session_data": ".eJxVjDsOwjAQBe_iGllr_FtT0ucM1vqHA8iW4qRC3B0ipYD2zcx7MU_bWv028uLnxC7szE6_W6D4yG0H6U7t1nnsbV3mwHeFH3Twqaf8vB7u30GlUb-10hqFSgVdgQBWojFFiYxgowsYXRZAVmcptU0GyBgr0GEhQQ5cUoa9P72CNtY:1ugLjT:14Z7xbza0RDk44Z9hMcc5aTk8ZWU2ka3hw0q6p21qfk",
+        "expire_date": "2025-08-11T11:09:27.634Z"
+    }
+},
+{
+    "model": "sessions.session",
+    "pk": "ipufq6llwd5m4cx0m0fcqjrpc5g40nwb",
+    "fields": {
+        "session_data": ".eJxVjEEOwiAQRe_C2hAqUBiX7nsGMjCDVA0kpV0Z765NutDtf-_9lwi4rSVsnZcwk7gIL06_W8T04LoDumO9NZlaXZc5yl2RB-1yasTP6-H-HRTs5VsDZHCMaDNQIqdVHiwYdjGngR1a0NqDx3hm443Kloj1CIksKzUiOPH-AAJAOGM:1ueXeE:iWxavFcouRVcBca7rYuuls4fCZi7TdOnG57F3b1BNUo",
+        "expire_date": "2025-08-06T11:28:34.906Z"
+    }
+},
+{
+    "model": "sessions.session",
+    "pk": "isfz586gkew66yw1dn45env60przq3a7",
+    "fields": {
+        "session_data": ".eJxVjEEOwiAQRe_C2hAqUBiX7nsGMjCDVA0kpV0Z765NutDtf-_9lwi4rSVsnZcwk7gIL06_W8T04LoDumO9NZlaXZc5yl2RB-1yasTP6-H-HRTs5VsDZHCMaDNQIqdVHiwYdjGngR1a0NqDx3hm443Kloj1CIksKzUiOPH-AAJAOGM:1ujbI8:OrupZeZx7FyObT4Gel26m-1ca9KD5VGDlnLAbNOEnoA",
+        "expire_date": "2025-08-20T10:22:40.873Z"
+    }
+},
+{
+    "model": "sessions.session",
+    "pk": "iupu5dvls3t602parxin95pdmae228pw",
+    "fields": {
+        "session_data": ".eJxVjDsOwjAQBe_iGllr_FtT0ucM1vqHA8iW4qRC3B0ipYD2zcx7MU_bWv028uLnxC7szE6_W6D4yG0H6U7t1nnsbV3mwHeFH3Twqaf8vB7u30GlUb-10hqFSgVdgQBWojFFiYxgowsYXRZAVmcptU0GyBgr0GEhQQ5cUoa9P72CNtY:1ugOYT:0TlonI6sbu5vWvUwJNy7LYKD4PIy8METYucwtFPZReU",
+        "expire_date": "2025-08-11T14:10:17.277Z"
+    }
+},
+{
+    "model": "sessions.session",
+    "pk": "j212t98822vh884pkw826ce7vg9e9nuc",
+    "fields": {
+        "session_data": ".eJxVjDsOwjAQBe_iGllr_FtT0ucM1vqHA8iW4qRC3B0ipYD2zcx7MU_bWv028uLnxC7szE6_W6D4yG0H6U7t1nnsbV3mwHeFH3Twqaf8vB7u30GlUb-10hqFSgVdgQBWojFFiYxgowsYXRZAVmcptU0GyBgr0GEhQQ5cUoa9P72CNtY:1uc30t:euRIXLnFlgMBv9PRLM_E4iDAXxz-xzCeCsU2bodFaGc",
+        "expire_date": "2025-07-30T14:21:39.038Z"
+    }
+},
+{
+    "model": "sessions.session",
+    "pk": "jsaigx50lz1qbmu5rnqeng95ak5t3jlp",
+    "fields": {
+        "session_data": ".eJxVjEEOwiAQRe_C2hAqUBiX7nsGMjCDVA0kpV0Z765NutDtf-_9lwi4rSVsnZcwk7gIL06_W8T04LoDumO9NZlaXZc5yl2RB-1yasTP6-H-HRTs5VsDZHCMaDNQIqdVHiwYdjGngR1a0NqDx3hm443Kloj1CIksKzUiOPH-AAJAOGM:1ukOK3:j_13FevySF6W8xP2iDxIlO1fenWXgC71EZ88PdH44Kg",
+        "expire_date": "2025-08-22T14:43:55.907Z"
+    }
+},
+{
+    "model": "sessions.session",
+    "pk": "k5dt0ryfo6rj5tmb9wubxlfvitfvvzzv",
+    "fields": {
+        "session_data": ".eJxVjDsOwyAQBe9CHSHAyy9lep8BLQsOTiKQjF1FuXtsyUXSvpl5bxZwW0vYel7CnNiVWXb53SLSM9cDpAfWe-PU6rrMkR8KP2nnY0v5dTvdv4OCvew1ReUkDBom4x0BuKyENyb7aJ0BUiKTR9IacIo-7SRJr-QgtBV6IIvs8wXIQjb-:1uqUw8:S8kfiML51kV_MXG6EjPH2fLF34PpJgwa58VtSCrqAP0",
+        "expire_date": "2025-09-08T11:00:28.910Z"
+    }
+},
+{
+    "model": "sessions.session",
+    "pk": "lvelt78w7746f9mgdc40el7qavsph14c",
+    "fields": {
+        "session_data": ".eJxVjEEOwiAQRe_C2hCYQKEu3XsGMsMMUjU0Ke3KeHdt0oVu_3vvv1TCba1p67KkidVZ2ahOvyNhfkjbCd-x3Wad57YuE-ld0Qft-jqzPC-H-3dQsddvXYiLI2ALMQcavDgcS0RvAjsLeTDC0RlrJHrPGAkcifHZQgnAIxT1_gAh1zhf:1ul2uW:ps7VeTuxDC96AzA10PBoQLrQM_ffgAtKwy8j_78C3cc",
+        "expire_date": "2025-08-24T10:04:16.690Z"
+    }
+},
+{
+    "model": "sessions.session",
+    "pk": "midr8ftin23zmvf10zjv7ig3hznx39kr",
+    "fields": {
+        "session_data": ".eJxVjDsOwjAQBe_iGlms7fWHkp4zWGvvggMokeKkQtwdIqWA9s3Me6lM69Ly2mXOA6uTiurwuxWqDxk3wHcab5Ou07jMQ9Gbonfa9WVieZ539--gUW_fGiiiuSYo3lfLVjxDCQ4JjBGwJSE751EEg618TMVBIATxPpJDrE69P9VoN0U:1uqVDT:c74vGdKlsArmPVeEsytNxUDYDTZhcl-ctZqdoDzwuAo",
+        "expire_date": "2025-09-08T11:18:23.107Z"
+    }
+},
+{
+    "model": "sessions.session",
+    "pk": "nqbtl2kxqqdd520ui43jrdk6aj92toxx",
+    "fields": {
+        "session_data": ".eJxVjDkOwjAQAP_iGln2-thASc8brF0fOIAcKU4qxN-RpRTQzozmLQLtWw17z2uYk7gIL06_jCk-cxsiPajdFxmXtq0zy5HIw3Z5W1J-XY_2b1Cp17EFDzwpxQQUUTMCRnb6XEAXrVTWRQFrm7wDhwiGJ0C20RpUNhlg8fkCw3w2ug:1uZaRQ:OMIS5cF4MTvyPen0mmzZF0gg25MuyojFGWd0xbP4-H4",
+        "expire_date": "2025-07-23T19:26:52.854Z"
+    }
+},
+{
+    "model": "sessions.session",
+    "pk": "nsf3gonbtiidyo9jvqms36oagiucyipd",
+    "fields": {
+        "session_data": ".eJxVjDkOwjAQAP_iGln2-thASc8brF0fOIAcKU4qxN-RpRTQzozmLQLtWw17z2uYk7gIL06_jCk-cxsiPajdFxmXtq0zy5HIw3Z5W1J-XY_2b1Cp17EFDzwpxQQUUTMCRnb6XEAXrVTWRQFrm7wDhwiGJ0C20RpUNhlg8fkCw3w2ug:1uYt89:hcazwWa9dj1HaVw5EAGtOaEcK36Y5SPPbsSZCTPFlXs",
+        "expire_date": "2025-07-21T21:12:05.788Z"
+    }
+},
+{
+    "model": "sessions.session",
+    "pk": "ntmnb5sbmqoty5261y74txutxflwgc7a",
+    "fields": {
+        "session_data": ".eJxVjDsOwjAQBe_iGllr_FtT0ucM1vqHA8iW4qRC3B0ipYD2zcx7MU_bWv028uLnxC7szE6_W6D4yG0H6U7t1nnsbV3mwHeFH3Twqaf8vB7u30GlUb-10hqFSgVdgQBWojFFiYxgowsYXRZAVmcptU0GyBgr0GEhQQ5cUoa9P72CNtY:1uc3JR:nJwtgwoCvbRaaVJLKIzkDkYJ4etzLNQkSg5CRjA9Ycs",
+        "expire_date": "2025-07-30T14:40:49.505Z"
+    }
+},
+{
+    "model": "sessions.session",
+    "pk": "nypsfl32buqwmzbtgqv92ce0va7n526g",
+    "fields": {
+        "session_data": ".eJxVjDkOwjAQAP_iGln2-thASc8brF0fOIAcKU4qxN-RpRTQzozmLQLtWw17z2uYk7gIL06_jCk-cxsiPajdFxmXtq0zy5HIw3Z5W1J-XY_2b1Cp17EFDzwpxQQUUTMCRnb6XEAXrVTWRQFrm7wDhwiGJ0C20RpUNhlg8fkCw3w2ug:1ujBc4:tMs-E9PcQgHFIdNDHqvKMGqC8F9x5XzRVjZ4M2X-nmM",
+        "expire_date": "2025-08-19T06:57:32.685Z"
+    }
+},
+{
+    "model": "sessions.session",
+    "pk": "o03o35l0scn4o6ffhctjahqtlets9cm4",
+    "fields": {
+        "session_data": ".eJxVjDsOwjAQBe_iGllr_FtT0ucM1vqHA8iW4qRC3B0ipYD2zcx7MU_bWv028uLnxC7szE6_W6D4yG0H6U7t1nnsbV3mwHeFH3Twqaf8vB7u30GlUb-10hqFSgVdgQBWojFFiYxgowsYXRZAVmcptU0GyBgr0GEhQQ5cUoa9P72CNtY:1uhMjQ:CNQrLwATDbsQkI8e8-EUxszfNMXXtCLctWjuF5DjpMc",
+        "expire_date": "2025-08-14T06:25:36.307Z"
+    }
+},
+{
+    "model": "sessions.session",
+    "pk": "ou3l2j5fg34w39kqi351fi8w8r6tez0u",
+    "fields": {
+        "session_data": ".eJxVjEEOwiAURO_C2hCopPBduvcM5A_wbdWUpLSrxrtrky50O--92VTkdRni2socx6wu6qxOvxs4Pcu0g_zg6V51qtMyj9C7og_a9K3m8roe7t_BwG341kmYfDFEzgmbLojAIXSWfOIC9nCpB8FkCb0HetsFWOsJ3jgIFfX-AAXNOKI:1uaifE:DKhw2u4pIJVryN03HvehX5_V4O6FM6GsKjGyzkgS3rQ",
+        "expire_date": "2025-07-26T22:25:48.008Z"
+    }
+},
+{
+    "model": "sessions.session",
+    "pk": "ou758396ufd9cef764ultomnndrk9pxk",
+    "fields": {
+        "session_data": ".eJxVjEEOwiAQRe_C2hCgwDgu3XuGZoZBqRpISrsy3l2bdKHb_977LzXSupRx7XkeJ1EnZdXhd2NKj1w3IHeqt6ZTq8s8sd4UvdOuL03y87y7fweFevnWR8QreHTivA8-Go8MnAyRtSFCdECDGGTLyUsO7MDFIaNkjsyAYtX7A7zAN3k:1ufx2q:7_Tuxs4X2NRU9pe306W8Muq9gaXXWkA7kt_VpdMOits",
+        "expire_date": "2025-08-10T08:47:48.966Z"
+    }
+},
+{
+    "model": "sessions.session",
+    "pk": "pcm3qyq5lhrry2zruz8l5485divhlreb",
+    "fields": {
+        "session_data": ".eJxVjEsOwiAUAO_C2hAonwcu3fcM5AEPqRqalHZlvLsh6UK3M5N5s4DHXsPRaQtLZlcm2eWXRUxPakPkB7b7ytPa9m2JfCT8tJ3Pa6bX7Wz_BhV7HVutigYN2YAW4JyZJi9BAUZC75BQR0XWGkM6ZuEgSYFFWEFA1qtY2OcLt8c3Tw:1uZu9Q:BrlgD3Exj_A4q6qx6LePG3QKCufszMk_hlHZHj5Wo-0",
+        "expire_date": "2025-07-24T16:29:36.801Z"
+    }
+},
+{
+    "model": "sessions.session",
+    "pk": "q5p0qaa0pfj79u3t6y6kql3aeyysa6n0",
+    "fields": {
+        "session_data": ".eJxVjMsOwiAQRf-FtSHQ8hhcuvcbyDBDpWogKe3K-O_apAvd3nPOfYmI21ri1vMSZxZnEcTpd0tIj1x3wHestyap1XWZk9wVedAur43z83K4fwcFe_nWZLydhmC1UgBW5wSOYASVMU0anQMLRpmRnLeD9pozMQP7ZJAUBwTx_gDEUTeD:1uesAn:iUoZITMUpxMWzh803fRcKrYj6waCI7Su1-jIUkxruKk",
+        "expire_date": "2025-08-07T09:23:33.439Z"
+    }
+},
+{
+    "model": "sessions.session",
+    "pk": "qf206iigzkztz8csrt33l6xj8rgkbs2r",
+    "fields": {
+        "session_data": ".eJxVjEEOwiAQRe_C2hAK06G4dO8ZyBRmpGpoUtqV8e7apAvd_vfef6lI21ri1niJU1ZnZdXpdxspPbjuIN-p3mad5rou06h3RR-06euc-Xk53L-DQq18655d543tQZC8R8BgAg8SPKDzxBnQihHLCRJRCOiMM1nIYecEBwL1_gC8sjcm:1uq5Xe:jwY4Fp-BGA8BAa5F8pHWtO4i-XWFtozR5UAK2k9jtqE",
+        "expire_date": "2025-09-07T07:53:30.778Z"
+    }
+},
+{
+    "model": "sessions.session",
+    "pk": "rcqyvqqvq32mqj8lbnm7a7fj9eqhlnn6",
+    "fields": {
+        "session_data": ".eJxVjDsOwjAQBe_iGllr_FtT0ucM1vqHA8iW4qRC3B0ipYD2zcx7MU_bWv028uLnxC7szE6_W6D4yG0H6U7t1nnsbV3mwHeFH3Twqaf8vB7u30GlUb-10hqFSgVdgQBWojFFiYxgowsYXRZAVmcptU0GyBgr0GEhQQ5cUoa9P72CNtY:1uZkBf:9zcjR78Y-78kQUiO3QXU_7eZC8W5r1jppbtu7wc0uMk",
+        "expire_date": "2025-07-24T05:51:15.134Z"
+    }
+},
+{
+    "model": "sessions.session",
+    "pk": "rff7v8iq98c01661nphklg8r8z8xoiwk",
+    "fields": {
+        "session_data": ".eJxVjEEOwiAQRe_C2pCpkDK4dO8ZyDAwUjWQlHbVeHdt0oVu_3vvbyrQupSw9jyHKamLGpw6_Y6R-JnrTtKD6r1pbnWZp6h3RR-061tL-XU93L-DQr18axjRMoOxw5kJBofgyURk5yDaLA5ZAIVjYiAQ9ozWIMjoZLSeJav3B__OOGw:1uiGue:Il402_0RrcuLmwaC6rDRE4H9YDzsGmCJ_otv629-SlE",
+        "expire_date": "2025-08-16T18:24:56.252Z"
+    }
+},
+{
+    "model": "sessions.session",
+    "pk": "rfuq1790fw8lr1h19rpf1z12frrgv8io",
+    "fields": {
+        "session_data": ".eJxVjEsOwiAUAO_C2hAonwcu3fcM5AEPqRqalHZlvLsh6UK3M5N5s4DHXsPRaQtLZlcm2eWXRUxPakPkB7b7ytPa9m2JfCT8tJ3Pa6bX7Wz_BhV7HVutigYN2YAW4JyZJi9BAUZC75BQR0XWGkM6ZuEgSYFFWEFA1qtY2OcLt8c3Tw:1uY2DP:zV7h3WjWGsI08X5lCX59RQkCWswxV1IUhxw_0RhUKHc",
+        "expire_date": "2025-07-19T12:41:59.411Z"
+    }
+},
+{
+    "model": "sessions.session",
+    "pk": "t6pnh8ox3y9uuz788q3zzezfr1vdscat",
+    "fields": {
+        "session_data": ".eJxVjEEOwiAQRe_C2hAqUBiX7nsGMjCDVA0kpV0Z765NutDtf-_9lwi4rSVsnZcwk7gIL06_W8T04LoDumO9NZlaXZc5yl2RB-1yasTP6-H-HRTs5VsDZHCMaDNQIqdVHiwYdjGngR1a0NqDx3hm443Kloj1CIksKzUiOPH-AAJAOGM:1uizZj:ETeQC7m7Q5vSe-RppIvwHcOzA3kNBYBMDTH4zRRUsyE",
+        "expire_date": "2025-08-18T18:06:19.127Z"
+    }
+},
+{
+    "model": "sessions.session",
+    "pk": "tin4cp7sy523q73v8zzg8qlunggzqcqt",
+    "fields": {
+        "session_data": ".eJxVjDsOwyAQBe9CHSHAyy9lep8BLQsOTiKQjF1FuXtsyUXSvpl5bxZwW0vYel7CnNiVWXb53SLSM9cDpAfWe-PU6rrMkR8KP2nnY0v5dTvdv4OCvew1ReUkDBom4x0BuKyENyb7aJ0BUiKTR9IacIo-7SRJr-QgtBV6IIvs8wXIQjb-:1ueAV4:zLQXpW0HkDEUnDrlXBNfHBeBsDk4cvUA7NsuSA0CEIs",
+        "expire_date": "2025-08-05T10:45:34.596Z"
+    }
+},
+{
+    "model": "sessions.session",
+    "pk": "tloukg69gu68nzlrye00kwu7nrbmhqcy",
+    "fields": {
+        "session_data": ".eJxVjEEOwiAQRe_C2hCgjIBL9z0DYQZGqoYmpV0Z765NutDtf-_9l4hpW2vcelnilMVF6CBOvyMmepS2k3xP7TZLmtu6TCh3RR60y3HO5Xk93L-Dmnr91pY0k7foLOZiDHsEQsbiECl7UCWgUzadOZMP5CgkAMUwgB7QsCPx_gBHPTlh:1ulvNo:vuvwFmO4s5N3Nml5iunz7j752tVHWGzF4NAwj89zpZQ",
+        "expire_date": "2025-08-26T20:14:08.211Z"
+    }
+},
+{
+    "model": "sessions.session",
+    "pk": "tmg6esmjpny7ta3506vgajxprp1g26wl",
+    "fields": {
+        "session_data": ".eJxVjEEOwiAQRe_C2hAqUBiX7nsGMjCDVA0kpV0Z765NutDtf-_9lwi4rSVsnZcwk7gIL06_W8T04LoDumO9NZlaXZc5yl2RB-1yasTP6-H-HRTs5VsDZHCMaDNQIqdVHiwYdjGngR1a0NqDx3hm443Kloj1CIksKzUiOPH-AAJAOGM:1ujB51:4YSMIjA2O9iW9HzP3hYtEnIt-te3lfO91DIU7YwzW2Y",
+        "expire_date": "2025-08-19T06:23:23.848Z"
+    }
+},
+{
+    "model": "sessions.session",
+    "pk": "tmu8wivyyt5dtssmpyeocsgctsiyxuth",
+    "fields": {
+        "session_data": ".eJxVjEEOwiAQRe_C2hAqUBiX7nsGMjCDVA0kpV0Z765NutDtf-_9lwi4rSVsnZcwk7gIL06_W8T04LoDumO9NZlaXZc5yl2RB-1yasTP6-H-HRTs5VsDZHCMaDNQIqdVHiwYdjGngR1a0NqDx3hm443Kloj1CIksKzUiOPH-AAJAOGM:1ufafO:aZV1CiF1rprIkoIWinjEh_8T_59pzl0cgv8PVBNtRy8",
+        "expire_date": "2025-08-09T08:54:06.909Z"
+    }
+},
+{
+    "model": "sessions.session",
+    "pk": "uqh34lytbajkjj316cbpbh72a4h6un2w",
+    "fields": {
+        "session_data": ".eJxVjDsOwjAQBe_iGllr_FtT0ucM1vqHA8iW4qRC3B0ipYD2zcx7MU_bWv028uLnxC7szE6_W6D4yG0H6U7t1nnsbV3mwHeFH3Twqaf8vB7u30GlUb-10hqFSgVdgQBWojFFiYxgowsYXRZAVmcptU0GyBgr0GEhQQ5cUoa9P72CNtY:1uiFX2:3jfZJ84-d9IplVauAQnLduMWPdPm_QWUJFOcpne9DWU",
+        "expire_date": "2025-08-16T16:56:28.988Z"
+    }
+},
+{
+    "model": "sessions.session",
+    "pk": "uqlmrllv7dpykxfy5url0tn2gpgdvcyu",
+    "fields": {
+        "session_data": ".eJxVjDsOwjAQBe_iGllr_FtT0ucM1vqHA8iW4qRC3B0ipYD2zcx7MU_bWv028uLnxC7szE6_W6D4yG0H6U7t1nnsbV3mwHeFH3Twqaf8vB7u30GlUb-10hqFSgVdgQBWojFFiYxgowsYXRZAVmcptU0GyBgr0GEhQQ5cUoa9P72CNtY:1uZ8th:XbFHvHtVgfVP-DcGBdDGPTPT1ehHK9hp4aaaH_2gll4",
+        "expire_date": "2025-07-22T14:02:13.690Z"
+    }
+},
+{
+    "model": "sessions.session",
+    "pk": "v8yxy113ss51ifje13wjq7oswbrtoo7p",
+    "fields": {
+        "session_data": ".eJxVjEEOwiAURO_C2hCopPBduvcM5A_wbdWUpLSrxrtrky50O--92VTkdRni2socx6wu6qxOvxs4Pcu0g_zg6V51qtMyj9C7og_a9K3m8roe7t_BwG341kmYfDFEzgmbLojAIXSWfOIC9nCpB8FkCb0HetsFWOsJ3jgIFfX-AAXNOKI:1uYA1k:lOOU5hqfQu-DyAVAFCpFjZdD0oamRoidU3n1laJj9uw",
+        "expire_date": "2025-07-19T21:02:28.887Z"
+    }
+},
+{
+    "model": "sessions.session",
+    "pk": "w8nlom8h0v1spuot9xi6u6n6mtb6uws9",
+    "fields": {
+        "session_data": ".eJxVjDkOwjAQAP_iGln2-thASc8brF0fOIAcKU4qxN-RpRTQzozmLQLtWw17z2uYk7gIL06_jCk-cxsiPajdFxmXtq0zy5HIw3Z5W1J-XY_2b1Cp17EFDzwpxQQUUTMCRnb6XEAXrVTWRQFrm7wDhwiGJ0C20RpUNhlg8fkCw3w2ug:1uZvHJ:qVQsVoWXx2sLHEQfsyG1dltcPSw8fPOLu1o26lqm6bc",
+        "expire_date": "2025-07-24T17:41:49.961Z"
+    }
+},
+{
+    "model": "sessions.session",
+    "pk": "xelm4etamm6lualq7ma83tswfa3bzpu3",
+    "fields": {
+        "session_data": ".eJxVjEEOwiAQRe_C2hAqUBiX7nsGMjCDVA0kpV0Z765NutDtf-_9lwi4rSVsnZcwk7gIL06_W8T04LoDumO9NZlaXZc5yl2RB-1yasTP6-H-HRTs5VsDZHCMaDNQIqdVHiwYdjGngR1a0NqDx3hm443Kloj1CIksKzUiOPH-AAJAOGM:1ufMwU:J06JPK4eAAoyfkMMAKdQpV3uO2vBs6WbGUHCjShFWwY",
+        "expire_date": "2025-08-08T18:14:50.856Z"
+    }
+},
+{
+    "model": "sessions.session",
+    "pk": "yewsvu0ljstwjvwomz14o20nf1rg2wtn",
+    "fields": {
+        "session_data": ".eJxVjEEOwiAQRe_C2hAqUBiX7nsGMjCDVA0kpV0Z765NutDtf-_9lwi4rSVsnZcwk7gIL06_W8T04LoDumO9NZlaXZc5yl2RB-1yasTP6-H-HRTs5VsDZHCMaDNQIqdVHiwYdjGngR1a0NqDx3hm443Kloj1CIksKzUiOPH-AAJAOGM:1ul28b:EDsdCEo2tF1GwcmLo-I_ODwU474o8R3zFakXeB0P4D4",
+        "expire_date": "2025-08-24T09:14:45.408Z"
+    }
+},
+{
+    "model": "sessions.session",
+    "pk": "ywtrmgs1u16gebj3jn3g5odiibz7j01h",
+    "fields": {
+        "session_data": ".eJxVjDsOwyAQBe9CHSHAyy9lep8BLQsOTiKQjF1FuXtsyUXSvpl5bxZwW0vYel7CnNiVWXb53SLSM9cDpAfWe-PU6rrMkR8KP2nnY0v5dTvdv4OCvew1ReUkDBom4x0BuKyENyb7aJ0BUiKTR9IacIo-7SRJr-QgtBV6IIvs8wXIQjb-:1uiERw:06aTEe_epCtowbG_hEnpy7jRPqgGhVy8CI4qJV56L_8",
+        "expire_date": "2025-08-16T15:47:08.220Z"
+    }
+},
+{
+    "model": "sessions.session",
+    "pk": "zesl8im88mikfd0qx06dvo3zh53zs7ps",
+    "fields": {
+        "session_data": ".eJxVjDkOwjAQAP_iGln2-thASc8brF0fOIAcKU4qxN-RpRTQzozmLQLtWw17z2uYk7gIL06_jCk-cxsiPajdFxmXtq0zy5HIw3Z5W1J-XY_2b1Cp17EFDzwpxQQUUTMCRnb6XEAXrVTWRQFrm7wDhwiGJ0C20RpUNhlg8fkCw3w2ug:1uizpe:fsiFSj-TP9ehz7rG8Y04HZjqKsG5A88GZCIeQIyqJcE",
+        "expire_date": "2025-08-18T18:22:46.138Z"
+    }
+},
+{
+    "model": "myApp.subscriptionplan",
+    "pk": 1,
+    "fields": {
+        "landlord_type": "individual",
+        "price": 599
+    }
+},
+{
+    "model": "myApp.subscriptionplan",
+    "pk": 2,
+    "fields": {
+        "landlord_type": "company",
+        "price": 1499
+    }
+},
+{
+    "model": "myApp.subscriptionplan",
+    "pk": 3,
+    "fields": {
+        "landlord_type": "agent",
+        "price": 3
+    }
+},
+{
+    "model": "myApp.adminupdate",
+    "pk": 1,
+    "fields": {
+        "title": "Unlock Affordable Rentals & Property Listings – KRH-Finder Launch Offer!",
+        "content": "Looking for a vacant house near you? Are you a landlord ready to reach tenants faster?\r\nKRH-Finder is your one-stop solution – and it’s now more affordable than ever!\r\n\r\nLimited-Time Offer: August 1st – August 31st, 2025.\r\nEnjoy exclusive discounts before the new prices roll out in September!\r\n\r\nLandlord Packages – Promote Your Property Easily.\r\nBasic – Only Ksh. 400/month: List 1 property.\r\n\r\nStandard – Ksh. 1,000/month: List up to 3 properties.\r\n\r\nPremium – Ksh. 2,000/month: List up to 7 properties.\r\n\r\nTenant Benefits – Find Vacant Houses Fast.\r\nUnlock landlord contacts for just Ksh. 10.\r\n\r\nGet real-time suggestion popups of vacant houses within 2km radius of your location.\r\n(Simply log in and enable location services in your browser).\r\n\r\nDon't miss this opportunity to connect, search, and save.\r\nJoin KRH-Finder today – offer ends August 31st!",
+        "date_posted": "2025-07-29T12:40:41.573Z",
+        "is_active": true
+    }
+},
+{
+    "model": "myApp.adminupdate",
+    "pk": 2,
+    "fields": {
+        "title": "Welcome",
+        "content": "Welcome to KRH-Finder",
+        "date_posted": "2025-07-29T20:54:33.109Z",
+        "is_active": true
+    }
+},
+{
+    "model": "myApp.adminupdate",
+    "pk": 3,
+    "fields": {
+        "title": "Looking for your next home?",
+        "content": "Create Your Free Tenant Account Today and Unlock the Full Power of XpBomaLite | \r\n\r\nFind Rentals Near You Instantly – Discover available houses around your current location in real time. Simply enable location access when prompted. | \r\n\r\nSave Your Favorite Properties – Bookmark homes you love for easy access anytime. |  \r\n\r\nTrack Your Browsing History – Revisit previously viewed rentals without starting over. | \r\n\r\nConnect Directly with Landlords – Call or message property owners and schedule visits with ease.\r\n\r\nSign up now — and let your next home find you!",
+        "date_posted": "2025-08-04T18:56:03.150Z",
+        "is_active": true
+    }
+},
+{
+    "model": "myApp.propertytype",
+    "pk": 2,
+    "fields": {
+        "name": "Bedsitter"
+    }
+},
+{
+    "model": "myApp.propertytype",
+    "pk": 3,
+    "fields": {
+        "name": "Single Room"
+    }
+},
+{
+    "model": "myApp.propertytype",
+    "pk": 6,
+    "fields": {
+        "name": "Double room"
+    }
+},
+{
+    "model": "myApp.propertytype",
+    "pk": 9,
+    "fields": {
+        "name": "1 Bedroom Apartment"
+    }
+},
+{
+    "model": "myApp.propertytype",
+    "pk": 11,
+    "fields": {
+        "name": "2 Bedroom Apartment"
+    }
+},
+{
+    "model": "myApp.propertytype",
+    "pk": 12,
+    "fields": {
+        "name": "3 Bedroom Apartment"
+    }
+},
+{
+    "model": "myApp.propertytype",
+    "pk": 13,
+    "fields": {
+        "name": "4 Bedroom Apartment"
+    }
+},
+{
+    "model": "myApp.propertytype",
+    "pk": 14,
+    "fields": {
+        "name": "Hostel"
+    }
+},
+{
+    "model": "myApp.propertytype",
+    "pk": 15,
+    "fields": {
+        "name": "Maisonette"
+    }
+},
+{
+    "model": "myApp.propertytype",
+    "pk": 16,
+    "fields": {
+        "name": "Townhouse"
+    }
+},
+{
+    "model": "myApp.propertytype",
+    "pk": 17,
+    "fields": {
+        "name": "Penthouse"
+    }
+},
+{
+    "model": "myApp.propertytype",
+    "pk": 18,
+    "fields": {
+        "name": "Serviced Apartment"
+    }
+},
+{
+    "model": "myApp.propertytype",
+    "pk": 19,
+    "fields": {
+        "name": "Villa"
+    }
+},
+{
+    "model": "myApp.propertytype",
+    "pk": 20,
+    "fields": {
+        "name": "Condo"
+    }
+},
+{
+    "model": "myApp.propertytype",
+    "pk": 21,
+    "fields": {
+        "name": "Mansion"
+    }
+},
+{
+    "model": "myApp.propertytype",
+    "pk": 22,
+    "fields": {
+        "name": "Airbnb"
+    }
+},
+{
+    "model": "myApp.propertytype",
+    "pk": 23,
+    "fields": {
+        "name": "Guesthouse"
+    }
+},
+{
+    "model": "myApp.amenity",
+    "pk": 1,
+    "fields": {
+        "name": "WiFi"
+    }
+},
+{
+    "model": "myApp.amenity",
+    "pk": 2,
+    "fields": {
+        "name": "Reliable water supply"
+    }
+},
+{
+    "model": "myApp.amenity",
+    "pk": 3,
+    "fields": {
+        "name": "DSTV"
+    }
+},
+{
+    "model": "myApp.amenity",
+    "pk": 4,
+    "fields": {
+        "name": "Parking"
+    }
+},
+{
+    "model": "myApp.amenity",
+    "pk": 5,
+    "fields": {
+        "name": "Fully Furnished"
+    }
+},
+{
+    "model": "myApp.amenity",
+    "pk": 6,
+    "fields": {
+        "name": "Air Conditioning"
+    }
+},
+{
+    "model": "myApp.amenity",
+    "pk": 7,
+    "fields": {
+        "name": "Built-in Wardrobes"
+    }
+},
+{
+    "model": "myApp.amenity",
+    "pk": 8,
+    "fields": {
+        "name": "Balcony View"
+    }
+},
+{
+    "model": "myApp.amenity",
+    "pk": 9,
+    "fields": {
+        "name": "Fireplace"
+    }
+},
+{
+    "model": "myApp.amenity",
+    "pk": 10,
+    "fields": {
+        "name": "Natural wood flooring"
+    }
+},
+{
+    "model": "myApp.amenity",
+    "pk": 11,
+    "fields": {
+        "name": "Floors finished with tiles"
+    }
+},
+{
+    "model": "myApp.amenity",
+    "pk": 12,
+    "fields": {
+        "name": "Bathtub"
+    }
+},
+{
+    "model": "myApp.amenity",
+    "pk": 13,
+    "fields": {
+        "name": "Shower Cubicle"
+    }
+},
+{
+    "model": "myApp.amenity",
+    "pk": 14,
+    "fields": {
+        "name": "Modern Kitchen"
+    }
+},
+{
+    "model": "myApp.amenity",
+    "pk": 15,
+    "fields": {
+        "name": "Heated water system"
+    }
+},
+{
+    "model": "myApp.amenity",
+    "pk": 16,
+    "fields": {
+        "name": "Ensuite Bathroom"
+    }
+},
+{
+    "model": "myApp.amenity",
+    "pk": 17,
+    "fields": {
+        "name": "Walk-in Closet"
+    }
+},
+{
+    "model": "myApp.amenity",
+    "pk": 18,
+    "fields": {
+        "name": "Ceiling Fan"
+    }
+},
+{
+    "model": "myApp.amenity",
+    "pk": 19,
+    "fields": {
+        "name": "Pantry"
+    }
+},
+{
+    "model": "myApp.amenity",
+    "pk": 20,
+    "fields": {
+        "name": "Parking-open"
+    }
+},
+{
+    "model": "myApp.amenity",
+    "pk": 21,
+    "fields": {
+        "name": "Parking-covered"
+    }
+},
+{
+    "model": "myApp.amenity",
+    "pk": 22,
+    "fields": {
+        "name": "Garage"
+    }
+},
+{
+    "model": "myApp.amenity",
+    "pk": 23,
+    "fields": {
+        "name": "Garden"
+    }
+},
+{
+    "model": "myApp.amenity",
+    "pk": 24,
+    "fields": {
+        "name": "Swimming Pool"
+    }
+},
+{
+    "model": "myApp.amenity",
+    "pk": 25,
+    "fields": {
+        "name": "Water Backup"
+    }
+},
+{
+    "model": "myApp.amenity",
+    "pk": 26,
+    "fields": {
+        "name": "Solar power backup"
+    }
+},
+{
+    "model": "myApp.amenity",
+    "pk": 27,
+    "fields": {
+        "name": "Rooftop Terrace"
+    }
+},
+{
+    "model": "myApp.amenity",
+    "pk": 28,
+    "fields": {
+        "name": "Elevator (Lift)"
+    }
+},
+{
+    "model": "myApp.amenity",
+    "pk": 29,
+    "fields": {
+        "name": "24/7 CCTV Surveillance"
+    }
+},
+{
+    "model": "myApp.amenity",
+    "pk": 30,
+    "fields": {
+        "name": "Security Guard"
+    }
+},
+{
+    "model": "myApp.amenity",
+    "pk": 31,
+    "fields": {
+        "name": "Gated community"
+    }
+},
+{
+    "model": "myApp.amenity",
+    "pk": 32,
+    "fields": {
+        "name": "Perimeter Wall"
+    }
+},
+{
+    "model": "myApp.amenity",
+    "pk": 33,
+    "fields": {
+        "name": "Electric Fence"
+    }
+},
+{
+    "model": "myApp.amenity",
+    "pk": 35,
+    "fields": {
+        "name": "Rainwater Harvesting"
+    }
+},
+{
+    "model": "myApp.amenity",
+    "pk": 36,
+    "fields": {
+        "name": "Sun-powered hot water system"
+    }
+},
+{
+    "model": "myApp.amenity",
+    "pk": 37,
+    "fields": {
+        "name": "Smart Lock"
+    }
+},
+{
+    "model": "myApp.amenity",
+    "pk": 38,
+    "fields": {
+        "name": "Cable TV Ready"
+    }
+},
+{
+    "model": "myApp.amenity",
+    "pk": 39,
+    "fields": {
+        "name": "Gym"
+    }
+},
+{
+    "model": "myApp.amenity",
+    "pk": 40,
+    "fields": {
+        "name": "Children’s Play Area"
+    }
+},
+{
+    "model": "myApp.amenity",
+    "pk": 41,
+    "fields": {
+        "name": "Outdoor grilling spot"
+    }
+},
+{
+    "model": "myApp.amenity",
+    "pk": 42,
+    "fields": {
+        "name": "Jogging Track"
+    }
+},
+{
+    "model": "myApp.amenity",
+    "pk": 43,
+    "fields": {
+        "name": "Shared event/meeting space"
+    }
+},
+{
+    "model": "myApp.amenity",
+    "pk": 44,
+    "fields": {
+        "name": "Resident support staff available"
+    }
+},
+{
+    "model": "myApp.amenity",
+    "pk": 45,
+    "fields": {
+        "name": "Cleaning Services"
+    }
+},
+{
+    "model": "myApp.amenity",
+    "pk": 46,
+    "fields": {
+        "name": "Laundry Room"
+    }
+},
+{
+    "model": "myApp.amenity",
+    "pk": 47,
+    "fields": {
+        "name": "Shared Kitchen"
+    }
+},
+{
+    "model": "myApp.amenity",
+    "pk": 48,
+    "fields": {
+        "name": "Shared toilet"
+    }
+},
+{
+    "model": "myApp.amenity",
+    "pk": 49,
+    "fields": {
+        "name": "Shared bathroom"
+    }
+},
+{
+    "model": "myApp.amenity",
+    "pk": 50,
+    "fields": {
+        "name": "Electricity-Prepaid (Tokens)"
+    }
+},
+{
+    "model": "myApp.amenity",
+    "pk": 51,
+    "fields": {
+        "name": "Electricity - Post-paid"
+    }
+},
+{
+    "model": "myApp.amenity",
+    "pk": 52,
+    "fields": {
+        "name": "Smoke Detectors"
+    }
+},
+{
+    "model": "myApp.amenity",
+    "pk": 53,
+    "fields": {
+        "name": "Carbon Monoxide Detectors"
+    }
+},
+{
+    "model": "myApp.amenity",
+    "pk": 54,
+    "fields": {
+        "name": "Fire Extinguishers"
+    }
+},
+{
+    "model": "myApp.amenity",
+    "pk": 55,
+    "fields": {
+        "name": "Fire Exit/Emergency Stairwell"
+    }
+},
+{
+    "model": "myApp.amenity",
+    "pk": 56,
+    "fields": {
+        "name": "Sprinkler System"
+    }
+},
+{
+    "model": "myApp.amenity",
+    "pk": 57,
+    "fields": {
+        "name": "Disabled Access / Wheelchair Accessible"
+    }
+},
+{
+    "model": "myApp.amenity",
+    "pk": 58,
+    "fields": {
+        "name": "Anti-slip tiles in wet areas"
+    }
+},
+{
+    "model": "myApp.amenity",
+    "pk": 59,
+    "fields": {
+        "name": "Soundproof walls/windows"
+    }
+},
+{
+    "model": "myApp.amenity",
+    "pk": 60,
+    "fields": {
+        "name": "Smart Doorbell"
+    }
+},
+{
+    "model": "myApp.amenity",
+    "pk": 61,
+    "fields": {
+        "name": "Smart Lighting"
+    }
+},
+{
+    "model": "myApp.amenity",
+    "pk": 62,
+    "fields": {
+        "name": "Fiber Internet Ready"
+    }
+},
+{
+    "model": "myApp.amenity",
+    "pk": 63,
+    "fields": {
+        "name": "Home Automation System"
+    }
+},
+{
+    "model": "myApp.amenity",
+    "pk": 64,
+    "fields": {
+        "name": "Satellite Dish Installation Ready"
+    }
+},
+{
+    "model": "myApp.amenity",
+    "pk": 65,
+    "fields": {
+        "name": "Wastewater treatment system"
+    }
+},
+{
+    "model": "myApp.amenity",
+    "pk": 66,
+    "fields": {
+        "name": "Greywater recycling system"
+    }
+},
+{
+    "model": "myApp.amenity",
+    "pk": 67,
+    "fields": {
+        "name": "Water Pressure Boosters"
+    }
+},
+{
+    "model": "myApp.amenity",
+    "pk": 68,
+    "fields": {
+        "name": "Solar Panel System"
+    }
+},
+{
+    "model": "myApp.amenity",
+    "pk": 69,
+    "fields": {
+        "name": "Recycling Center"
+    }
+},
+{
+    "model": "myApp.amenity",
+    "pk": 70,
+    "fields": {
+        "name": "Composting Facility"
+    }
+},
+{
+    "model": "myApp.amenity",
+    "pk": 71,
+    "fields": {
+        "name": "Double Glazed Windows"
+    }
+},
+{
+    "model": "myApp.amenity",
+    "pk": 72,
+    "fields": {
+        "name": "Wall-Mounted TV Points"
+    }
+},
+{
+    "model": "myApp.amenity",
+    "pk": 73,
+    "fields": {
+        "name": "Built-in Kitchen Appliances"
+    }
+},
+{
+    "model": "myApp.amenity",
+    "pk": 74,
+    "fields": {
+        "name": "Storage Room"
+    }
+},
+{
+    "model": "myApp.amenity",
+    "pk": 75,
+    "fields": {
+        "name": "Study Area"
+    }
+},
+{
+    "model": "myApp.amenity",
+    "pk": 76,
+    "fields": {
+        "name": "In-unit Laundry Machine"
+    }
+},
+{
+    "model": "myApp.amenity",
+    "pk": 77,
+    "fields": {
+        "name": "Laundry Drying Area"
+    }
+},
+{
+    "model": "myApp.amenity",
+    "pk": 78,
+    "fields": {
+        "name": "Recycling Pickup"
+    }
+},
+{
+    "model": "myApp.amenity",
+    "pk": 79,
+    "fields": {
+        "name": "Reception Desk"
+    }
+},
+{
+    "model": "myApp.amenity",
+    "pk": 80,
+    "fields": {
+        "name": "Library"
+    }
+},
+{
+    "model": "myApp.amenity",
+    "pk": 81,
+    "fields": {
+        "name": "Restaurant"
+    }
+},
+{
+    "model": "myApp.amenity",
+    "pk": 82,
+    "fields": {
+        "name": "Game Room"
+    }
+},
+{
+    "model": "myApp.amenity",
+    "pk": 83,
+    "fields": {
+        "name": "Biometric Access"
+    }
+},
+{
+    "model": "myApp.amenity",
+    "pk": 84,
+    "fields": {
+        "name": "Visitor Management System"
+    }
+},
+{
+    "model": "myApp.amenity",
+    "pk": 85,
+    "fields": {
+        "name": "Emergency Alert System"
+    }
+},
+{
+    "model": "myApp.amenity",
+    "pk": 86,
+    "fields": {
+        "name": "Visitor Parking"
+    }
+},
+{
+    "model": "myApp.amenity",
+    "pk": 87,
+    "fields": {
+        "name": "Daycare"
+    }
+},
+{
+    "model": "myApp.amenity",
+    "pk": 88,
+    "fields": {
+        "name": "Sliding doors"
+    }
+},
+{
+    "model": "myApp.amenity",
+    "pk": 89,
+    "fields": {
+        "name": "Natural lighting"
+    }
+},
+{
+    "model": "myApp.amenity",
+    "pk": 90,
+    "fields": {
+        "name": "Countertop kitchen"
+    }
+},
+{
+    "model": "myApp.amenity",
+    "pk": 91,
+    "fields": {
+        "name": "Open plan kitchen"
+    }
+},
+{
+    "model": "myApp.amenity",
+    "pk": 92,
+    "fields": {
+        "name": "Sitting toilet"
+    }
+},
+{
+    "model": "myApp.amenity",
+    "pk": 93,
+    "fields": {
+        "name": "Hot shower"
+    }
+},
+{
+    "model": "myApp.amenity",
+    "pk": 94,
+    "fields": {
+        "name": "Squat toilet"
+    }
+},
+{
+    "model": "myApp.amenity",
+    "pk": 95,
+    "fields": {
+        "name": "Sliding windows"
+    }
+},
+{
+    "model": "myApp.amenity",
+    "pk": 96,
+    "fields": {
+        "name": "Gypsum Ceiling"
+    }
+},
+{
+    "model": "myApp.amenity",
+    "pk": 97,
+    "fields": {
+        "name": "POP Ceiling"
+    }
+},
+{
+    "model": "myApp.amenity",
+    "pk": 98,
+    "fields": {
+        "name": "PVC Ceiling"
+    }
+},
+{
+    "model": "myApp.amenity",
+    "pk": 99,
+    "fields": {
+        "name": "Wooden Ceiling"
+    }
+},
+{
+    "model": "myApp.amenity",
+    "pk": 100,
+    "fields": {
+        "name": "Acoustic Ceiling"
+    }
+},
+{
+    "model": "myApp.amenity",
+    "pk": 101,
+    "fields": {
+        "name": "Metal Ceiling"
+    }
+},
+{
+    "model": "myApp.amenity",
+    "pk": 102,
+    "fields": {
+        "name": "Coffered Ceiling"
+    }
+},
+{
+    "model": "myApp.amenity",
+    "pk": 103,
+    "fields": {
+        "name": "Single sink"
+    }
+},
+{
+    "model": "myApp.amenity",
+    "pk": 104,
+    "fields": {
+        "name": "Double sink"
+    }
+},
+{
+    "model": "myApp.amenity",
+    "pk": 105,
+    "fields": {
+        "name": "Security Lighting"
+    }
+},
+{
+    "model": "myApp.amenity",
+    "pk": 106,
+    "fields": {
+        "name": "Security Patrols"
+    }
+},
+{
+    "model": "myApp.amenity",
+    "pk": 107,
+    "fields": {
+        "name": "Guard Dogs"
+    }
+},
+{
+    "model": "myApp.amenity",
+    "pk": 108,
+    "fields": {
+        "name": "Guard House"
+    }
+},
+{
+    "model": "myApp.amenity",
+    "pk": 109,
+    "fields": {
+        "name": "Double Gate System"
+    }
+},
+{
+    "model": "myApp.amenity",
+    "pk": 110,
+    "fields": {
+        "name": "RFID / Keycard Access"
+    }
+},
+{
+    "model": "myApp.amenity",
+    "pk": 111,
+    "fields": {
+        "name": "Video Doorbell"
+    }
+},
+{
+    "model": "myApp.amenity",
+    "pk": 112,
+    "fields": {
+        "name": "Security Alarm System"
+    }
+},
+{
+    "model": "myApp.amenity",
+    "pk": 114,
+    "fields": {
+        "name": "Fire Hose Reels"
+    }
+},
+{
+    "model": "myApp.amenity",
+    "pk": 115,
+    "fields": {
+        "name": "Emergency Assembly Point"
+    }
+},
+{
+    "model": "myApp.amenity",
+    "pk": 116,
+    "fields": {
+        "name": "Boom Gate"
+    }
+},
+{
+    "model": "myApp.amenity",
+    "pk": 117,
+    "fields": {
+        "name": "Intercom System (audio/video)"
+    }
+},
+{
+    "model": "myApp.amenity",
+    "pk": 118,
+    "fields": {
+        "name": "Motion Sensor Lighting"
+    }
+},
+{
+    "model": "myApp.amenity",
+    "pk": 119,
+    "fields": {
+        "name": "Underfloor Heating"
+    }
+},
+{
+    "model": "myApp.amenity",
+    "pk": 120,
+    "fields": {
+        "name": "Home Office Space"
+    }
+},
+{
+    "model": "myApp.amenity",
+    "pk": 121,
+    "fields": {
+        "name": "Smart Thermostat"
+    }
+},
+{
+    "model": "myApp.amenity",
+    "pk": 122,
+    "fields": {
+        "name": "Smart Water Leak Sensors"
+    }
+},
+{
+    "model": "myApp.amenity",
+    "pk": 123,
+    "fields": {
+        "name": "Energy-Efficient Appliances"
+    }
+},
+{
+    "model": "myApp.amenity",
+    "pk": 124,
+    "fields": {
+        "name": "Breakfast Bar"
+    }
+},
+{
+    "model": "myApp.amenity",
+    "pk": 125,
+    "fields": {
+        "name": "Dishwashing Machine"
+    }
+},
+{
+    "model": "myApp.amenity",
+    "pk": 126,
+    "fields": {
+        "name": "Ironing Station"
+    }
+},
+{
+    "model": "myApp.amenity",
+    "pk": 127,
+    "fields": {
+        "name": "Pet-Friendly Areas"
+    }
+},
+{
+    "model": "myApp.amenity",
+    "pk": 128,
+    "fields": {
+        "name": "Steam Room"
+    }
+},
+{
+    "model": "myApp.amenity",
+    "pk": 129,
+    "fields": {
+        "name": "Jacuzzi / Hot Tub"
+    }
+},
+{
+    "model": "myApp.amenity",
+    "pk": 130,
+    "fields": {
+        "name": "Guest cloakroom"
+    }
+},
+{
+    "model": "myApp.amenity",
+    "pk": 131,
+    "fields": {
+        "name": "TV wall"
+    }
+},
+{
+    "model": "myApp.amenity",
+    "pk": 132,
+    "fields": {
+        "name": "Generator power backup"
+    }
+},
+{
+    "model": "myApp.amenity",
+    "pk": 133,
+    "fields": {
+        "name": "Servent quarters"
+    }
+},
+{
+    "model": "myApp.location",
+    "pk": 1,
+    "fields": {
+        "county": "Nairobi",
+        "city": "Nairobi",
+        "estate": "Lavington"
+    }
+},
+{
+    "model": "myApp.location",
+    "pk": 2,
+    "fields": {
+        "county": "Nakuru",
+        "city": "Nakuru",
+        "estate": "Upperhill"
+    }
+},
+{
+    "model": "myApp.location",
+    "pk": 3,
+    "fields": {
+        "county": "Nakuru",
+        "city": "Nakuru",
+        "estate": "KITI"
+    }
+},
+{
+    "model": "myApp.location",
+    "pk": 4,
+    "fields": {
+        "county": "Nakuru",
+        "city": "Nakuru",
+        "estate": "Maili site"
+    }
+},
+{
+    "model": "myApp.location",
+    "pk": 5,
+    "fields": {
+        "county": "Nakuru",
+        "city": "Nakuru",
+        "estate": "Kaburi"
+    }
+},
+{
+    "model": "myApp.location",
+    "pk": 6,
+    "fields": {
+        "county": "Nakuru",
+        "city": "Nakuru",
+        "estate": "Lower poshomill"
+    }
+},
+{
+    "model": "myApp.location",
+    "pk": 7,
+    "fields": {
+        "county": "Nakuru",
+        "city": "Nakuru",
+        "estate": "Njorua"
+    }
+},
+{
+    "model": "myApp.property",
+    "pk": 5,
+    "fields": {
+        "landlord": 1,
+        "title": "Palm crest homes",
+        "description": "Find your home now",
+        "property_type": 9,
+        "city": "Nakuru",
+        "estate": "Njorua",
+        "latitude": -0.26830709265867336,
+        "longitude": 36.10279083251954,
+        "address": "45",
+        "rent": "6000.00",
+        "bedrooms": 1,
+        "bathrooms": 1,
+        "has_balcony": true,
+        "is_approved": true,
+        "is_available": true,
+        "date_posted": "2025-07-05T17:18:45.649Z",
+        "amenities": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            8,
+            9,
+            10,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            21,
+            24,
+            26,
+            29,
+            31,
+            35,
+            36,
+            37,
+            38,
+            40,
+            41,
+            43,
+            44,
+            45,
+            47,
+            48
+        ]
+    }
+},
+{
+    "model": "myApp.property",
+    "pk": 6,
+    "fields": {
+        "landlord": 2,
+        "title": "Mountain view apartments",
+        "description": "<p><strong>Mountain </strong>view apartments</p>",
+        "property_type": 11,
+        "city": "Nakuru",
+        "estate": "KITI",
+        "latitude": -0.2709024364236275,
+        "longitude": 36.10394954681397,
+        "address": "Along Solai road",
+        "rent": "6000.00",
+        "bedrooms": 2,
+        "bathrooms": 1,
+        "has_balcony": true,
+        "is_approved": true,
+        "is_available": true,
+        "date_posted": "2025-07-05T19:04:34.515Z",
+        "amenities": [
+            2,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            11,
+            12,
+            13,
+            16,
+            17,
+            26,
+            29,
+            30,
+            32,
+            33,
+            40
+        ]
+    }
+},
+{
+    "model": "myApp.property",
+    "pk": 7,
+    "fields": {
+        "landlord": 2,
+        "title": "Uzima apartments",
+        "description": "<p>Uzima apartments is the best place to be</p>",
+        "property_type": 11,
+        "city": "Nakuru",
+        "estate": "Heshima",
+        "latitude": -0.2503891142461816,
+        "longitude": 36.11939907073975,
+        "address": "35, Nakuru",
+        "rent": "10000.00",
+        "bedrooms": 2,
+        "bathrooms": 1,
+        "has_balcony": false,
+        "is_approved": true,
+        "is_available": true,
+        "date_posted": "2025-07-06T12:48:11.331Z",
+        "amenities": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            10,
+            12,
+            13,
+            15,
+            16,
+            17,
+            18,
+            21,
+            24,
+            29,
+            30,
+            31,
+            32,
+            33,
+            40,
+            43,
+            50
+        ]
+    }
+},
+{
+    "model": "myApp.property",
+    "pk": 8,
+    "fields": {
+        "landlord": 3,
+        "title": "Ruth,s apartments",
+        "description": "<p>Book your space now</p>",
+        "property_type": 2,
+        "city": "Nakuru",
+        "estate": "Maili sita",
+        "latitude": -0.23221462721758349,
+        "longitude": 36.11974239349366,
+        "address": "Next to topkey entertainment",
+        "rent": "4500.00",
+        "bedrooms": 0,
+        "bathrooms": 1,
+        "has_balcony": false,
+        "is_approved": true,
+        "is_available": false,
+        "date_posted": "2025-07-06T16:22:12.613Z",
+        "amenities": [
+            2,
+            3,
+            11,
+            14,
+            16,
+            18,
+            19,
+            20,
+            23,
+            24,
+            29,
+            30,
+            31,
+            36,
+            37,
+            38,
+            42,
+            44,
+            45,
+            46,
+            48,
+            49
+        ]
+    }
+},
+{
+    "model": "myApp.property",
+    "pk": 9,
+    "fields": {
+        "landlord": 3,
+        "title": "Sun View Homes",
+        "description": "This is the best place to be. Welcome",
+        "property_type": 9,
+        "city": "Nakuru",
+        "estate": "Mawanga",
+        "latitude": -0.2640840001442574,
+        "longitude": 36.130814552307136,
+        "address": "Chap chap mali mali shop",
+        "rent": "5500.00",
+        "bedrooms": 1,
+        "bathrooms": 1,
+        "has_balcony": false,
+        "is_approved": true,
+        "is_available": true,
+        "date_posted": "2025-07-08T19:25:27.178Z",
+        "amenities": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            7,
+            8,
+            11,
+            12,
+            13,
+            15,
+            17,
+            18,
+            19,
+            27,
+            29,
+            30,
+            31,
+            33,
+            37,
+            38,
+            39,
+            43,
+            50,
+            52,
+            56,
+            57,
+            60,
+            61,
+            66,
+            70,
+            74,
+            79,
+            83,
+            85,
+            86,
+            87,
+            88,
+            89,
+            90,
+            91,
+            92,
+            93
+        ]
+    }
+},
+{
+    "model": "myApp.property",
+    "pk": 10,
+    "fields": {
+        "landlord": 2,
+        "title": "Ushirika Estates",
+        "description": "<p><i><strong>Ushirika </strong></i>is the best estate</p>",
+        "property_type": 3,
+        "city": "Nakuru",
+        "estate": "St. Micheal",
+        "latitude": -0.2711394739934546,
+        "longitude": 36.05176448822022,
+        "address": "Next to mama wise cereals and gen shop",
+        "rent": "4000.00",
+        "bedrooms": 0,
+        "bathrooms": 1,
+        "has_balcony": false,
+        "is_approved": true,
+        "is_available": true,
+        "date_posted": "2025-07-08T21:02:41.149Z",
+        "amenities": [
+            1,
+            2,
+            3,
+            5,
+            11,
+            13,
+            15,
+            16,
+            27,
+            30,
+            33,
+            37,
+            41,
+            46,
+            88,
+            89,
+            92,
+            93
+        ]
+    }
+},
+{
+    "model": "myApp.property",
+    "pk": 11,
+    "fields": {
+        "landlord": 1,
+        "title": "Hill top Apartments",
+        "description": "Best apartments",
+        "property_type": 20,
+        "city": "Nakuru",
+        "estate": "KITI",
+        "latitude": -0.27319938727569787,
+        "longitude": 36.1053228378296,
+        "address": "Outskirts of Nakuru",
+        "rent": "45000.00",
+        "bedrooms": 3,
+        "bathrooms": 1,
+        "has_balcony": false,
+        "is_approved": true,
+        "is_available": true,
+        "date_posted": "2025-07-08T22:55:57.180Z",
+        "amenities": [
+            1,
+            2,
+            3,
+            5,
+            6,
+            8,
+            9,
+            10,
+            12,
+            13,
+            14,
+            16,
+            17,
+            18,
+            19,
+            21,
+            22,
+            23,
+            24,
+            25,
+            26,
+            29,
+            31,
+            33,
+            39,
+            51
+        ]
+    }
+},
+{
+    "model": "myApp.property",
+    "pk": 12,
+    "fields": {
+        "landlord": 1,
+        "title": "Uwezo flats",
+        "description": "Uwezo flats is located along ngara road",
+        "property_type": 11,
+        "city": "Nairobi",
+        "estate": "Ngara",
+        "latitude": -1.2729275067035106,
+        "longitude": 36.8287023923159,
+        "address": "Along Kinshasa road",
+        "rent": "25000.00",
+        "bedrooms": 1,
+        "bathrooms": 1,
+        "has_balcony": false,
+        "is_approved": true,
+        "is_available": true,
+        "date_posted": "2025-07-09T21:39:02.760Z",
+        "amenities": [
+            1,
+            2,
+            3,
+            5,
+            6,
+            8,
+            10,
+            12,
+            13,
+            14,
+            15,
+            16,
+            19,
+            21,
+            24,
+            25,
+            28,
+            29,
+            30,
+            31,
+            32,
+            33,
+            35,
+            40,
+            44,
+            46,
+            50,
+            56,
+            58,
+            60,
+            72,
+            75,
+            84,
+            85,
+            91,
+            93
+        ]
+    }
+},
+{
+    "model": "myApp.property",
+    "pk": 13,
+    "fields": {
+        "landlord": 3,
+        "title": "Upendo Homes",
+        "description": "<p>Welcome</p>",
+        "property_type": 9,
+        "city": "Nakuru",
+        "estate": "KITI",
+        "latitude": -0.26853776010259583,
+        "longitude": 36.10593438148499,
+        "address": "Along Solai road",
+        "rent": "5600.00",
+        "bedrooms": 1,
+        "bathrooms": 1,
+        "has_balcony": true,
+        "is_approved": true,
+        "is_available": true,
+        "date_posted": "2025-07-11T22:14:36.894Z",
+        "amenities": [
+            1,
+            2,
+            5,
+            6,
+            9,
+            11,
+            12,
+            13,
+            17,
+            18,
+            20,
+            22,
+            26,
+            27,
+            30,
+            31,
+            32,
+            35,
+            38,
+            46,
+            50
+        ]
+    }
+},
+{
+    "model": "myApp.property",
+    "pk": 14,
+    "fields": {
+        "landlord": 2,
+        "title": "Umoja Estates",
+        "description": "It is in umoja",
+        "property_type": 11,
+        "city": "Nairobi",
+        "estate": "Kileleshwa",
+        "latitude": -1.27645020516054,
+        "longitude": 36.77595019340516,
+        "address": "Mzima Spgs Ln",
+        "rent": "90000.00",
+        "bedrooms": 3,
+        "bathrooms": 2,
+        "has_balcony": true,
+        "is_approved": true,
+        "is_available": true,
+        "date_posted": "2025-07-11T22:56:00.684Z",
+        "amenities": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            11,
+            12,
+            13,
+            15,
+            16,
+            17,
+            18,
+            21,
+            23,
+            24,
+            25,
+            26,
+            28,
+            29,
+            30,
+            36,
+            37,
+            38,
+            39,
+            42,
+            44,
+            46,
+            52,
+            56,
+            57,
+            60,
+            62,
+            64,
+            66,
+            67,
+            72,
+            80,
+            84
+        ]
+    }
+},
+{
+    "model": "myApp.property",
+    "pk": 15,
+    "fields": {
+        "landlord": 2,
+        "title": "Salem Apartments",
+        "description": "<ul><li>We are located a<strong>long KITI-Mawanga road</strong></li><li><strong>Welcome</strong></li><li><strong>Do not be afraid</strong></li></ul><p><i>Don't miss out</i></p>",
+        "property_type": 11,
+        "city": "Nakuru",
+        "estate": "Solai road",
+        "latitude": -0.2665130496435725,
+        "longitude": 36.106022894382484,
+        "address": "35, Nakuru",
+        "rent": "10000.00",
+        "bedrooms": 2,
+        "bathrooms": 1,
+        "has_balcony": true,
+        "is_approved": true,
+        "is_available": true,
+        "date_posted": "2025-07-13T09:12:51.768Z",
+        "amenities": [
+            1,
+            2,
+            5,
+            7,
+            8,
+            9,
+            11,
+            12,
+            13,
+            16,
+            17,
+            21,
+            28,
+            29,
+            30,
+            31,
+            32,
+            33,
+            37,
+            46,
+            50,
+            54,
+            55,
+            56,
+            73,
+            75,
+            79,
+            80,
+            82,
+            83,
+            86,
+            89,
+            90,
+            91,
+            93,
+            105,
+            110,
+            112,
+            118,
+            119,
+            120,
+            122,
+            124,
+            126,
+            128,
+            129
+        ]
+    }
+},
+{
+    "model": "myApp.property",
+    "pk": 16,
+    "fields": {
+        "landlord": 1,
+        "title": "Mary land apartments",
+        "description": "<h4>Mary land apartments</h4><p>&nbsp;</p>\n<table><tbody><tr><td>Title</td><td>ksh</td></tr><tr><td>books</td><td>100</td></tr><tr><td>pens</td><td>20</td></tr><tr><td>&nbsp;</td><td>&nbsp;</td></tr></tbody></table>",
+        "property_type": 9,
+        "city": "Nakuru",
+        "estate": "KITI",
+        "latitude": -0.2668568715872402,
+        "longitude": 36.113904565572746,
+        "address": "34",
+        "rent": "5500.00",
+        "bedrooms": 1,
+        "bathrooms": 1,
+        "has_balcony": false,
+        "is_approved": true,
+        "is_available": true,
+        "date_posted": "2025-07-13T10:03:21.070Z",
+        "amenities": [
+            1,
+            2,
+            4,
+            5,
+            9,
+            11,
+            12,
+            13,
+            15,
+            16,
+            18,
+            19,
+            21,
+            24,
+            25,
+            27,
+            29,
+            30,
+            33,
+            38,
+            39,
+            40,
+            42,
+            44
+        ]
+    }
+},
+{
+    "model": "myApp.property",
+    "pk": 17,
+    "fields": {
+        "landlord": 1,
+        "title": "Two-Bedroom apartment",
+        "description": "<p>This cozy and secure two-bedroom apartment is located in the gated Nyayo Embakasi estate. It offers a spacious living room with natural lighting, a modern kitchen fitted with cabinets, tiled flooring throughout, and a separate toilet and bathroom. Ideal for small families or professionals working around the JKIA and Mombasa Road area. Key Features: 24/7 Security with perimeter wall and electric fencing Ample parking space Children’s play area Borehole and city council water supply Monthly rent: KES 25,000</p>",
+        "property_type": 11,
+        "city": "Nairobi",
+        "estate": "Nyayo Embakasi estate.",
+        "latitude": -1.2760660321371906,
+        "longitude": 36.82489916682244,
+        "address": "Embakasi street",
+        "rent": "25000.00",
+        "bedrooms": 2,
+        "bathrooms": 1,
+        "has_balcony": true,
+        "is_approved": true,
+        "is_available": true,
+        "date_posted": "2025-07-13T14:17:17.657Z",
+        "amenities": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            11,
+            12,
+            13,
+            14,
+            16,
+            18,
+            19,
+            21,
+            23,
+            25,
+            26,
+            27,
+            29,
+            30,
+            33,
+            36,
+            38,
+            39,
+            41,
+            43,
+            44,
+            45,
+            46,
+            47,
+            48,
+            49,
+            50,
+            51,
+            99,
+            103
+        ]
+    }
+},
+{
+    "model": "myApp.property",
+    "pk": 20,
+    "fields": {
+        "landlord": 3,
+        "title": "2 Bedroom apartment",
+        "description": "<p><strong>This </strong>cozy and secure two-bedroom apartment is located in the gated <i>Nyayo Embakasi</i> estate. It offers a spacious living room with natural lighting, a modern kitchen fitted with cabinets, tiled flooring throughout, and a separate toilet and bathroom.&nbsp;</p><p><i><strong>Nearby amenities</strong></i></p><ol><li>Supermarket</li><li>Kindergarten</li><li>Barbecue</li><li>car wash</li></ol><p>It is ideal for <strong>small families</strong> or professionals working around the JKIA and Mombasa Road area. Key Features: 24/7 Security with perimeter wall and electric fencing Ample parking space.</p>",
+        "property_type": 9,
+        "city": "Nakuru",
+        "estate": "Mawanga",
+        "latitude": -0.26545534867970755,
+        "longitude": 36.11462205648423,
+        "address": "Mawanga road next to Workers police station",
+        "rent": "12000.00",
+        "bedrooms": 2,
+        "bathrooms": 1,
+        "has_balcony": true,
+        "is_approved": true,
+        "is_available": false,
+        "date_posted": "2025-07-17T22:00:42.947Z",
+        "amenities": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            18,
+            19,
+            23,
+            25,
+            27,
+            28,
+            29,
+            30,
+            32,
+            33,
+            35,
+            37,
+            38,
+            39,
+            41,
+            43,
+            44,
+            45,
+            46,
+            48,
+            50,
+            51,
+            54,
+            55,
+            58,
+            60,
+            64,
+            66,
+            68,
+            72,
+            80,
+            82,
+            86,
+            89,
+            91,
+            93
+        ]
+    }
+},
+{
+    "model": "myApp.property",
+    "pk": 21,
+    "fields": {
+        "landlord": 3,
+        "title": "Amazing apartments",
+        "description": "<p>Best in the region</p>",
+        "property_type": 11,
+        "city": "Kitale",
+        "estate": "Kibomet",
+        "latitude": 0.9991519314748929,
+        "longitude": 35.00753836258656,
+        "address": "Along kapenguria road",
+        "rent": "20000.00",
+        "bedrooms": 2,
+        "bathrooms": 1,
+        "has_balcony": false,
+        "is_approved": true,
+        "is_available": false,
+        "date_posted": "2025-07-21T20:46:42.158Z",
+        "amenities": [
+            1,
+            2,
+            4,
+            5,
+            7,
+            8,
+            9,
+            12,
+            15,
+            16,
+            18,
+            19,
+            21,
+            22,
+            26,
+            27,
+            30,
+            31,
+            32,
+            33,
+            39,
+            55,
+            56,
+            58,
+            60,
+            68,
+            75,
+            77,
+            83,
+            84,
+            87,
+            88,
+            90,
+            94,
+            95,
+            119,
+            124,
+            125,
+            127,
+            128,
+            129,
+            130,
+            131
+        ]
+    }
+},
+{
+    "model": "myApp.property",
+    "pk": 22,
+    "fields": {
+        "landlord": 1,
+        "title": "Baraka Flats Apartments",
+        "description": "<p><strong>Welcome to Baraka Flats</strong>, where comfort meets convenience in the heart of Kileleshwa.&nbsp;</p><p>These modern, spacious apartments are thoughtfully designed to provide a serene, secure, and affordable living environment for families, professionals, and students alike. Each unit features large windows for ample natural lighting, tiled floors, inbuilt wardrobes, and a well-fitted kitchen with cabinet space.&nbsp;</p><p>The living areas are open and airy, offering the perfect blend of modern design and traditional comfort.&nbsp;</p><h4>Nearby amenities</h4><ul><li>School</li><li>Hospital</li><li>supermarket</li><li>Gym</li></ul><p>For more call <strong>0700740099</strong></p>",
+        "property_type": 11,
+        "city": "Nakuru",
+        "estate": "Maili sita",
+        "latitude": -0.2267058541301585,
+        "longitude": 36.11910469830036,
+        "address": "Solai road",
+        "rent": "5000.00",
+        "bedrooms": 1,
+        "bathrooms": 1,
+        "has_balcony": true,
+        "is_approved": true,
+        "is_available": true,
+        "date_posted": "2025-07-24T20:49:57.558Z",
+        "amenities": [
+            1,
+            2,
+            5,
+            18,
+            21,
+            27,
+            29,
+            30,
+            32,
+            43,
+            46,
+            50,
+            52,
+            53,
+            54,
+            55,
+            56,
+            57,
+            58,
+            59,
+            60,
+            62,
+            64,
+            65,
+            70,
+            74,
+            79,
+            84,
+            85,
+            87,
+            90,
+            91,
+            93,
+            106,
+            107,
+            117,
+            123,
+            124,
+            126,
+            129,
+            130
+        ]
+    }
+},
+{
+    "model": "myApp.property",
+    "pk": 23,
+    "fields": {
+        "landlord": 2,
+        "title": "Riverside homes",
+        "description": "Rent this houses at affordable prices",
+        "property_type": 9,
+        "city": "Kisumu",
+        "estate": "Kisumu ndogo",
+        "latitude": -0.11484456940325403,
+        "longitude": 34.78135496377946,
+        "address": "Next to Crisfa Junior secondary school",
+        "rent": "15000.00",
+        "bedrooms": 2,
+        "bathrooms": 1,
+        "has_balcony": true,
+        "is_approved": true,
+        "is_available": true,
+        "date_posted": "2025-07-29T10:08:50.473Z",
+        "amenities": [
+            1,
+            2,
+            3,
+            5,
+            6,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            18,
+            19,
+            20,
+            25,
+            26,
+            28,
+            30,
+            31,
+            37,
+            40,
+            71,
+            73,
+            77,
+            81,
+            83,
+            87,
+            89,
+            91,
+            92,
+            93
+        ]
+    }
+},
+{
+    "model": "myApp.property",
+    "pk": 24,
+    "fields": {
+        "landlord": 9,
+        "title": "3 bedroom apartment at Kahawa",
+        "description": "<p>3 <strong>bedroom</strong> apartment at <strong>Kahawa</strong></p><p>&nbsp;</p><p><strong>Book your space now</strong></p>",
+        "property_type": 12,
+        "city": "Nairobi",
+        "estate": "Kahawa",
+        "latitude": -1.1875575928985198,
+        "longitude": 36.909694522619255,
+        "address": "Kawawa Nairobi ndogo",
+        "rent": "45000.00",
+        "bedrooms": 3,
+        "bathrooms": 2,
+        "has_balcony": true,
+        "is_approved": true,
+        "is_available": true,
+        "date_posted": "2025-08-02T18:51:11.134Z",
+        "amenities": [
+            1,
+            3,
+            4,
+            5,
+            6,
+            7,
+            9,
+            10,
+            12,
+            13,
+            15,
+            16,
+            18,
+            19,
+            21,
+            29,
+            31,
+            35,
+            39,
+            40,
+            42,
+            44,
+            50,
+            52,
+            53,
+            56,
+            60,
+            61,
+            66,
+            67,
+            81,
+            82,
+            84,
+            85,
+            86,
+            87,
+            88,
+            89,
+            90,
+            91,
+            93,
+            96,
+            104,
+            117,
+            121,
+            123,
+            124,
+            129,
+            130,
+            132,
+            133
+        ]
+    }
+},
+{
+    "model": "myApp.property",
+    "pk": 25,
+    "fields": {
+        "landlord": 2,
+        "title": "Test apartment",
+        "description": "<p><strong>Test</strong> apartment</p>",
+        "property_type": 17,
+        "city": "Nakuru",
+        "estate": "Teachers",
+        "latitude": -0.2736305474656187,
+        "longitude": 36.108416765928276,
+        "address": "Langas road",
+        "rent": "15000.00",
+        "bedrooms": 2,
+        "bathrooms": 2,
+        "has_balcony": true,
+        "is_approved": true,
+        "is_available": true,
+        "date_posted": "2025-08-07T15:57:42.583Z",
+        "amenities": [
+            1,
+            4,
+            5,
+            6,
+            7,
+            8,
+            11,
+            12,
+            14,
+            16,
+            17,
+            19,
+            27,
+            29,
+            31,
+            33,
+            38,
+            39,
+            40,
+            42,
+            44,
+            52,
+            56,
+            60,
+            62,
+            64,
+            68,
+            74,
+            78,
+            80,
+            82,
+            84,
+            91,
+            94,
+            99,
+            104,
+            109,
+            111,
+            115,
+            118,
+            119,
+            120,
+            122,
+            123,
+            124,
+            126,
+            127,
+            129,
+            130,
+            131,
+            132,
+            133
+        ]
+    }
+},
+{
+    "model": "myApp.propertyimage",
+    "pk": 5,
+    "fields": {
+        "property": 5,
+        "image": "property_images/Bedroom4.webp",
+        "caption": "Bedroom"
+    }
+},
+{
+    "model": "myApp.propertyimage",
+    "pk": 6,
+    "fields": {
+        "property": 6,
+        "image": "property_images/house9.jpg",
+        "caption": "Main entrance"
+    }
+},
+{
+    "model": "myApp.propertyimage",
+    "pk": 7,
+    "fields": {
+        "property": 7,
+        "image": "property_images/house11.webp",
+        "caption": "Playing arena"
+    }
+},
+{
+    "model": "myApp.propertyimage",
+    "pk": 8,
+    "fields": {
+        "property": 8,
+        "image": "property_images/house11_0pu3QwX.webp",
+        "caption": "COmpound"
+    }
+},
+{
+    "model": "myApp.propertyimage",
+    "pk": 10,
+    "fields": {
+        "property": 10,
+        "image": "property_images/house6.jpeg",
+        "caption": "Aerial view"
+    }
+},
+{
+    "model": "myApp.propertyimage",
+    "pk": 11,
+    "fields": {
+        "property": 11,
+        "image": "property_images/living_room3.webp",
+        "caption": "Living room"
+    }
+},
+{
+    "model": "myApp.propertyimage",
+    "pk": 12,
+    "fields": {
+        "property": 11,
+        "image": "property_images/Bedroom3.jpeg",
+        "caption": "Bedroom"
+    }
+},
+{
+    "model": "myApp.propertyimage",
+    "pk": 13,
+    "fields": {
+        "property": 11,
+        "image": "property_images/bathroom_3.jpg",
+        "caption": "Bathroom"
+    }
+},
+{
+    "model": "myApp.propertyimage",
+    "pk": 14,
+    "fields": {
+        "property": 8,
+        "image": "property_images/Ruth1.jpg",
+        "caption": "Living room"
+    }
+},
+{
+    "model": "myApp.propertyimage",
+    "pk": 15,
+    "fields": {
+        "property": 8,
+        "image": "property_images/ruth2.jpg",
+        "caption": "Dinning room"
+    }
+},
+{
+    "model": "myApp.propertyimage",
+    "pk": 16,
+    "fields": {
+        "property": 8,
+        "image": "property_images/ruth3.jpg",
+        "caption": "Living room"
+    }
+},
+{
+    "model": "myApp.propertyimage",
+    "pk": 17,
+    "fields": {
+        "property": 5,
+        "image": "property_images/living_room4.jpg",
+        "caption": "Living room"
+    }
+},
+{
+    "model": "myApp.propertyimage",
+    "pk": 18,
+    "fields": {
+        "property": 5,
+        "image": "property_images/bathroom_4.jpg",
+        "caption": "Bathroom"
+    }
+},
+{
+    "model": "myApp.propertyimage",
+    "pk": 19,
+    "fields": {
+        "property": 12,
+        "image": "property_images/living_room1_M74zc7A.jpg",
+        "caption": "Living room"
+    }
+},
+{
+    "model": "myApp.propertyimage",
+    "pk": 20,
+    "fields": {
+        "property": 12,
+        "image": "property_images/bathroom_3_1nP4zbe.jpg",
+        "caption": "Bathroom"
+    }
+},
+{
+    "model": "myApp.propertyimage",
+    "pk": 21,
+    "fields": {
+        "property": 12,
+        "image": "property_images/Bedroom3_hyLOa9x.jpeg",
+        "caption": "Bedroom"
+    }
+},
+{
+    "model": "myApp.propertyimage",
+    "pk": 22,
+    "fields": {
+        "property": 13,
+        "image": "property_images/bathroom.jpg",
+        "caption": "Bathroom"
+    }
+},
+{
+    "model": "myApp.propertyimage",
+    "pk": 23,
+    "fields": {
+        "property": 13,
+        "image": "property_images/kitchen.jpg",
+        "caption": "Kitchen"
+    }
+},
+{
+    "model": "myApp.propertyimage",
+    "pk": 24,
+    "fields": {
+        "property": 13,
+        "image": "property_images/Sitting.jpg",
+        "caption": "Living room"
+    }
+},
+{
+    "model": "myApp.propertyimage",
+    "pk": 25,
+    "fields": {
+        "property": 14,
+        "image": "property_images/bathroom_vRPWHOe.jpg",
+        "caption": "Bathroom"
+    }
+},
+{
+    "model": "myApp.propertyimage",
+    "pk": 26,
+    "fields": {
+        "property": 14,
+        "image": "property_images/kitchen_qKnWbC7.jpg",
+        "caption": "Kitchen"
+    }
+},
+{
+    "model": "myApp.propertyimage",
+    "pk": 29,
+    "fields": {
+        "property": 15,
+        "image": "property_images/bathroom_cJ8A1uI.jpg",
+        "caption": "Bathroom"
+    }
+},
+{
+    "model": "myApp.propertyimage",
+    "pk": 30,
+    "fields": {
+        "property": 15,
+        "image": "property_images/kitchen_K9rU2DK.jpg",
+        "caption": "Modern kitchen"
+    }
+},
+{
+    "model": "myApp.propertyimage",
+    "pk": 32,
+    "fields": {
+        "property": 15,
+        "image": "property_images/livving_room_Af2Nfh8.jpg",
+        "caption": "Living room"
+    }
+},
+{
+    "model": "myApp.propertyimage",
+    "pk": 33,
+    "fields": {
+        "property": 16,
+        "image": "property_images/bathroom_QV6NS4J.jpg",
+        "caption": "Bathroom"
+    }
+},
+{
+    "model": "myApp.propertyimage",
+    "pk": 34,
+    "fields": {
+        "property": 16,
+        "image": "property_images/kitchen_v9exx6y.jpg",
+        "caption": "Kitchen"
+    }
+},
+{
+    "model": "myApp.propertyimage",
+    "pk": 37,
+    "fields": {
+        "property": 16,
+        "image": "property_images/sitting_room.jpg",
+        "caption": "Living room"
+    }
+},
+{
+    "model": "myApp.propertyimage",
+    "pk": 38,
+    "fields": {
+        "property": 16,
+        "image": "property_images/ruth3_NlpySWj.jpg",
+        "caption": "Guest room"
+    }
+},
+{
+    "model": "myApp.propertyimage",
+    "pk": 39,
+    "fields": {
+        "property": 17,
+        "image": "property_images/Bedroom.jpg",
+        "caption": "Bedroom"
+    }
+},
+{
+    "model": "myApp.propertyimage",
+    "pk": 40,
+    "fields": {
+        "property": 17,
+        "image": "property_images/DH.jpg",
+        "caption": "Dining room"
+    }
+},
+{
+    "model": "myApp.propertyimage",
+    "pk": 48,
+    "fields": {
+        "property": 20,
+        "image": "property_images/modern_kitchen_kIxIhtN.jpg",
+        "caption": "Kitchen"
+    }
+},
+{
+    "model": "myApp.propertyimage",
+    "pk": 49,
+    "fields": {
+        "property": 20,
+        "image": "property_images/bed_VlStgWP.jpg",
+        "caption": "Bedroom"
+    }
+},
+{
+    "model": "myApp.propertyimage",
+    "pk": 50,
+    "fields": {
+        "property": 20,
+        "image": "property_images/New_apartment_GmexEUQ.jpg",
+        "caption": "Parking area"
+    }
+},
+{
+    "model": "myApp.propertyimage",
+    "pk": 51,
+    "fields": {
+        "property": 21,
+        "image": "property_images/images_2.jpeg",
+        "caption": "Compound"
+    }
+},
+{
+    "model": "myApp.propertyimage",
+    "pk": 52,
+    "fields": {
+        "property": 21,
+        "image": "property_images/images_3.jpeg",
+        "caption": "Kitchen"
+    }
+},
+{
+    "model": "myApp.propertyimage",
+    "pk": 53,
+    "fields": {
+        "property": 22,
+        "image": "property_images/mliving.jpg",
+        "caption": "Living room "
+    }
+},
+{
+    "model": "myApp.propertyimage",
+    "pk": 54,
+    "fields": {
+        "property": 22,
+        "image": "property_images/modern_k.jpg",
+        "caption": "Kitchen "
+    }
+},
+{
+    "model": "myApp.propertyimage",
+    "pk": 55,
+    "fields": {
+        "property": 22,
+        "image": "property_images/Baraka_flats.jpg",
+        "caption": "Side view "
+    }
+},
+{
+    "model": "myApp.propertyimage",
+    "pk": 56,
+    "fields": {
+        "property": 7,
+        "image": "property_images/mliving_M4kqZW7.jpg",
+        "caption": "Modern living room"
+    }
+},
+{
+    "model": "myApp.propertyimage",
+    "pk": 57,
+    "fields": {
+        "property": 15,
+        "image": "property_images/Sitting_OJ791M8.jpg",
+        "caption": "Sitting room"
+    }
+},
+{
+    "model": "myApp.propertyimage",
+    "pk": 58,
+    "fields": {
+        "property": 10,
+        "image": "property_images/bathroom1.jpg",
+        "caption": "Bathroom"
+    }
+},
+{
+    "model": "myApp.propertyimage",
+    "pk": 59,
+    "fields": {
+        "property": 10,
+        "image": "property_images/living_room1.jpg",
+        "caption": "Modern living room"
+    }
+},
+{
+    "model": "myApp.propertyimage",
+    "pk": 60,
+    "fields": {
+        "property": 10,
+        "image": "property_images/Bedroom1.jpeg",
+        "caption": "Bedroom"
+    }
+},
+{
+    "model": "myApp.propertyimage",
+    "pk": 61,
+    "fields": {
+        "property": 9,
+        "image": "property_images/Bedroom4_zgCwgwz.webp",
+        "caption": "Bedroom"
+    }
+},
+{
+    "model": "myApp.propertyimage",
+    "pk": 62,
+    "fields": {
+        "property": 9,
+        "image": "property_images/living_room4_UICMZXO.jpg",
+        "caption": "Living room"
+    }
+},
+{
+    "model": "myApp.propertyimage",
+    "pk": 63,
+    "fields": {
+        "property": 9,
+        "image": "property_images/bathroom_4_HhfEwfw.jpg",
+        "caption": "Bathroom"
+    }
+},
+{
+    "model": "myApp.propertyimage",
+    "pk": 64,
+    "fields": {
+        "property": 7,
+        "image": "property_images/Bedroom3_aW2EuHx.jpeg",
+        "caption": "Bedroom"
+    }
+},
+{
+    "model": "myApp.propertyimage",
+    "pk": 65,
+    "fields": {
+        "property": 6,
+        "image": "property_images/Bedroom2_A5tP7rY.jpg",
+        "caption": "Bedroom"
+    }
+},
+{
+    "model": "myApp.propertyimage",
+    "pk": 66,
+    "fields": {
+        "property": 6,
+        "image": "property_images/living_room1_oToOCN6.jpg",
+        "caption": "Living room"
+    }
+},
+{
+    "model": "myApp.propertyimage",
+    "pk": 67,
+    "fields": {
+        "property": 6,
+        "image": "property_images/bathroom_3_Yis6f72.jpg",
+        "caption": "Bathroom"
+    }
+},
+{
+    "model": "myApp.propertyimage",
+    "pk": 68,
+    "fields": {
+        "property": 23,
+        "image": "property_images/Bedroom1_IDU1P1M.jpeg",
+        "caption": "Master bedroom"
+    }
+},
+{
+    "model": "myApp.propertyimage",
+    "pk": 69,
+    "fields": {
+        "property": 23,
+        "image": "property_images/living_room1_5b2YUNX.jpg",
+        "caption": "Living room"
+    }
+},
+{
+    "model": "myApp.propertyimage",
+    "pk": 70,
+    "fields": {
+        "property": 23,
+        "image": "property_images/bathroom2_GG3gvOk.jpg",
+        "caption": "Toilet"
+    }
+},
+{
+    "model": "myApp.propertyimage",
+    "pk": 71,
+    "fields": {
+        "property": 21,
+        "image": "property_images/living_room4_3Nl3HSw.jpg",
+        "caption": "Modern living room"
+    }
+},
+{
+    "model": "myApp.propertyimage",
+    "pk": 72,
+    "fields": {
+        "property": 21,
+        "image": "property_images/bathroom2_1kiKTk6.jpg",
+        "caption": "Bathroom"
+    }
+},
+{
+    "model": "myApp.propertyimage",
+    "pk": 73,
+    "fields": {
+        "property": 14,
+        "image": "property_images/Bedroom2_a3Dc1Eh.jpg",
+        "caption": "Bedroom"
+    }
+},
+{
+    "model": "myApp.propertyimage",
+    "pk": 74,
+    "fields": {
+        "property": 24,
+        "image": "property_images/Bedroom4_58mMrFw.webp",
+        "caption": "Master bedroom"
+    }
+},
+{
+    "model": "myApp.propertyimage",
+    "pk": 75,
+    "fields": {
+        "property": 24,
+        "image": "property_images/Bedroom3_3f9ZpA5.jpeg",
+        "caption": "Visitors bedroom"
+    }
+},
+{
+    "model": "myApp.propertyimage",
+    "pk": 76,
+    "fields": {
+        "property": 24,
+        "image": "property_images/living_room4_CFs4ryN.jpg",
+        "caption": "Living room"
+    }
+},
+{
+    "model": "myApp.propertyimage",
+    "pk": 77,
+    "fields": {
+        "property": 24,
+        "image": "property_images/bathroom2_rNEps17.jpg",
+        "caption": "Bathroom"
+    }
+},
+{
+    "model": "myApp.propertyimage",
+    "pk": 78,
+    "fields": {
+        "property": 25,
+        "image": "property_images/living_room1_D8zAlq5.jpg",
+        "caption": "Living room"
+    }
+},
+{
+    "model": "myApp.propertyimage",
+    "pk": 79,
+    "fields": {
+        "property": 25,
+        "image": "property_images/bathroom_3_q1JbvAl.jpg",
+        "caption": "Bathroom"
+    }
+},
+{
+    "model": "myApp.propertyimage",
+    "pk": 80,
+    "fields": {
+        "property": 17,
+        "image": "property_images/living_room2_MW0GXDK.jpg",
+        "caption": "Modern living room"
+    }
+},
+{
+    "model": "myApp.propertyimage",
+    "pk": 81,
+    "fields": {
+        "property": 25,
+        "image": "property_images/IMG_20250813_154830.jpg",
+        "caption": "Modern living room"
+    }
+},
+{
+    "model": "myApp.payment",
+    "pk": 46,
+    "fields": {
+        "landlord": 2,
+        "amount": "1.00",
+        "phone_number": "254700740099",
+        "transaction_id": "ws_CO_270720251035368700740099",
+        "mpesa_receipt": "TGR0OY2582",
+        "checkout_request_id": "ws_CO_270720251035368700740099",
+        "status": "Success",
+        "is_successful": true,
+        "timestamp": "2025-07-27T07:35:51.893Z",
+        "expiry_date": "2025-08-26T07:35:47.862Z"
+    }
+},
+{
+    "model": "myApp.payment",
+    "pk": 48,
+    "fields": {
+        "landlord": 3,
+        "amount": "3.00",
+        "phone_number": "254700740099",
+        "transaction_id": "ws_CO_270720251142139700740099",
+        "mpesa_receipt": "TGR8P76GLI",
+        "checkout_request_id": "ws_CO_270720251142139700740099",
+        "status": "Success",
+        "is_successful": true,
+        "timestamp": "2025-07-27T08:42:27.617Z",
+        "expiry_date": "2025-07-28T08:42:23.740Z"
+    }
+},
+{
+    "model": "myApp.payment",
+    "pk": 49,
+    "fields": {
+        "landlord": 1,
+        "amount": "1.00",
+        "phone_number": "254113131983",
+        "transaction_id": "ws_CO_270720251148591113131983",
+        "mpesa_receipt": "TGR4P83W9M",
+        "checkout_request_id": "ws_CO_270720251148591113131983",
+        "status": "Success",
+        "is_successful": true,
+        "timestamp": "2025-07-27T08:49:09.918Z",
+        "expiry_date": "2025-07-28T08:49:06.225Z"
+    }
+},
+{
+    "model": "myApp.payment",
+    "pk": 50,
+    "fields": {
+        "landlord": 7,
+        "amount": "2.00",
+        "phone_number": "254700740099",
+        "transaction_id": "ws_CO_270720251322199700740099",
+        "mpesa_receipt": "TGR9PLEAXV",
+        "checkout_request_id": "ws_CO_270720251322199700740099",
+        "status": "Success",
+        "is_successful": true,
+        "timestamp": "2025-07-27T10:22:28Z",
+        "expiry_date": "2025-08-19T20:22:28Z"
+    }
+},
+{
+    "model": "myApp.payment",
+    "pk": 53,
+    "fields": {
+        "landlord": 1,
+        "amount": "3.00",
+        "phone_number": "254795413032",
+        "transaction_id": "ws_CO_270720251359213795413032",
+        "mpesa_receipt": "TGR9PR5O8F",
+        "checkout_request_id": "ws_CO_270720251359213795413032",
+        "status": "Success",
+        "is_successful": true,
+        "timestamp": "2025-07-27T10:59:31.592Z",
+        "expiry_date": "2025-07-28T10:59:29.225Z"
+    }
+},
+{
+    "model": "myApp.payment",
+    "pk": 55,
+    "fields": {
+        "landlord": 1,
+        "amount": "3.00",
+        "phone_number": "254113131983",
+        "transaction_id": "ws_CO_280720251535047113131983",
+        "mpesa_receipt": "TGS9UVHWEF",
+        "checkout_request_id": "ws_CO_280720251535047113131983",
+        "status": "Success",
+        "is_successful": true,
+        "timestamp": "2025-07-28T12:35:20Z",
+        "expiry_date": "2025-08-12T19:34:59Z"
+    }
+},
+{
+    "model": "myApp.payment",
+    "pk": 56,
+    "fields": {
+        "landlord": 3,
+        "amount": "1.00",
+        "phone_number": "254700740099",
+        "transaction_id": "ws_CO_280720251711559700740099",
+        "mpesa_receipt": "TGS9VBWA8R",
+        "checkout_request_id": "ws_CO_280720251711559700740099",
+        "status": "Success",
+        "is_successful": true,
+        "timestamp": "2025-07-28T14:12:08.663Z",
+        "expiry_date": "2025-07-29T14:12:06.078Z"
+    }
+},
+{
+    "model": "myApp.payment",
+    "pk": 59,
+    "fields": {
+        "landlord": 3,
+        "amount": "1.00",
+        "phone_number": "254700740099",
+        "transaction_id": "ws_CO_290720251955479700740099",
+        "mpesa_receipt": "TGT92B9GGZ",
+        "checkout_request_id": "ws_CO_290720251955479700740099",
+        "status": "Success",
+        "is_successful": true,
+        "timestamp": "2025-07-29T16:55:58Z",
+        "expiry_date": "2025-07-29T12:55:58Z"
+    }
+},
+{
+    "model": "myApp.payment",
+    "pk": 60,
+    "fields": {
+        "landlord": 3,
+        "amount": "1.00",
+        "phone_number": "254700740099",
+        "transaction_id": "ws_CO_290720252018123700740099",
+        "mpesa_receipt": "TGT92GWMR5",
+        "checkout_request_id": "ws_CO_290720252018123700740099",
+        "status": "Success",
+        "is_successful": true,
+        "timestamp": "2025-07-29T17:18:27Z",
+        "expiry_date": "2025-07-29T17:18:23Z"
+    }
+},
+{
+    "model": "myApp.payment",
+    "pk": 61,
+    "fields": {
+        "landlord": 3,
+        "amount": "1.00",
+        "phone_number": "254700740099",
+        "transaction_id": "ws_CO_290720252026318700740099",
+        "mpesa_receipt": "TGT92IUURR",
+        "checkout_request_id": "ws_CO_290720252026318700740099",
+        "status": "Success",
+        "is_successful": true,
+        "timestamp": "2025-07-29T17:26:40.872Z",
+        "expiry_date": "2025-07-30T17:26:40.872Z"
+    }
+},
+{
+    "model": "myApp.payment",
+    "pk": 70,
+    "fields": {
+        "landlord": 3,
+        "amount": "1.00",
+        "phone_number": "254113131983",
+        "transaction_id": "ws_CO_310720250935360113131983",
+        "mpesa_receipt": "TGV392W1MH",
+        "checkout_request_id": "ws_CO_310720250935360113131983",
+        "status": "Success",
+        "is_successful": true,
+        "timestamp": "2025-07-31T06:35:46Z",
+        "expiry_date": "2025-08-20T20:34:36Z"
+    }
+},
+{
+    "model": "myApp.payment",
+    "pk": 71,
+    "fields": {
+        "landlord": 9,
+        "amount": "1.00",
+        "phone_number": "254700740099",
+        "transaction_id": "ws_CO_020820252129265700740099",
+        "mpesa_receipt": "TH23NISKHH",
+        "checkout_request_id": "ws_CO_020820252129265700740099",
+        "status": "Success",
+        "is_successful": true,
+        "timestamp": "2025-08-02T18:29:35Z",
+        "expiry_date": "2025-08-20T20:17:59Z"
+    }
+},
+{
+    "model": "myApp.payment",
+    "pk": 77,
+    "fields": {
+        "landlord": 1,
+        "amount": "3.00",
+        "phone_number": "254700740099",
+        "transaction_id": "ws_CO_130820251124280700740099",
+        "mpesa_receipt": "THD25MKWRG",
+        "checkout_request_id": "ws_CO_130820251124280700740099",
+        "status": "Success",
+        "is_successful": true,
+        "timestamp": "2025-08-13T08:24:42Z",
+        "expiry_date": "2025-08-21T08:24:42Z"
+    }
+},
+{
+    "model": "myApp.payment",
+    "pk": 78,
+    "fields": {
+        "landlord": 1,
+        "amount": "3.00",
+        "phone_number": "254700740099",
+        "transaction_id": "ws_CO_210820251804183700740099",
+        "mpesa_receipt": "THL0C3FJCY",
+        "checkout_request_id": "ws_CO_210820251804183700740099",
+        "status": "Success",
+        "is_successful": true,
+        "timestamp": "2025-08-21T15:04:25.896Z",
+        "expiry_date": "2025-09-20T15:04:25.896Z"
+    }
+},
+{
+    "model": "myApp.payment",
+    "pk": 79,
+    "fields": {
+        "landlord": 9,
+        "amount": "599.00",
+        "phone_number": "254700740099",
+        "transaction_id": "ws_CO_210820251831563700740099",
+        "mpesa_receipt": null,
+        "checkout_request_id": "ws_CO_210820251831563700740099",
+        "status": "Pending",
+        "is_successful": false,
+        "timestamp": "2025-08-21T15:31:50.325Z",
+        "expiry_date": null
+    }
+},
+{
+    "model": "myApp.payment",
+    "pk": 80,
+    "fields": {
+        "landlord": 9,
+        "amount": "3.00",
+        "phone_number": "254700740099",
+        "transaction_id": "ws_CO_220820251155102700740099",
+        "mpesa_receipt": null,
+        "checkout_request_id": "ws_CO_220820251155102700740099",
+        "status": "Pending",
+        "is_successful": false,
+        "timestamp": "2025-08-22T08:55:04.126Z",
+        "expiry_date": null
+    }
+},
+{
+    "model": "myApp.payment",
+    "pk": 81,
+    "fields": {
+        "landlord": 9,
+        "amount": "3.00",
+        "phone_number": "254700740099",
+        "transaction_id": "ws_CO_220820251209287700740099",
+        "mpesa_receipt": "THM4FEGCUW",
+        "checkout_request_id": "ws_CO_220820251209287700740099",
+        "status": "Success",
+        "is_successful": true,
+        "timestamp": "2025-08-22T09:09:33.883Z",
+        "expiry_date": "2025-09-21T09:09:33.883Z"
+    }
+},
+{
+    "model": "myApp.payment",
+    "pk": 82,
+    "fields": {
+        "landlord": 3,
+        "amount": "3.00",
+        "phone_number": "254700740099",
+        "transaction_id": "ws_CO_220820251415242700740099",
+        "mpesa_receipt": null,
+        "checkout_request_id": "ws_CO_220820251415242700740099",
+        "status": "Pending",
+        "is_successful": false,
+        "timestamp": "2025-08-22T11:15:18.274Z",
+        "expiry_date": null
+    }
+},
+{
+    "model": "myApp.payment",
+    "pk": 83,
+    "fields": {
+        "landlord": 3,
+        "amount": "3.00",
+        "phone_number": "254700740099",
+        "transaction_id": "ws_CO_220820251418580700740099",
+        "mpesa_receipt": null,
+        "checkout_request_id": "ws_CO_220820251418580700740099",
+        "status": "Pending",
+        "is_successful": false,
+        "timestamp": "2025-08-22T11:18:51.709Z",
+        "expiry_date": null
+    }
+},
+{
+    "model": "myApp.payment",
+    "pk": 84,
+    "fields": {
+        "landlord": 3,
+        "amount": "3.00",
+        "phone_number": "254700740099",
+        "transaction_id": "ws_CO_220820251421351700740099",
+        "mpesa_receipt": null,
+        "checkout_request_id": "ws_CO_220820251421351700740099",
+        "status": "Pending",
+        "is_successful": false,
+        "timestamp": "2025-08-22T11:21:29.118Z",
+        "expiry_date": null
+    }
+},
+{
+    "model": "myApp.payment",
+    "pk": 85,
+    "fields": {
+        "landlord": 3,
+        "amount": "3.00",
+        "phone_number": "254700740099",
+        "transaction_id": "ws_CO_220820251423193700740099",
+        "mpesa_receipt": null,
+        "checkout_request_id": "ws_CO_220820251423193700740099",
+        "status": "Pending",
+        "is_successful": false,
+        "timestamp": "2025-08-22T11:23:12.509Z",
+        "expiry_date": null
+    }
+},
+{
+    "model": "myApp.payment",
+    "pk": 86,
+    "fields": {
+        "landlord": 3,
+        "amount": "3.00",
+        "phone_number": "254700740099",
+        "transaction_id": "ws_CO_220820252305175700740099",
+        "mpesa_receipt": null,
+        "checkout_request_id": "ws_CO_220820252305175700740099",
+        "status": "Pending",
+        "is_successful": false,
+        "timestamp": "2025-08-22T20:05:10.791Z",
+        "expiry_date": null
+    }
+},
+{
+    "model": "myApp.payment",
+    "pk": 87,
+    "fields": {
+        "landlord": 3,
+        "amount": "3.00",
+        "phone_number": "254700740099",
+        "transaction_id": "ws_CO_220820252335176700740099",
+        "mpesa_receipt": "THM3IZTDS5",
+        "checkout_request_id": "ws_CO_220820252335176700740099",
+        "status": "Success",
+        "is_successful": true,
+        "timestamp": "2025-08-22T20:35:24.285Z",
+        "expiry_date": "2025-09-21T20:35:24.285Z"
+    }
+},
+{
+    "model": "myApp.favoriteproperty",
+    "pk": 46,
+    "fields": {
+        "tenant": 2,
+        "property": 6,
+        "added_on": "2025-07-10T04:48:15.075Z"
+    }
+},
+{
+    "model": "myApp.favoriteproperty",
+    "pk": 55,
+    "fields": {
+        "tenant": 2,
+        "property": 9,
+        "added_on": "2025-07-12T00:05:16.361Z"
+    }
+},
+{
+    "model": "myApp.favoriteproperty",
+    "pk": 66,
+    "fields": {
+        "tenant": 2,
+        "property": 15,
+        "added_on": "2025-07-13T19:23:35.246Z"
+    }
+},
+{
+    "model": "myApp.favoriteproperty",
+    "pk": 67,
+    "fields": {
+        "tenant": 2,
+        "property": 17,
+        "added_on": "2025-07-13T19:25:50.227Z"
+    }
+},
+{
+    "model": "myApp.favoriteproperty",
+    "pk": 68,
+    "fields": {
+        "tenant": 2,
+        "property": 5,
+        "added_on": "2025-07-13T19:49:47.388Z"
+    }
+},
+{
+    "model": "myApp.favoriteproperty",
+    "pk": 69,
+    "fields": {
+        "tenant": 2,
+        "property": 13,
+        "added_on": "2025-07-13T19:53:49.551Z"
+    }
+},
+{
+    "model": "myApp.favoriteproperty",
+    "pk": 70,
+    "fields": {
+        "tenant": 2,
+        "property": 14,
+        "added_on": "2025-07-13T19:56:33.021Z"
+    }
+},
+{
+    "model": "myApp.favoriteproperty",
+    "pk": 72,
+    "fields": {
+        "tenant": 3,
+        "property": 5,
+        "added_on": "2025-07-13T21:37:57.516Z"
+    }
+},
+{
+    "model": "myApp.favoriteproperty",
+    "pk": 74,
+    "fields": {
+        "tenant": 3,
+        "property": 8,
+        "added_on": "2025-07-14T14:34:59.561Z"
+    }
+},
+{
+    "model": "myApp.favoriteproperty",
+    "pk": 75,
+    "fields": {
+        "tenant": 3,
+        "property": 17,
+        "added_on": "2025-07-14T14:57:49.135Z"
+    }
+},
+{
+    "model": "myApp.favoriteproperty",
+    "pk": 76,
+    "fields": {
+        "tenant": 3,
+        "property": 16,
+        "added_on": "2025-07-14T17:36:57.601Z"
+    }
+},
+{
+    "model": "myApp.favoriteproperty",
+    "pk": 85,
+    "fields": {
+        "tenant": 5,
+        "property": 16,
+        "added_on": "2025-07-17T16:39:21.960Z"
+    }
+},
+{
+    "model": "myApp.favoriteproperty",
+    "pk": 86,
+    "fields": {
+        "tenant": 5,
+        "property": 17,
+        "added_on": "2025-07-17T18:23:49.740Z"
+    }
+},
+{
+    "model": "myApp.favoriteproperty",
+    "pk": 87,
+    "fields": {
+        "tenant": 5,
+        "property": 14,
+        "added_on": "2025-07-17T18:38:46.023Z"
+    }
+},
+{
+    "model": "myApp.favoriteproperty",
+    "pk": 88,
+    "fields": {
+        "tenant": 5,
+        "property": 15,
+        "added_on": "2025-07-17T18:42:01.991Z"
+    }
+},
+{
+    "model": "myApp.favoriteproperty",
+    "pk": 89,
+    "fields": {
+        "tenant": 5,
+        "property": 10,
+        "added_on": "2025-07-17T19:22:30.771Z"
+    }
+},
+{
+    "model": "myApp.favoriteproperty",
+    "pk": 91,
+    "fields": {
+        "tenant": 4,
+        "property": 9,
+        "added_on": "2025-07-17T20:53:31.692Z"
+    }
+},
+{
+    "model": "myApp.favoriteproperty",
+    "pk": 92,
+    "fields": {
+        "tenant": 5,
+        "property": 6,
+        "added_on": "2025-07-17T21:18:14.209Z"
+    }
+},
+{
+    "model": "myApp.favoriteproperty",
+    "pk": 93,
+    "fields": {
+        "tenant": 5,
+        "property": 20,
+        "added_on": "2025-07-17T22:13:57.304Z"
+    }
+},
+{
+    "model": "myApp.favoriteproperty",
+    "pk": 94,
+    "fields": {
+        "tenant": 3,
+        "property": 20,
+        "added_on": "2025-07-18T06:54:58.297Z"
+    }
+},
+{
+    "model": "myApp.favoriteproperty",
+    "pk": 95,
+    "fields": {
+        "tenant": 2,
+        "property": 20,
+        "added_on": "2025-07-18T10:50:00.520Z"
+    }
+},
+{
+    "model": "myApp.favoriteproperty",
+    "pk": 100,
+    "fields": {
+        "tenant": 3,
+        "property": 15,
+        "added_on": "2025-07-19T22:29:36.190Z"
+    }
+},
+{
+    "model": "myApp.favoriteproperty",
+    "pk": 101,
+    "fields": {
+        "tenant": 3,
+        "property": 11,
+        "added_on": "2025-07-20T06:20:57.965Z"
+    }
+},
+{
+    "model": "myApp.favoriteproperty",
+    "pk": 102,
+    "fields": {
+        "tenant": 3,
+        "property": 13,
+        "added_on": "2025-07-20T06:45:00.597Z"
+    }
+},
+{
+    "model": "myApp.favoriteproperty",
+    "pk": 103,
+    "fields": {
+        "tenant": 3,
+        "property": 9,
+        "added_on": "2025-07-21T20:25:41.321Z"
+    }
+},
+{
+    "model": "myApp.favoriteproperty",
+    "pk": 104,
+    "fields": {
+        "tenant": 4,
+        "property": 20,
+        "added_on": "2025-07-22T19:14:13.985Z"
+    }
+},
+{
+    "model": "myApp.favoriteproperty",
+    "pk": 105,
+    "fields": {
+        "tenant": 4,
+        "property": 21,
+        "added_on": "2025-07-22T19:19:51.592Z"
+    }
+},
+{
+    "model": "myApp.favoriteproperty",
+    "pk": 106,
+    "fields": {
+        "tenant": 2,
+        "property": 21,
+        "added_on": "2025-07-23T15:06:37.939Z"
+    }
+},
+{
+    "model": "myApp.favoriteproperty",
+    "pk": 107,
+    "fields": {
+        "tenant": 4,
+        "property": 22,
+        "added_on": "2025-07-26T09:26:22.393Z"
+    }
+},
+{
+    "model": "myApp.favoriteproperty",
+    "pk": 108,
+    "fields": {
+        "tenant": 4,
+        "property": 11,
+        "added_on": "2025-07-26T13:45:00.615Z"
+    }
+},
+{
+    "model": "myApp.favoriteproperty",
+    "pk": 109,
+    "fields": {
+        "tenant": 7,
+        "property": 22,
+        "added_on": "2025-07-27T11:38:42.383Z"
+    }
+},
+{
+    "model": "myApp.favoriteproperty",
+    "pk": 110,
+    "fields": {
+        "tenant": 6,
+        "property": 15,
+        "added_on": "2025-07-28T15:27:44.300Z"
+    }
+},
+{
+    "model": "myApp.favoriteproperty",
+    "pk": 112,
+    "fields": {
+        "tenant": 6,
+        "property": 5,
+        "added_on": "2025-07-28T16:05:31.036Z"
+    }
+},
+{
+    "model": "myApp.favoriteproperty",
+    "pk": 115,
+    "fields": {
+        "tenant": 4,
+        "property": 23,
+        "added_on": "2025-07-29T12:15:33.815Z"
+    }
+},
+{
+    "model": "myApp.favoriteproperty",
+    "pk": 116,
+    "fields": {
+        "tenant": 4,
+        "property": 6,
+        "added_on": "2025-07-29T15:29:24.457Z"
+    }
+},
+{
+    "model": "myApp.favoriteproperty",
+    "pk": 117,
+    "fields": {
+        "tenant": 6,
+        "property": 16,
+        "added_on": "2025-07-29T20:48:16.178Z"
+    }
+},
+{
+    "model": "myApp.favoriteproperty",
+    "pk": 118,
+    "fields": {
+        "tenant": 6,
+        "property": 13,
+        "added_on": "2025-07-29T20:48:28.581Z"
+    }
+},
+{
+    "model": "myApp.favoriteproperty",
+    "pk": 119,
+    "fields": {
+        "tenant": 2,
+        "property": 23,
+        "added_on": "2025-07-29T22:03:26.632Z"
+    }
+},
+{
+    "model": "myApp.favoriteproperty",
+    "pk": 120,
+    "fields": {
+        "tenant": 6,
+        "property": 21,
+        "added_on": "2025-07-30T08:57:17.751Z"
+    }
+},
+{
+    "model": "myApp.favoriteproperty",
+    "pk": 121,
+    "fields": {
+        "tenant": 3,
+        "property": 22,
+        "added_on": "2025-08-02T16:46:10.159Z"
+    }
+},
+{
+    "model": "myApp.favoriteproperty",
+    "pk": 122,
+    "fields": {
+        "tenant": 3,
+        "property": 24,
+        "added_on": "2025-08-02T19:00:19.910Z"
+    }
+},
+{
+    "model": "myApp.favoriteproperty",
+    "pk": 123,
+    "fields": {
+        "tenant": 4,
+        "property": 7,
+        "added_on": "2025-08-05T07:16:03.536Z"
+    }
+},
+{
+    "model": "myApp.favoriteproperty",
+    "pk": 125,
+    "fields": {
+        "tenant": 2,
+        "property": 16,
+        "added_on": "2025-08-07T06:45:52.092Z"
+    }
+},
+{
+    "model": "myApp.favoriteproperty",
+    "pk": 126,
+    "fields": {
+        "tenant": 2,
+        "property": 25,
+        "added_on": "2025-08-07T16:30:32.438Z"
+    }
+},
+{
+    "model": "myApp.favoriteproperty",
+    "pk": 127,
+    "fields": {
+        "tenant": 4,
+        "property": 5,
+        "added_on": "2025-08-08T10:11:21.862Z"
+    }
+},
+{
+    "model": "myApp.favoriteproperty",
+    "pk": 128,
+    "fields": {
+        "tenant": 6,
+        "property": 11,
+        "added_on": "2025-08-08T14:25:52.908Z"
+    }
+},
+{
+    "model": "myApp.favoriteproperty",
+    "pk": 129,
+    "fields": {
+        "tenant": 6,
+        "property": 25,
+        "added_on": "2025-08-08T14:28:04.967Z"
+    }
+},
+{
+    "model": "myApp.favoriteproperty",
+    "pk": 131,
+    "fields": {
+        "tenant": 8,
+        "property": 15,
+        "added_on": "2025-08-10T10:03:18.920Z"
+    }
+},
+{
+    "model": "myApp.favoriteproperty",
+    "pk": 132,
+    "fields": {
+        "tenant": 8,
+        "property": 11,
+        "added_on": "2025-08-10T10:18:23.722Z"
+    }
+},
+{
+    "model": "myApp.favoriteproperty",
+    "pk": 133,
+    "fields": {
+        "tenant": 8,
+        "property": 21,
+        "added_on": "2025-08-10T14:02:38.898Z"
+    }
+},
+{
+    "model": "myApp.favoriteproperty",
+    "pk": 134,
+    "fields": {
+        "tenant": 4,
+        "property": 15,
+        "added_on": "2025-08-10T14:47:09.776Z"
+    }
+},
+{
+    "model": "myApp.favoriteproperty",
+    "pk": 136,
+    "fields": {
+        "tenant": 9,
+        "property": 20,
+        "added_on": "2025-08-11T22:38:13.125Z"
+    }
+},
+{
+    "model": "myApp.favoriteproperty",
+    "pk": 137,
+    "fields": {
+        "tenant": 4,
+        "property": 12,
+        "added_on": "2025-08-12T13:48:18.060Z"
+    }
+},
+{
+    "model": "myApp.favoriteproperty",
+    "pk": 138,
+    "fields": {
+        "tenant": 9,
+        "property": 17,
+        "added_on": "2025-08-12T14:48:34.806Z"
+    }
+},
+{
+    "model": "myApp.favoriteproperty",
+    "pk": 139,
+    "fields": {
+        "tenant": 9,
+        "property": 13,
+        "added_on": "2025-08-12T14:56:32.809Z"
+    }
+},
+{
+    "model": "myApp.favoriteproperty",
+    "pk": 140,
+    "fields": {
+        "tenant": 4,
+        "property": 10,
+        "added_on": "2025-08-13T18:56:29.340Z"
+    }
+},
+{
+    "model": "myApp.favoriteproperty",
+    "pk": 141,
+    "fields": {
+        "tenant": 2,
+        "property": 11,
+        "added_on": "2025-08-16T13:11:27.876Z"
+    }
+},
+{
+    "model": "myApp.favoriteproperty",
+    "pk": 142,
+    "fields": {
+        "tenant": 9,
+        "property": 23,
+        "added_on": "2025-08-16T18:08:36.896Z"
+    }
+},
+{
+    "model": "myApp.favoriteproperty",
+    "pk": 143,
+    "fields": {
+        "tenant": 9,
+        "property": 14,
+        "added_on": "2025-08-18T13:02:20.075Z"
+    }
+},
+{
+    "model": "myApp.favoriteproperty",
+    "pk": 146,
+    "fields": {
+        "tenant": 4,
+        "property": 8,
+        "added_on": "2025-08-19T19:18:22.897Z"
+    }
+},
+{
+    "model": "myApp.favoriteproperty",
+    "pk": 148,
+    "fields": {
+        "tenant": 3,
+        "property": 12,
+        "added_on": "2025-08-19T19:33:41.779Z"
+    }
+},
+{
+    "model": "myApp.favoriteproperty",
+    "pk": 149,
+    "fields": {
+        "tenant": 6,
+        "property": 6,
+        "added_on": "2025-08-19T20:25:42.649Z"
+    }
+},
+{
+    "model": "myApp.favoriteproperty",
+    "pk": 150,
+    "fields": {
+        "tenant": 4,
+        "property": 13,
+        "added_on": "2025-08-20T15:01:01.928Z"
+    }
+},
+{
+    "model": "myApp.favoriteproperty",
+    "pk": 151,
+    "fields": {
+        "tenant": 9,
+        "property": 16,
+        "added_on": "2025-08-21T15:53:52.423Z"
+    }
+},
+{
+    "model": "myApp.favoriteproperty",
+    "pk": 152,
+    "fields": {
+        "tenant": 9,
+        "property": 10,
+        "added_on": "2025-08-22T21:15:11.607Z"
+    }
+},
+{
+    "model": "myApp.favoriteproperty",
+    "pk": 153,
+    "fields": {
+        "tenant": 9,
+        "property": 24,
+        "added_on": "2025-08-22T21:56:34.335Z"
+    }
+},
+{
+    "model": "myApp.favoriteproperty",
+    "pk": 154,
+    "fields": {
+        "tenant": 9,
+        "property": 15,
+        "added_on": "2025-08-23T12:51:32.157Z"
+    }
+},
+{
+    "model": "myApp.favoriteproperty",
+    "pk": 155,
+    "fields": {
+        "tenant": 4,
+        "property": 16,
+        "added_on": "2025-08-23T13:23:27.895Z"
+    }
+},
+{
+    "model": "myApp.favoriteproperty",
+    "pk": 156,
+    "fields": {
+        "tenant": 4,
+        "property": 25,
+        "added_on": "2025-08-23T13:46:27.003Z"
+    }
+},
+{
+    "model": "myApp.propertyview",
+    "pk": 2,
+    "fields": {
+        "tenant": 2,
+        "property": 8,
+        "viewed_on": "2025-08-13T20:29:35.243Z"
+    }
+},
+{
+    "model": "myApp.propertyview",
+    "pk": 5,
+    "fields": {
+        "tenant": 2,
+        "property": 7,
+        "viewed_on": "2025-08-07T06:44:28.695Z"
+    }
+},
+{
+    "model": "myApp.propertyview",
+    "pk": 6,
+    "fields": {
+        "tenant": 2,
+        "property": 5,
+        "viewed_on": "2025-08-16T12:20:28.564Z"
+    }
+},
+{
+    "model": "myApp.propertyview",
+    "pk": 7,
+    "fields": {
+        "tenant": 3,
+        "property": 5,
+        "viewed_on": "2025-08-21T15:44:15.030Z"
+    }
+},
+{
+    "model": "myApp.propertyview",
+    "pk": 9,
+    "fields": {
+        "tenant": 3,
+        "property": 7,
+        "viewed_on": "2025-08-06T10:51:30.767Z"
+    }
+},
+{
+    "model": "myApp.propertyview",
+    "pk": 10,
+    "fields": {
+        "tenant": 4,
+        "property": 8,
+        "viewed_on": "2025-08-23T13:32:58.010Z"
+    }
+},
+{
+    "model": "myApp.propertyview",
+    "pk": 12,
+    "fields": {
+        "tenant": 4,
+        "property": 7,
+        "viewed_on": "2025-08-19T20:17:16.673Z"
+    }
+},
+{
+    "model": "myApp.propertyview",
+    "pk": 15,
+    "fields": {
+        "tenant": 2,
+        "property": 6,
+        "viewed_on": "2025-08-16T13:12:25.429Z"
+    }
+},
+{
+    "model": "myApp.propertyview",
+    "pk": 16,
+    "fields": {
+        "tenant": 4,
+        "property": 6,
+        "viewed_on": "2025-08-22T20:51:12.492Z"
+    }
+},
+{
+    "model": "myApp.propertyview",
+    "pk": 18,
+    "fields": {
+        "tenant": 4,
+        "property": 5,
+        "viewed_on": "2025-08-23T13:51:37.194Z"
+    }
+},
+{
+    "model": "myApp.propertyview",
+    "pk": 20,
+    "fields": {
+        "tenant": 3,
+        "property": 6,
+        "viewed_on": "2025-08-25T12:53:44.164Z"
+    }
+},
+{
+    "model": "myApp.propertyview",
+    "pk": 21,
+    "fields": {
+        "tenant": 2,
+        "property": 9,
+        "viewed_on": "2025-08-16T18:38:01.247Z"
+    }
+},
+{
+    "model": "myApp.propertyview",
+    "pk": 22,
+    "fields": {
+        "tenant": 2,
+        "property": 10,
+        "viewed_on": "2025-08-20T18:54:14.658Z"
+    }
+},
+{
+    "model": "myApp.propertyview",
+    "pk": 23,
+    "fields": {
+        "tenant": 2,
+        "property": 11,
+        "viewed_on": "2025-08-20T18:52:27.055Z"
+    }
+},
+{
+    "model": "myApp.propertyview",
+    "pk": 24,
+    "fields": {
+        "tenant": 4,
+        "property": 11,
+        "viewed_on": "2025-08-19T18:01:03.619Z"
+    }
+},
+{
+    "model": "myApp.propertyview",
+    "pk": 25,
+    "fields": {
+        "tenant": 2,
+        "property": 12,
+        "viewed_on": "2025-08-13T20:20:18.977Z"
+    }
+},
+{
+    "model": "myApp.propertyview",
+    "pk": 26,
+    "fields": {
+        "tenant": 3,
+        "property": 11,
+        "viewed_on": "2025-08-02T20:21:12.863Z"
+    }
+},
+{
+    "model": "myApp.propertyview",
+    "pk": 27,
+    "fields": {
+        "tenant": 4,
+        "property": 12,
+        "viewed_on": "2025-08-23T13:27:04.158Z"
+    }
+},
+{
+    "model": "myApp.propertyview",
+    "pk": 28,
+    "fields": {
+        "tenant": 3,
+        "property": 10,
+        "viewed_on": "2025-08-06T11:07:50.806Z"
+    }
+},
+{
+    "model": "myApp.propertyview",
+    "pk": 29,
+    "fields": {
+        "tenant": 2,
+        "property": 14,
+        "viewed_on": "2025-08-06T22:16:42.631Z"
+    }
+},
+{
+    "model": "myApp.propertyview",
+    "pk": 30,
+    "fields": {
+        "tenant": 3,
+        "property": 8,
+        "viewed_on": "2025-07-25T10:34:41.856Z"
+    }
+},
+{
+    "model": "myApp.propertyview",
+    "pk": 31,
+    "fields": {
+        "tenant": 3,
+        "property": 14,
+        "viewed_on": "2025-08-19T19:33:28.762Z"
+    }
+},
+{
+    "model": "myApp.propertyview",
+    "pk": 32,
+    "fields": {
+        "tenant": 3,
+        "property": 12,
+        "viewed_on": "2025-08-25T11:02:57.365Z"
+    }
+},
+{
+    "model": "myApp.propertyview",
+    "pk": 33,
+    "fields": {
+        "tenant": 3,
+        "property": 9,
+        "viewed_on": "2025-07-22T09:18:38.119Z"
+    }
+},
+{
+    "model": "myApp.propertyview",
+    "pk": 34,
+    "fields": {
+        "tenant": 3,
+        "property": 13,
+        "viewed_on": "2025-08-06T09:53:33.763Z"
+    }
+},
+{
+    "model": "myApp.propertyview",
+    "pk": 35,
+    "fields": {
+        "tenant": 3,
+        "property": 15,
+        "viewed_on": "2025-08-19T19:35:47.883Z"
+    }
+},
+{
+    "model": "myApp.propertyview",
+    "pk": 36,
+    "fields": {
+        "tenant": 3,
+        "property": 17,
+        "viewed_on": "2025-08-02T16:50:10.532Z"
+    }
+},
+{
+    "model": "myApp.propertyview",
+    "pk": 38,
+    "fields": {
+        "tenant": 2,
+        "property": 15,
+        "viewed_on": "2025-08-22T11:14:08.115Z"
+    }
+},
+{
+    "model": "myApp.propertyview",
+    "pk": 39,
+    "fields": {
+        "tenant": 2,
+        "property": 17,
+        "viewed_on": "2025-08-16T12:21:48.304Z"
+    }
+},
+{
+    "model": "myApp.propertyview",
+    "pk": 40,
+    "fields": {
+        "tenant": 2,
+        "property": 13,
+        "viewed_on": "2025-08-20T18:44:46.510Z"
+    }
+},
+{
+    "model": "myApp.propertyview",
+    "pk": 42,
+    "fields": {
+        "tenant": 3,
+        "property": 16,
+        "viewed_on": "2025-08-04T08:24:36.780Z"
+    }
+},
+{
+    "model": "myApp.propertyview",
+    "pk": 44,
+    "fields": {
+        "tenant": 4,
+        "property": 14,
+        "viewed_on": "2025-08-19T19:03:26.701Z"
+    }
+},
+{
+    "model": "myApp.propertyview",
+    "pk": 45,
+    "fields": {
+        "tenant": 4,
+        "property": 17,
+        "viewed_on": "2025-08-22T20:51:52.620Z"
+    }
+},
+{
+    "model": "myApp.propertyview",
+    "pk": 46,
+    "fields": {
+        "tenant": 4,
+        "property": 10,
+        "viewed_on": "2025-08-25T12:19:02.477Z"
+    }
+},
+{
+    "model": "myApp.propertyview",
+    "pk": 47,
+    "fields": {
+        "tenant": 4,
+        "property": 13,
+        "viewed_on": "2025-08-23T13:41:22.433Z"
+    }
+},
+{
+    "model": "myApp.propertyview",
+    "pk": 48,
+    "fields": {
+        "tenant": 4,
+        "property": 15,
+        "viewed_on": "2025-08-23T13:20:33.536Z"
+    }
+},
+{
+    "model": "myApp.propertyview",
+    "pk": 49,
+    "fields": {
+        "tenant": 4,
+        "property": 16,
+        "viewed_on": "2025-08-25T12:24:31.851Z"
+    }
+},
+{
+    "model": "myApp.propertyview",
+    "pk": 50,
+    "fields": {
+        "tenant": 2,
+        "property": 16,
+        "viewed_on": "2025-08-22T10:51:29.377Z"
+    }
+},
+{
+    "model": "myApp.propertyview",
+    "pk": 51,
+    "fields": {
+        "tenant": 5,
+        "property": 16,
+        "viewed_on": "2025-07-20T16:57:58.952Z"
+    }
+},
+{
+    "model": "myApp.propertyview",
+    "pk": 52,
+    "fields": {
+        "tenant": 5,
+        "property": 7,
+        "viewed_on": "2025-07-17T16:57:45.809Z"
+    }
+},
+{
+    "model": "myApp.propertyview",
+    "pk": 53,
+    "fields": {
+        "tenant": 5,
+        "property": 17,
+        "viewed_on": "2025-07-24T09:23:53.019Z"
+    }
+},
+{
+    "model": "myApp.propertyview",
+    "pk": 54,
+    "fields": {
+        "tenant": 5,
+        "property": 14,
+        "viewed_on": "2025-07-24T11:02:03.658Z"
+    }
+},
+{
+    "model": "myApp.propertyview",
+    "pk": 55,
+    "fields": {
+        "tenant": 5,
+        "property": 15,
+        "viewed_on": "2025-07-24T10:20:21.681Z"
+    }
+},
+{
+    "model": "myApp.propertyview",
+    "pk": 56,
+    "fields": {
+        "tenant": 5,
+        "property": 12,
+        "viewed_on": "2025-07-17T19:25:27.131Z"
+    }
+},
+{
+    "model": "myApp.propertyview",
+    "pk": 57,
+    "fields": {
+        "tenant": 5,
+        "property": 10,
+        "viewed_on": "2025-07-17T21:26:50.620Z"
+    }
+},
+{
+    "model": "myApp.propertyview",
+    "pk": 58,
+    "fields": {
+        "tenant": 5,
+        "property": 9,
+        "viewed_on": "2025-07-17T22:47:41.602Z"
+    }
+},
+{
+    "model": "myApp.propertyview",
+    "pk": 59,
+    "fields": {
+        "tenant": 4,
+        "property": 9,
+        "viewed_on": "2025-08-22T20:56:11.523Z"
+    }
+},
+{
+    "model": "myApp.propertyview",
+    "pk": 60,
+    "fields": {
+        "tenant": 5,
+        "property": 11,
+        "viewed_on": "2025-07-17T21:08:07.545Z"
+    }
+},
+{
+    "model": "myApp.propertyview",
+    "pk": 61,
+    "fields": {
+        "tenant": 5,
+        "property": 13,
+        "viewed_on": "2025-07-17T21:19:50.577Z"
+    }
+},
+{
+    "model": "myApp.propertyview",
+    "pk": 62,
+    "fields": {
+        "tenant": 5,
+        "property": 8,
+        "viewed_on": "2025-07-17T21:18:02.067Z"
+    }
+},
+{
+    "model": "myApp.propertyview",
+    "pk": 63,
+    "fields": {
+        "tenant": 5,
+        "property": 6,
+        "viewed_on": "2025-07-17T21:27:13.715Z"
+    }
+},
+{
+    "model": "myApp.propertyview",
+    "pk": 64,
+    "fields": {
+        "tenant": 5,
+        "property": 5,
+        "viewed_on": "2025-07-17T21:29:44.097Z"
+    }
+},
+{
+    "model": "myApp.propertyview",
+    "pk": 65,
+    "fields": {
+        "tenant": 5,
+        "property": 20,
+        "viewed_on": "2025-07-18T10:52:09.402Z"
+    }
+},
+{
+    "model": "myApp.propertyview",
+    "pk": 66,
+    "fields": {
+        "tenant": 3,
+        "property": 20,
+        "viewed_on": "2025-08-25T12:50:40.709Z"
+    }
+},
+{
+    "model": "myApp.propertyview",
+    "pk": 67,
+    "fields": {
+        "tenant": 2,
+        "property": 20,
+        "viewed_on": "2025-08-16T11:56:52.937Z"
+    }
+},
+{
+    "model": "myApp.propertyview",
+    "pk": 68,
+    "fields": {
+        "tenant": 4,
+        "property": 20,
+        "viewed_on": "2025-08-25T10:48:09.039Z"
+    }
+},
+{
+    "model": "myApp.propertyview",
+    "pk": 69,
+    "fields": {
+        "tenant": 6,
+        "property": 20,
+        "viewed_on": "2025-08-09T19:29:55.142Z"
+    }
+},
+{
+    "model": "myApp.propertyview",
+    "pk": 70,
+    "fields": {
+        "tenant": 6,
+        "property": 16,
+        "viewed_on": "2025-08-08T19:24:06.524Z"
+    }
+},
+{
+    "model": "myApp.propertyview",
+    "pk": 71,
+    "fields": {
+        "tenant": 6,
+        "property": 13,
+        "viewed_on": "2025-08-09T19:37:24.674Z"
+    }
+},
+{
+    "model": "myApp.propertyview",
+    "pk": 72,
+    "fields": {
+        "tenant": 6,
+        "property": 14,
+        "viewed_on": "2025-07-27T18:53:45.593Z"
+    }
+},
+{
+    "model": "myApp.propertyview",
+    "pk": 73,
+    "fields": {
+        "tenant": 6,
+        "property": 15,
+        "viewed_on": "2025-08-09T19:36:05.380Z"
+    }
+},
+{
+    "model": "myApp.propertyview",
+    "pk": 74,
+    "fields": {
+        "tenant": 6,
+        "property": 17,
+        "viewed_on": "2025-07-20T17:02:03.341Z"
+    }
+},
+{
+    "model": "myApp.propertyview",
+    "pk": 75,
+    "fields": {
+        "tenant": 6,
+        "property": 11,
+        "viewed_on": "2025-08-08T19:21:10.141Z"
+    }
+},
+{
+    "model": "myApp.propertyview",
+    "pk": 76,
+    "fields": {
+        "tenant": 6,
+        "property": 9,
+        "viewed_on": "2025-08-09T19:15:55.730Z"
+    }
+},
+{
+    "model": "myApp.propertyview",
+    "pk": 77,
+    "fields": {
+        "tenant": 3,
+        "property": 21,
+        "viewed_on": "2025-07-27T18:13:44.434Z"
+    }
+},
+{
+    "model": "myApp.propertyview",
+    "pk": 78,
+    "fields": {
+        "tenant": 2,
+        "property": 21,
+        "viewed_on": "2025-08-20T18:48:13.729Z"
+    }
+},
+{
+    "model": "myApp.propertyview",
+    "pk": 79,
+    "fields": {
+        "tenant": 4,
+        "property": 21,
+        "viewed_on": "2025-08-22T21:01:37.208Z"
+    }
+},
+{
+    "model": "myApp.propertyview",
+    "pk": 80,
+    "fields": {
+        "tenant": 5,
+        "property": 21,
+        "viewed_on": "2025-07-24T09:38:02.003Z"
+    }
+},
+{
+    "model": "myApp.propertyview",
+    "pk": 81,
+    "fields": {
+        "tenant": 2,
+        "property": 22,
+        "viewed_on": "2025-08-16T12:39:57.445Z"
+    }
+},
+{
+    "model": "myApp.propertyview",
+    "pk": 82,
+    "fields": {
+        "tenant": 4,
+        "property": 22,
+        "viewed_on": "2025-08-25T11:50:17.570Z"
+    }
+},
+{
+    "model": "myApp.propertyview",
+    "pk": 83,
+    "fields": {
+        "tenant": 6,
+        "property": 7,
+        "viewed_on": "2025-08-08T14:29:11.227Z"
+    }
+},
+{
+    "model": "myApp.propertyview",
+    "pk": 84,
+    "fields": {
+        "tenant": 7,
+        "property": 5,
+        "viewed_on": "2025-07-26T14:16:24.187Z"
+    }
+},
+{
+    "model": "myApp.propertyview",
+    "pk": 85,
+    "fields": {
+        "tenant": 7,
+        "property": 11,
+        "viewed_on": "2025-07-27T11:35:24.723Z"
+    }
+},
+{
+    "model": "myApp.propertyview",
+    "pk": 86,
+    "fields": {
+        "tenant": 7,
+        "property": 22,
+        "viewed_on": "2025-07-27T11:38:42.498Z"
+    }
+},
+{
+    "model": "myApp.propertyview",
+    "pk": 87,
+    "fields": {
+        "tenant": 6,
+        "property": 5,
+        "viewed_on": "2025-08-09T19:27:38.231Z"
+    }
+},
+{
+    "model": "myApp.propertyview",
+    "pk": 88,
+    "fields": {
+        "tenant": 6,
+        "property": 10,
+        "viewed_on": "2025-07-28T15:29:56.013Z"
+    }
+},
+{
+    "model": "myApp.propertyview",
+    "pk": 89,
+    "fields": {
+        "tenant": 6,
+        "property": 21,
+        "viewed_on": "2025-07-30T08:57:17.990Z"
+    }
+},
+{
+    "model": "myApp.propertyview",
+    "pk": 90,
+    "fields": {
+        "tenant": 4,
+        "property": 23,
+        "viewed_on": "2025-08-20T14:44:31.843Z"
+    }
+},
+{
+    "model": "myApp.propertyview",
+    "pk": 91,
+    "fields": {
+        "tenant": 6,
+        "property": 22,
+        "viewed_on": "2025-08-08T14:31:03.748Z"
+    }
+},
+{
+    "model": "myApp.propertyview",
+    "pk": 92,
+    "fields": {
+        "tenant": 2,
+        "property": 23,
+        "viewed_on": "2025-08-22T08:28:59.683Z"
+    }
+},
+{
+    "model": "myApp.propertyview",
+    "pk": 93,
+    "fields": {
+        "tenant": 3,
+        "property": 23,
+        "viewed_on": "2025-07-31T14:25:07.610Z"
+    }
+},
+{
+    "model": "myApp.propertyview",
+    "pk": 94,
+    "fields": {
+        "tenant": 3,
+        "property": 22,
+        "viewed_on": "2025-08-25T12:27:26.910Z"
+    }
+},
+{
+    "model": "myApp.propertyview",
+    "pk": 95,
+    "fields": {
+        "tenant": 6,
+        "property": 6,
+        "viewed_on": "2025-08-19T20:25:42.769Z"
+    }
+},
+{
+    "model": "myApp.propertyview",
+    "pk": 96,
+    "fields": {
+        "tenant": 6,
+        "property": 23,
+        "viewed_on": "2025-07-31T17:14:08.290Z"
+    }
+},
+{
+    "model": "myApp.propertyview",
+    "pk": 97,
+    "fields": {
+        "tenant": 3,
+        "property": 24,
+        "viewed_on": "2025-08-19T19:34:38.802Z"
+    }
+},
+{
+    "model": "myApp.propertyview",
+    "pk": 98,
+    "fields": {
+        "tenant": 4,
+        "property": 24,
+        "viewed_on": "2025-08-20T14:56:59.993Z"
+    }
+},
+{
+    "model": "myApp.propertyview",
+    "pk": 99,
+    "fields": {
+        "tenant": 2,
+        "property": 25,
+        "viewed_on": "2025-08-22T11:04:24.374Z"
+    }
+},
+{
+    "model": "myApp.propertyview",
+    "pk": 100,
+    "fields": {
+        "tenant": 4,
+        "property": 25,
+        "viewed_on": "2025-08-23T13:46:27.207Z"
+    }
+},
+{
+    "model": "myApp.propertyview",
+    "pk": 101,
+    "fields": {
+        "tenant": 6,
+        "property": 25,
+        "viewed_on": "2025-08-10T11:16:17.763Z"
+    }
+},
+{
+    "model": "myApp.propertyview",
+    "pk": 102,
+    "fields": {
+        "tenant": 8,
+        "property": 21,
+        "viewed_on": "2025-08-10T14:02:39.065Z"
+    }
+},
+{
+    "model": "myApp.propertyview",
+    "pk": 103,
+    "fields": {
+        "tenant": 8,
+        "property": 25,
+        "viewed_on": "2025-08-10T13:54:03.398Z"
+    }
+},
+{
+    "model": "myApp.propertyview",
+    "pk": 104,
+    "fields": {
+        "tenant": 8,
+        "property": 15,
+        "viewed_on": "2025-08-10T12:24:22.684Z"
+    }
+},
+{
+    "model": "myApp.propertyview",
+    "pk": 105,
+    "fields": {
+        "tenant": 8,
+        "property": 5,
+        "viewed_on": "2025-08-10T13:16:52.547Z"
+    }
+},
+{
+    "model": "myApp.propertyview",
+    "pk": 106,
+    "fields": {
+        "tenant": 8,
+        "property": 11,
+        "viewed_on": "2025-08-10T13:51:38.009Z"
+    }
+},
+{
+    "model": "myApp.propertyview",
+    "pk": 107,
+    "fields": {
+        "tenant": 8,
+        "property": 17,
+        "viewed_on": "2025-08-10T11:54:59.767Z"
+    }
+},
+{
+    "model": "myApp.propertyview",
+    "pk": 108,
+    "fields": {
+        "tenant": 9,
+        "property": 20,
+        "viewed_on": "2025-08-24T20:26:03.306Z"
+    }
+},
+{
+    "model": "myApp.propertyview",
+    "pk": 109,
+    "fields": {
+        "tenant": 9,
+        "property": 12,
+        "viewed_on": "2025-08-12T09:57:26.893Z"
+    }
+},
+{
+    "model": "myApp.propertyview",
+    "pk": 110,
+    "fields": {
+        "tenant": 9,
+        "property": 17,
+        "viewed_on": "2025-08-21T15:56:30.591Z"
+    }
+},
+{
+    "model": "myApp.propertyview",
+    "pk": 111,
+    "fields": {
+        "tenant": 9,
+        "property": 13,
+        "viewed_on": "2025-08-22T22:11:13.822Z"
+    }
+},
+{
+    "model": "myApp.propertyview",
+    "pk": 112,
+    "fields": {
+        "tenant": 9,
+        "property": 23,
+        "viewed_on": "2025-08-24T06:59:49.926Z"
+    }
+},
+{
+    "model": "myApp.propertyview",
+    "pk": 113,
+    "fields": {
+        "tenant": 2,
+        "property": 24,
+        "viewed_on": "2025-08-16T12:35:11.732Z"
+    }
+},
+{
+    "model": "myApp.propertyview",
+    "pk": 114,
+    "fields": {
+        "tenant": 9,
+        "property": 15,
+        "viewed_on": "2025-08-24T20:27:04.236Z"
+    }
+},
+{
+    "model": "myApp.propertyview",
+    "pk": 115,
+    "fields": {
+        "tenant": 9,
+        "property": 21,
+        "viewed_on": "2025-08-24T06:57:49.707Z"
+    }
+},
+{
+    "model": "myApp.propertyview",
+    "pk": 116,
+    "fields": {
+        "tenant": 9,
+        "property": 14,
+        "viewed_on": "2025-08-18T13:02:20.207Z"
+    }
+},
+{
+    "model": "myApp.propertyview",
+    "pk": 117,
+    "fields": {
+        "tenant": 3,
+        "property": 25,
+        "viewed_on": "2025-08-25T12:26:54.256Z"
+    }
+},
+{
+    "model": "myApp.propertyview",
+    "pk": 118,
+    "fields": {
+        "tenant": 9,
+        "property": 24,
+        "viewed_on": "2025-08-24T06:57:03.024Z"
+    }
+},
+{
+    "model": "myApp.propertyview",
+    "pk": 119,
+    "fields": {
+        "tenant": 9,
+        "property": 16,
+        "viewed_on": "2025-08-24T07:04:21.580Z"
+    }
+},
+{
+    "model": "myApp.propertyview",
+    "pk": 120,
+    "fields": {
+        "tenant": 9,
+        "property": 25,
+        "viewed_on": "2025-08-25T12:17:50.976Z"
+    }
+},
+{
+    "model": "myApp.propertyview",
+    "pk": 121,
+    "fields": {
+        "tenant": 9,
+        "property": 10,
+        "viewed_on": "2025-08-25T12:17:31.821Z"
+    }
+},
+{
+    "model": "myApp.propertyview",
+    "pk": 122,
+    "fields": {
+        "tenant": 9,
+        "property": 22,
+        "viewed_on": "2025-08-25T12:12:04.620Z"
+    }
+},
+{
+    "model": "myApp.propertyview",
+    "pk": 123,
+    "fields": {
+        "tenant": 9,
+        "property": 11,
+        "viewed_on": "2025-08-24T06:52:22.626Z"
+    }
+},
+{
+    "model": "myApp.propertyview",
+    "pk": 124,
+    "fields": {
+        "tenant": 9,
+        "property": 5,
+        "viewed_on": "2025-08-24T20:27:50.782Z"
+    }
+},
+{
+    "model": "myApp.propertyview",
+    "pk": 125,
+    "fields": {
+        "tenant": 9,
+        "property": 9,
+        "viewed_on": "2025-08-22T22:09:27.471Z"
+    }
+},
+{
+    "model": "myApp.propertyview",
+    "pk": 126,
+    "fields": {
+        "tenant": 9,
+        "property": 6,
+        "viewed_on": "2025-08-24T07:06:43.042Z"
+    }
+},
+{
+    "model": "myApp.propertyview",
+    "pk": 127,
+    "fields": {
+        "tenant": 9,
+        "property": 8,
+        "viewed_on": "2025-08-24T07:28:37.842Z"
+    }
+},
+{
+    "model": "myApp.tenantpayment",
+    "pk": 1,
+    "fields": {
+        "tenant": 2,
+        "amount": "100.00",
+        "transaction_code": "KQD67FRT",
+        "timestamp": "2025-07-08T11:20:43.081Z",
+        "is_approved": true
+    }
+},
+{
+    "model": "myApp.tenantpayment",
+    "pk": 2,
+    "fields": {
+        "tenant": 2,
+        "amount": "100.00",
+        "transaction_code": "TG7712ZDJR",
+        "timestamp": "2025-07-08T14:35:48.023Z",
+        "is_approved": true
+    }
+},
+{
+    "model": "myApp.tenantpayment",
+    "pk": 3,
+    "fields": {
+        "tenant": 4,
+        "amount": "100.00",
+        "transaction_code": "KBE234VHD",
+        "timestamp": "2025-07-08T17:39:56.828Z",
+        "is_approved": true
+    }
+},
+{
+    "model": "myApp.tenantpayment",
+    "pk": 4,
+    "fields": {
+        "tenant": 3,
+        "amount": "100.00",
+        "transaction_code": "QRT45EDSI",
+        "timestamp": "2025-07-10T12:46:59.186Z",
+        "is_approved": true
+    }
+},
+{
+    "model": "myApp.tenantpayment",
+    "pk": 5,
+    "fields": {
+        "tenant": 4,
+        "amount": "100.00",
+        "transaction_code": "KBH45FR",
+        "timestamp": "2025-07-10T13:50:49.102Z",
+        "is_approved": true
+    }
+},
+{
+    "model": "myApp.tenantpayment",
+    "pk": 6,
+    "fields": {
+        "tenant": 5,
+        "amount": "100.00",
+        "transaction_code": "TGH5DNBZKN",
+        "timestamp": "2025-07-17T16:35:41.972Z",
+        "is_approved": true
+    }
+},
+{
+    "model": "myApp.tenantpayment",
+    "pk": 7,
+    "fields": {
+        "tenant": 6,
+        "amount": "100.00",
+        "transaction_code": "BQQHF7YFH",
+        "timestamp": "2025-07-19T18:31:58.886Z",
+        "is_approved": true
+    }
+},
+{
+    "model": "myApp.referralsubmission",
+    "pk": 4,
+    "fields": {
+        "tenant": 2,
+        "landlord_name": "Ruth Chepkorir",
+        "landlord_phone": "254113131983",
+        "tenant_phone": "0788986788",
+        "mpesa_receipt": "TGV392W1MH",
+        "submitted_at": "2025-08-06T18:24:06.689Z",
+        "is_verified": true,
+        "is_paid": true,
+        "unique_identity_key": "ruth chepkorir_2"
+    }
+},
+{
+    "model": "myApp.referralsubmission",
+    "pk": 5,
+    "fields": {
+        "tenant": 2,
+        "landlord_name": "Caren teek",
+        "landlord_phone": "254795413032",
+        "tenant_phone": "0700740099",
+        "mpesa_receipt": "TGR9PR5O8F",
+        "submitted_at": "2025-08-06T18:43:29.159Z",
+        "is_verified": true,
+        "is_paid": true,
+        "unique_identity_key": "caren teek_2"
+    }
+},
+{
+    "model": "myApp.referralsubmission",
+    "pk": 6,
+    "fields": {
+        "tenant": 2,
+        "landlord_name": "Ruth",
+        "landlord_phone": "254700740099",
+        "tenant_phone": "0700740099",
+        "mpesa_receipt": "TGR8P76GLI",
+        "submitted_at": "2025-08-06T18:47:52.077Z",
+        "is_verified": true,
+        "is_paid": true,
+        "unique_identity_key": "ruth_2"
+    }
+},
+{
+    "model": "myApp.referralsubmission",
+    "pk": 7,
+    "fields": {
+        "tenant": 4,
+        "landlord_name": "moses",
+        "landlord_phone": "254700740099",
+        "tenant_phone": "25495413032",
+        "mpesa_receipt": "TH23NISKHH",
+        "submitted_at": "2025-08-07T10:41:03.435Z",
+        "is_verified": true,
+        "is_paid": true,
+        "unique_identity_key": "moses_4"
+    }
+},
+{
+    "model": "mpesa.tokenprice",
+    "pk": 1,
+    "fields": {
+        "token_count": 1,
+        "amount": 10
+    }
+},
+{
+    "model": "mpesa.tokenprice",
+    "pk": 2,
+    "fields": {
+        "token_count": 5,
+        "amount": 40
+    }
+},
+{
+    "model": "mpesa.tokenprice",
+    "pk": 3,
+    "fields": {
+        "token_count": 10,
+        "amount": 70
+    }
+},
+{
+    "model": "mpesa.tokenprice",
+    "pk": 4,
+    "fields": {
+        "token_count": 15,
+        "amount": 110
+    }
+},
+{
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can add log entry",
+        "content_type": [
+            "admin",
+            "logentry"
+        ],
+        "codename": "add_logentry"
+    }
+},
+{
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can change log entry",
+        "content_type": [
+            "admin",
+            "logentry"
+        ],
+        "codename": "change_logentry"
+    }
+},
+{
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can delete log entry",
+        "content_type": [
+            "admin",
+            "logentry"
+        ],
+        "codename": "delete_logentry"
+    }
+},
+{
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can view log entry",
+        "content_type": [
+            "admin",
+            "logentry"
+        ],
+        "codename": "view_logentry"
+    }
+},
+{
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can add permission",
+        "content_type": [
+            "auth",
+            "permission"
+        ],
+        "codename": "add_permission"
+    }
+},
+{
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can change permission",
+        "content_type": [
+            "auth",
+            "permission"
+        ],
+        "codename": "change_permission"
+    }
+},
+{
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can delete permission",
+        "content_type": [
+            "auth",
+            "permission"
+        ],
+        "codename": "delete_permission"
+    }
+},
+{
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can view permission",
+        "content_type": [
+            "auth",
+            "permission"
+        ],
+        "codename": "view_permission"
+    }
+},
+{
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can add group",
+        "content_type": [
+            "auth",
+            "group"
+        ],
+        "codename": "add_group"
+    }
+},
+{
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can change group",
+        "content_type": [
+            "auth",
+            "group"
+        ],
+        "codename": "change_group"
+    }
+},
+{
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can delete group",
+        "content_type": [
+            "auth",
+            "group"
+        ],
+        "codename": "delete_group"
+    }
+},
+{
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can view group",
+        "content_type": [
+            "auth",
+            "group"
+        ],
+        "codename": "view_group"
+    }
+},
+{
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can add user",
+        "content_type": [
+            "auth",
+            "user"
+        ],
+        "codename": "add_user"
+    }
+},
+{
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can change user",
+        "content_type": [
+            "auth",
+            "user"
+        ],
+        "codename": "change_user"
+    }
+},
+{
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can delete user",
+        "content_type": [
+            "auth",
+            "user"
+        ],
+        "codename": "delete_user"
+    }
+},
+{
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can view user",
+        "content_type": [
+            "auth",
+            "user"
+        ],
+        "codename": "view_user"
+    }
+},
+{
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can add content type",
+        "content_type": [
+            "contenttypes",
+            "contenttype"
+        ],
+        "codename": "add_contenttype"
+    }
+},
+{
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can change content type",
+        "content_type": [
+            "contenttypes",
+            "contenttype"
+        ],
+        "codename": "change_contenttype"
+    }
+},
+{
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can delete content type",
+        "content_type": [
+            "contenttypes",
+            "contenttype"
+        ],
+        "codename": "delete_contenttype"
+    }
+},
+{
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can view content type",
+        "content_type": [
+            "contenttypes",
+            "contenttype"
+        ],
+        "codename": "view_contenttype"
+    }
+},
+{
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can add session",
+        "content_type": [
+            "sessions",
+            "session"
+        ],
+        "codename": "add_session"
+    }
+},
+{
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can change session",
+        "content_type": [
+            "sessions",
+            "session"
+        ],
+        "codename": "change_session"
+    }
+},
+{
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can delete session",
+        "content_type": [
+            "sessions",
+            "session"
+        ],
+        "codename": "delete_session"
+    }
+},
+{
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can view session",
+        "content_type": [
+            "sessions",
+            "session"
+        ],
+        "codename": "view_session"
+    }
+},
+{
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can add register user",
+        "content_type": [
+            "myApp",
+            "registeruser"
+        ],
+        "codename": "add_registeruser"
+    }
+},
+{
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can change register user",
+        "content_type": [
+            "myApp",
+            "registeruser"
+        ],
+        "codename": "change_registeruser"
+    }
+},
+{
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can delete register user",
+        "content_type": [
+            "myApp",
+            "registeruser"
+        ],
+        "codename": "delete_registeruser"
+    }
+},
+{
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can view register user",
+        "content_type": [
+            "myApp",
+            "registeruser"
+        ],
+        "codename": "view_registeruser"
+    }
+},
+{
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can add property",
+        "content_type": [
+            "myApp",
+            "property"
+        ],
+        "codename": "add_property"
+    }
+},
+{
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can change property",
+        "content_type": [
+            "myApp",
+            "property"
+        ],
+        "codename": "change_property"
+    }
+},
+{
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can delete property",
+        "content_type": [
+            "myApp",
+            "property"
+        ],
+        "codename": "delete_property"
+    }
+},
+{
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can view property",
+        "content_type": [
+            "myApp",
+            "property"
+        ],
+        "codename": "view_property"
+    }
+},
+{
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can add location",
+        "content_type": [
+            "myApp",
+            "location"
+        ],
+        "codename": "add_location"
+    }
+},
+{
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can change location",
+        "content_type": [
+            "myApp",
+            "location"
+        ],
+        "codename": "change_location"
+    }
+},
+{
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can delete location",
+        "content_type": [
+            "myApp",
+            "location"
+        ],
+        "codename": "delete_location"
+    }
+},
+{
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can view location",
+        "content_type": [
+            "myApp",
+            "location"
+        ],
+        "codename": "view_location"
+    }
+},
+{
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can add amenity",
+        "content_type": [
+            "myApp",
+            "amenity"
+        ],
+        "codename": "add_amenity"
+    }
+},
+{
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can change amenity",
+        "content_type": [
+            "myApp",
+            "amenity"
+        ],
+        "codename": "change_amenity"
+    }
+},
+{
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can delete amenity",
+        "content_type": [
+            "myApp",
+            "amenity"
+        ],
+        "codename": "delete_amenity"
+    }
+},
+{
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can view amenity",
+        "content_type": [
+            "myApp",
+            "amenity"
+        ],
+        "codename": "view_amenity"
+    }
+},
+{
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can add property image",
+        "content_type": [
+            "myApp",
+            "propertyimage"
+        ],
+        "codename": "add_propertyimage"
+    }
+},
+{
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can change property image",
+        "content_type": [
+            "myApp",
+            "propertyimage"
+        ],
+        "codename": "change_propertyimage"
+    }
+},
+{
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can delete property image",
+        "content_type": [
+            "myApp",
+            "propertyimage"
+        ],
+        "codename": "delete_propertyimage"
+    }
+},
+{
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can view property image",
+        "content_type": [
+            "myApp",
+            "propertyimage"
+        ],
+        "codename": "view_propertyimage"
+    }
+},
+{
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can add property type",
+        "content_type": [
+            "myApp",
+            "propertytype"
+        ],
+        "codename": "add_propertytype"
+    }
+},
+{
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can change property type",
+        "content_type": [
+            "myApp",
+            "propertytype"
+        ],
+        "codename": "change_propertytype"
+    }
+},
+{
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can delete property type",
+        "content_type": [
+            "myApp",
+            "propertytype"
+        ],
+        "codename": "delete_propertytype"
+    }
+},
+{
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can view property type",
+        "content_type": [
+            "myApp",
+            "propertytype"
+        ],
+        "codename": "view_propertytype"
+    }
+},
+{
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can add payment",
+        "content_type": [
+            "myApp",
+            "payment"
+        ],
+        "codename": "add_payment"
+    }
+},
+{
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can change payment",
+        "content_type": [
+            "myApp",
+            "payment"
+        ],
+        "codename": "change_payment"
+    }
+},
+{
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can delete payment",
+        "content_type": [
+            "myApp",
+            "payment"
+        ],
+        "codename": "delete_payment"
+    }
+},
+{
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can view payment",
+        "content_type": [
+            "myApp",
+            "payment"
+        ],
+        "codename": "view_payment"
+    }
+},
+{
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can add tenant",
+        "content_type": [
+            "myApp",
+            "tenant"
+        ],
+        "codename": "add_tenant"
+    }
+},
+{
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can change tenant",
+        "content_type": [
+            "myApp",
+            "tenant"
+        ],
+        "codename": "change_tenant"
+    }
+},
+{
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can delete tenant",
+        "content_type": [
+            "myApp",
+            "tenant"
+        ],
+        "codename": "delete_tenant"
+    }
+},
+{
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can view tenant",
+        "content_type": [
+            "myApp",
+            "tenant"
+        ],
+        "codename": "view_tenant"
+    }
+},
+{
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can add favorite property",
+        "content_type": [
+            "myApp",
+            "favoriteproperty"
+        ],
+        "codename": "add_favoriteproperty"
+    }
+},
+{
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can change favorite property",
+        "content_type": [
+            "myApp",
+            "favoriteproperty"
+        ],
+        "codename": "change_favoriteproperty"
+    }
+},
+{
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can delete favorite property",
+        "content_type": [
+            "myApp",
+            "favoriteproperty"
+        ],
+        "codename": "delete_favoriteproperty"
+    }
+},
+{
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can view favorite property",
+        "content_type": [
+            "myApp",
+            "favoriteproperty"
+        ],
+        "codename": "view_favoriteproperty"
+    }
+},
+{
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can add property view",
+        "content_type": [
+            "myApp",
+            "propertyview"
+        ],
+        "codename": "add_propertyview"
+    }
+},
+{
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can change property view",
+        "content_type": [
+            "myApp",
+            "propertyview"
+        ],
+        "codename": "change_propertyview"
+    }
+},
+{
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can delete property view",
+        "content_type": [
+            "myApp",
+            "propertyview"
+        ],
+        "codename": "delete_propertyview"
+    }
+},
+{
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can view property view",
+        "content_type": [
+            "myApp",
+            "propertyview"
+        ],
+        "codename": "view_propertyview"
+    }
+},
+{
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can add tenant payment",
+        "content_type": [
+            "myApp",
+            "tenantpayment"
+        ],
+        "codename": "add_tenantpayment"
+    }
+},
+{
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can change tenant payment",
+        "content_type": [
+            "myApp",
+            "tenantpayment"
+        ],
+        "codename": "change_tenantpayment"
+    }
+},
+{
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can delete tenant payment",
+        "content_type": [
+            "myApp",
+            "tenantpayment"
+        ],
+        "codename": "delete_tenantpayment"
+    }
+},
+{
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can view tenant payment",
+        "content_type": [
+            "myApp",
+            "tenantpayment"
+        ],
+        "codename": "view_tenantpayment"
+    }
+},
+{
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can add comment",
+        "content_type": [
+            "myApp",
+            "comment"
+        ],
+        "codename": "add_comment"
+    }
+},
+{
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can change comment",
+        "content_type": [
+            "myApp",
+            "comment"
+        ],
+        "codename": "change_comment"
+    }
+},
+{
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can delete comment",
+        "content_type": [
+            "myApp",
+            "comment"
+        ],
+        "codename": "delete_comment"
+    }
+},
+{
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can view comment",
+        "content_type": [
+            "myApp",
+            "comment"
+        ],
+        "codename": "view_comment"
+    }
+},
+{
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can add rating",
+        "content_type": [
+            "myApp",
+            "rating"
+        ],
+        "codename": "add_rating"
+    }
+},
+{
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can change rating",
+        "content_type": [
+            "myApp",
+            "rating"
+        ],
+        "codename": "change_rating"
+    }
+},
+{
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can delete rating",
+        "content_type": [
+            "myApp",
+            "rating"
+        ],
+        "codename": "delete_rating"
+    }
+},
+{
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can view rating",
+        "content_type": [
+            "myApp",
+            "rating"
+        ],
+        "codename": "view_rating"
+    }
+},
+{
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can add system rating",
+        "content_type": [
+            "myApp",
+            "systemrating"
+        ],
+        "codename": "add_systemrating"
+    }
+},
+{
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can change system rating",
+        "content_type": [
+            "myApp",
+            "systemrating"
+        ],
+        "codename": "change_systemrating"
+    }
+},
+{
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can delete system rating",
+        "content_type": [
+            "myApp",
+            "systemrating"
+        ],
+        "codename": "delete_systemrating"
+    }
+},
+{
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can view system rating",
+        "content_type": [
+            "myApp",
+            "systemrating"
+        ],
+        "codename": "view_systemrating"
+    }
+},
+{
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can add token wallet",
+        "content_type": [
+            "myApp",
+            "tokenwallet"
+        ],
+        "codename": "add_tokenwallet"
+    }
+},
+{
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can change token wallet",
+        "content_type": [
+            "myApp",
+            "tokenwallet"
+        ],
+        "codename": "change_tokenwallet"
+    }
+},
+{
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can delete token wallet",
+        "content_type": [
+            "myApp",
+            "tokenwallet"
+        ],
+        "codename": "delete_tokenwallet"
+    }
+},
+{
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can view token wallet",
+        "content_type": [
+            "myApp",
+            "tokenwallet"
+        ],
+        "codename": "view_tokenwallet"
+    }
+},
+{
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can add token transaction",
+        "content_type": [
+            "myApp",
+            "tokentransaction"
+        ],
+        "codename": "add_tokentransaction"
+    }
+},
+{
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can change token transaction",
+        "content_type": [
+            "myApp",
+            "tokentransaction"
+        ],
+        "codename": "change_tokentransaction"
+    }
+},
+{
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can delete token transaction",
+        "content_type": [
+            "myApp",
+            "tokentransaction"
+        ],
+        "codename": "delete_tokentransaction"
+    }
+},
+{
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can view token transaction",
+        "content_type": [
+            "myApp",
+            "tokentransaction"
+        ],
+        "codename": "view_tokentransaction"
+    }
+},
+{
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can add admin update",
+        "content_type": [
+            "myApp",
+            "adminupdate"
+        ],
+        "codename": "add_adminupdate"
+    }
+},
+{
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can change admin update",
+        "content_type": [
+            "myApp",
+            "adminupdate"
+        ],
+        "codename": "change_adminupdate"
+    }
+},
+{
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can delete admin update",
+        "content_type": [
+            "myApp",
+            "adminupdate"
+        ],
+        "codename": "delete_adminupdate"
+    }
+},
+{
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can view admin update",
+        "content_type": [
+            "myApp",
+            "adminupdate"
+        ],
+        "codename": "view_adminupdate"
+    }
+},
+{
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can add subscription plan",
+        "content_type": [
+            "myApp",
+            "subscriptionplan"
+        ],
+        "codename": "add_subscriptionplan"
+    }
+},
+{
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can change subscription plan",
+        "content_type": [
+            "myApp",
+            "subscriptionplan"
+        ],
+        "codename": "change_subscriptionplan"
+    }
+},
+{
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can delete subscription plan",
+        "content_type": [
+            "myApp",
+            "subscriptionplan"
+        ],
+        "codename": "delete_subscriptionplan"
+    }
+},
+{
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can view subscription plan",
+        "content_type": [
+            "myApp",
+            "subscriptionplan"
+        ],
+        "codename": "view_subscriptionplan"
+    }
+},
+{
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can add token price",
+        "content_type": [
+            "mpesa",
+            "tokenprice"
+        ],
+        "codename": "add_tokenprice"
+    }
+},
+{
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can change token price",
+        "content_type": [
+            "mpesa",
+            "tokenprice"
+        ],
+        "codename": "change_tokenprice"
+    }
+},
+{
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can delete token price",
+        "content_type": [
+            "mpesa",
+            "tokenprice"
+        ],
+        "codename": "delete_tokenprice"
+    }
+},
+{
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can view token price",
+        "content_type": [
+            "mpesa",
+            "tokenprice"
+        ],
+        "codename": "view_tokenprice"
+    }
+},
+{
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can add referral submission",
+        "content_type": [
+            "myApp",
+            "referralsubmission"
+        ],
+        "codename": "add_referralsubmission"
+    }
+},
+{
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can change referral submission",
+        "content_type": [
+            "myApp",
+            "referralsubmission"
+        ],
+        "codename": "change_referralsubmission"
+    }
+},
+{
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can delete referral submission",
+        "content_type": [
+            "myApp",
+            "referralsubmission"
+        ],
+        "codename": "delete_referralsubmission"
+    }
+},
+{
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can view referral submission",
+        "content_type": [
+            "myApp",
+            "referralsubmission"
+        ],
+        "codename": "view_referralsubmission"
+    }
+},
+{
+    "model": "auth.user",
+    "fields": {
+        "password": "pbkdf2_sha256$1000000$byfjhgo9TWw7gELMQ7H3ik$qjh0MM0EXv6VI+R7GXc3ZMlY/hc/UiVvRTixManAyTE=",
+        "last_login": "2025-08-24T07:51:36.958Z",
+        "is_superuser": false,
+        "username": "caren",
+        "first_name": "",
+        "last_name": "",
+        "email": "carenteek@gmail.com",
+        "is_staff": true,
+        "is_active": true,
+        "date_joined": "2025-07-05T08:57:02Z",
+        "groups": [],
+        "user_permissions": [
+            [
+                "view_adminupdate",
+                "myApp",
+                "adminupdate"
+            ],
+            [
+                "change_comment",
+                "myApp",
+                "comment"
+            ],
+            [
+                "view_payment",
+                "myApp",
+                "payment"
+            ],
+            [
+                "view_property",
+                "myApp",
+                "property"
+            ],
+            [
+                "view_referralsubmission",
+                "myApp",
+                "referralsubmission"
+            ]
+        ]
+    }
+},
+{
+    "model": "auth.user",
+    "fields": {
+        "password": "pbkdf2_sha256$1000000$vcOKgCO5tKBGyECxEYoAZC$fwSVvFRPnrC2jQM5VM6zIyq17YPbmemdhMOaV9jaQ3E=",
+        "last_login": "2025-08-25T10:25:52.805Z",
+        "is_superuser": true,
+        "username": "WashingtonDC",
+        "first_name": "Super",
+        "last_name": "Admin",
+        "email": "kimtaim75@gmail.com",
+        "is_staff": true,
+        "is_active": true,
+        "date_joined": "2025-07-05T09:49:28Z",
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "auth.user",
+    "fields": {
+        "password": "pbkdf2_sha256$1000000$ie33Ot63yumnY1VAQ786dP$W/U7IdPRHVPgn2bRkahFLkn66xC/P7/cPZwj3dYypv0=",
+        "last_login": "2025-08-25T10:23:57.497Z",
+        "is_superuser": false,
+        "username": "mulunda",
+        "first_name": "",
+        "last_name": "",
+        "email": "kimtaim75@gmail.com",
+        "is_staff": false,
+        "is_active": true,
+        "date_joined": "2025-07-05T14:14:10Z",
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "auth.user",
+    "fields": {
+        "password": "pbkdf2_sha256$1000000$ngPhUsb75oeaHoguuSKTO7$vnYfWeNxwyefWd+NFR9IdbxzGWedXqENDG79ozNWm7I=",
+        "last_login": "2025-08-23T12:57:35.244Z",
+        "is_superuser": false,
+        "username": "chepkorir",
+        "first_name": "",
+        "last_name": "",
+        "email": "kipsangmoses@outlook.com",
+        "is_staff": false,
+        "is_active": true,
+        "date_joined": "2025-07-06T09:02:20.953Z",
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "auth.user",
+    "fields": {
+        "password": "pbkdf2_sha256$1000000$OF0RuoXqXlrw8rTgoD1Kq0$EDZIZ4PNtezIAZqp0mv/JiKz8Xp79KI6OzIYGG31Fq4=",
+        "last_login": "2025-08-22T09:31:29.967Z",
+        "is_superuser": false,
+        "username": "mulundak",
+        "first_name": "Moses",
+        "last_name": "Kipsang",
+        "email": "kipsangmoses1@outlook.com",
+        "is_staff": false,
+        "is_active": true,
+        "date_joined": "2025-07-07T10:18:27Z",
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "auth.user",
+    "fields": {
+        "password": "pbkdf2_sha256$1000000$K9kSKijQ0TzF9fZz66V9jk$Nd4m1TqK5FmCQXKFMKrgWt//1iNYQtW/FQ41Bh1vKv4=",
+        "last_login": "2025-08-25T11:00:28.742Z",
+        "is_superuser": false,
+        "username": "ruth",
+        "first_name": "Ruth",
+        "last_name": "Moses",
+        "email": "ruthkipsang@gmail.com",
+        "is_staff": false,
+        "is_active": true,
+        "date_joined": "2025-07-07T11:20:48Z",
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "auth.user",
+    "fields": {
+        "password": "pbkdf2_sha256$1000000$NB1qerTMerKaOY9llP2BNa$S+okzJMs7npJdDIn1o3pG//Dj1sEVtrFF0CjRKN7ikc=",
+        "last_login": "2025-08-25T11:18:23.023Z",
+        "is_superuser": false,
+        "username": "mamaruth",
+        "first_name": "Caren",
+        "last_name": "Moses",
+        "email": "mamaruth@gmail.com",
+        "is_staff": false,
+        "is_active": true,
+        "date_joined": "2025-07-07T12:20:33Z",
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "auth.user",
+    "fields": {
+        "password": "pbkdf2_sha256$1000000$IY0bQR8cCpDx7zJ34C997C$IygFHmlxAbtqDEy9VlYnAFSQjoLEg137P2TaX/WtKBA=",
+        "last_login": "2025-07-24T09:23:33.355Z",
+        "is_superuser": false,
+        "username": "moses123",
+        "first_name": "Kimtai",
+        "last_name": "Moses",
+        "email": "kiptukenya@gmail.com",
+        "is_staff": false,
+        "is_active": true,
+        "date_joined": "2025-07-17T15:53:07.647Z",
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "auth.user",
+    "fields": {
+        "password": "pbkdf2_sha256$1000000$pEMSfXkzObfx2Xp4UtmEj6$cfRa+rzWFnJeMkZeUwK/YFGET7xteCPF5JBUO4wxdzU=",
+        "last_login": "2025-08-19T20:25:13.146Z",
+        "is_superuser": false,
+        "username": "maina",
+        "first_name": "Maina",
+        "last_name": "Kamau",
+        "email": "mainakamau456@gmail.com",
+        "is_staff": false,
+        "is_active": true,
+        "date_joined": "2025-07-19T18:25:09.458Z",
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "auth.user",
+    "fields": {
+        "password": "pbkdf2_sha256$1000000$rU0sNNxYJWtXaesmMlY9q3$nJXa0cf3BTieWafCyXq7r2cepoTaTFYV7hQ8WaofcOE=",
+        "last_login": "2025-08-02T17:51:44.236Z",
+        "is_superuser": false,
+        "username": "johndoe",
+        "first_name": "",
+        "last_name": "",
+        "email": "johndoe@gmail.com",
+        "is_staff": false,
+        "is_active": true,
+        "date_joined": "2025-07-25T07:34:03.688Z",
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "auth.user",
+    "fields": {
+        "password": "pbkdf2_sha256$1000000$5Wtb2KfwEY6SggjfnKLhIq$Biebevhds2yC9PXlMhWUN9NkCNKEQMYmIEgv3GfN4qE=",
+        "last_login": "2025-08-19T20:29:01.582Z",
+        "is_superuser": false,
+        "username": "demo",
+        "first_name": "Demo",
+        "last_name": "User",
+        "email": "demouser@gmail.com",
+        "is_staff": false,
+        "is_active": true,
+        "date_joined": "2025-07-26T14:12:09.660Z",
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "auth.user",
+    "fields": {
+        "password": "pbkdf2_sha256$1000000$MApO4oOuncx5w74tGN6223$jvSr56DktJ1yiclnT7kY/jXIUJR2v5c/P5vfQNN5Ah0=",
+        "last_login": "2025-08-23T12:52:20.567Z",
+        "is_superuser": false,
+        "username": "test",
+        "first_name": "",
+        "last_name": "",
+        "email": "testuser@gmail.com",
+        "is_staff": false,
+        "is_active": true,
+        "date_joined": "2025-08-02T18:15:02.439Z",
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "auth.user",
+    "fields": {
+        "password": "pbkdf2_sha256$1000000$UlL9RAoKGIC86zNaPsYAeZ$ZcPAYaRb/kCq6498QRR1CIl2IsRLJ+nmvtOKrhvC9sk=",
+        "last_login": "2025-08-10T11:17:06.409Z",
+        "is_superuser": false,
+        "username": "demouser",
+        "first_name": "Demo",
+        "last_name": "User",
+        "email": "demouser@gmail.com",
+        "is_staff": false,
+        "is_active": true,
+        "date_joined": "2025-08-10T09:58:28.140Z",
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "auth.user",
+    "fields": {
+        "password": "pbkdf2_sha256$1000000$zjTJJm5ztiT2zpKD0hqYlW$3uVF1xCH2mx8OmKbf9DXnvmxPkOAN84LhSLeSlXYlp4=",
+        "last_login": "2025-08-25T12:05:43.417Z",
+        "is_superuser": false,
+        "username": "chepko",
+        "first_name": "Kipsang",
+        "last_name": "Moses",
+        "email": "kimtaim77@gmail.com",
+        "is_staff": false,
+        "is_active": true,
+        "date_joined": "2025-08-11T22:30:50.549Z",
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "myApp.registeruser",
+    "pk": 1,
+    "fields": {
+        "user": [
+            "caren"
+        ],
+        "first_name": "Caren",
+        "last_name": "Teek",
+        "id_number": "000000",
+        "phone_number": "0795413032",
+        "landlord_type": "agent",
+        "date_joined": "2025-07-05T08:57:09.248Z",
+        "last_login": "2025-08-24T07:55:00.670Z",
+        "is_paid": true,
+        "profile_photo": "landlord_photos/For_christ.JPG",
+        "is_verified": true
+    }
+},
+{
+    "model": "myApp.registeruser",
+    "pk": 2,
+    "fields": {
+        "user": [
+            "mulunda"
+        ],
+        "first_name": "Kimtai",
+        "last_name": "Kipsang",
+        "id_number": "42921220",
+        "phone_number": "0700740099",
+        "landlord_type": "agent",
+        "date_joined": "2025-07-05T14:14:18.146Z",
+        "last_login": "2025-08-25T10:26:42.977Z",
+        "is_paid": true,
+        "profile_photo": "landlord_photos/MOSES_KIPSANG-Passport.jpg",
+        "is_verified": true
+    }
+},
+{
+    "model": "myApp.registeruser",
+    "pk": 3,
+    "fields": {
+        "user": [
+            "chepkorir"
+        ],
+        "first_name": "Ruth",
+        "last_name": "Chepkorir",
+        "id_number": "42980577",
+        "phone_number": "0700740099",
+        "landlord_type": "agent",
+        "date_joined": "2025-07-06T09:02:24.178Z",
+        "last_login": "2025-08-22T11:15:05.234Z",
+        "is_paid": true,
+        "profile_photo": "landlord_photos/contact-us-icon-communication-icon-free-png.jpg",
+        "is_verified": true
+    }
+},
+{
+    "model": "myApp.registeruser",
+    "pk": 7,
+    "fields": {
+        "user": [
+            "johndoe"
+        ],
+        "first_name": "John",
+        "last_name": "Doe",
+        "id_number": "33735050",
+        "phone_number": "0113131983",
+        "landlord_type": "individual",
+        "date_joined": "2025-07-25T07:34:07.228Z",
+        "last_login": "2025-08-02T17:52:09.236Z",
+        "is_paid": true,
+        "profile_photo": "",
+        "is_verified": true
+    }
+},
+{
+    "model": "myApp.registeruser",
+    "pk": 9,
+    "fields": {
+        "user": [
+            "test"
+        ],
+        "first_name": "test",
+        "last_name": "user",
+        "id_number": "36841657",
+        "phone_number": "0113131983",
+        "landlord_type": "individual",
+        "date_joined": "2025-08-02T18:15:05.634Z",
+        "last_login": "2025-08-22T09:10:37.332Z",
+        "is_paid": true,
+        "profile_photo": "",
+        "is_verified": true
+    }
+},
+{
+    "model": "myApp.tenant",
+    "pk": 2,
+    "fields": {
+        "user": [
+            "mulundak"
+        ],
+        "phone_number": "0700740099",
+        "date_joined": "2025-07-07T10:18:30.507Z",
+        "is_subscribed": true,
+        "subscription_expires": "2025-07-17T14:25:00Z",
+        "mpesa_receipt": "KBNHF45GH"
+    }
+},
+{
+    "model": "myApp.tenant",
+    "pk": 3,
+    "fields": {
+        "user": [
+            "ruth"
+        ],
+        "phone_number": "0700740099",
+        "date_joined": "2025-07-07T11:20:52.006Z",
+        "is_subscribed": true,
+        "subscription_expires": "2025-08-16T14:00:12Z",
+        "mpesa_receipt": "KBNHF45GH"
+    }
+},
+{
+    "model": "myApp.tenant",
+    "pk": 4,
+    "fields": {
+        "user": [
+            "mamaruth"
+        ],
+        "phone_number": "0700740099",
+        "date_joined": "2025-07-07T12:20:36.999Z",
+        "is_subscribed": true,
+        "subscription_expires": "2025-08-11T21:00:00Z",
+        "mpesa_receipt": null
+    }
+},
+{
+    "model": "myApp.tenant",
+    "pk": 5,
+    "fields": {
+        "user": [
+            "moses123"
+        ],
+        "phone_number": "0113131983",
+        "date_joined": "2025-07-17T15:53:10.867Z",
+        "is_subscribed": true,
+        "subscription_expires": "2025-08-17T16:36:51Z",
+        "mpesa_receipt": null
+    }
+},
+{
+    "model": "myApp.tenant",
+    "pk": 6,
+    "fields": {
+        "user": [
+            "maina"
+        ],
+        "phone_number": "0738919198",
+        "date_joined": "2025-07-19T18:25:13.843Z",
+        "is_subscribed": true,
+        "subscription_expires": "2025-07-21T18:32:59Z",
+        "mpesa_receipt": null
+    }
+},
+{
+    "model": "myApp.tenant",
+    "pk": 7,
+    "fields": {
+        "user": [
+            "demo"
+        ],
+        "phone_number": "0795413032",
+        "date_joined": "2025-07-26T14:12:13.017Z",
+        "is_subscribed": false,
+        "subscription_expires": null,
+        "mpesa_receipt": null
+    }
+},
+{
+    "model": "myApp.tenant",
+    "pk": 8,
+    "fields": {
+        "user": [
+            "demouser"
+        ],
+        "phone_number": "0113131983",
+        "date_joined": "2025-08-10T09:58:34.908Z",
+        "is_subscribed": false,
+        "subscription_expires": null,
+        "mpesa_receipt": null
+    }
+},
+{
+    "model": "myApp.tenant",
+    "pk": 9,
+    "fields": {
+        "user": [
+            "chepko"
+        ],
+        "phone_number": "0700740099",
+        "date_joined": "2025-08-11T22:30:53.803Z",
+        "is_subscribed": false,
+        "subscription_expires": null,
+        "mpesa_receipt": null
+    }
+},
+{
+    "model": "myApp.comment",
+    "pk": 1,
+    "fields": {
+        "property": 13,
+        "user": [
+            "mamaruth"
+        ],
+        "content": "It is the best rentals in the region",
+        "timestamp": "2025-07-16T15:58:13.580Z",
+        "is_approved": true
+    }
+},
+{
+    "model": "myApp.comment",
+    "pk": 2,
+    "fields": {
+        "property": 16,
+        "user": [
+            "ruth"
+        ],
+        "content": "Nice apartments",
+        "timestamp": "2025-07-16T18:55:45.781Z",
+        "is_approved": true
+    }
+},
+{
+    "model": "myApp.comment",
+    "pk": 3,
+    "fields": {
+        "property": 17,
+        "user": [
+            "mulundak"
+        ],
+        "content": "This is the best apartment to be",
+        "timestamp": "2025-07-16T19:10:36.342Z",
+        "is_approved": true
+    }
+},
+{
+    "model": "myApp.comment",
+    "pk": 4,
+    "fields": {
+        "property": 17,
+        "user": [
+            "ruth"
+        ],
+        "content": "Best apartment",
+        "timestamp": "2025-07-16T20:45:44.514Z",
+        "is_approved": true
+    }
+},
+{
+    "model": "myApp.comment",
+    "pk": 5,
+    "fields": {
+        "property": 17,
+        "user": [
+            "ruth"
+        ],
+        "content": "I like it",
+        "timestamp": "2025-07-16T21:10:18.417Z",
+        "is_approved": true
+    }
+},
+{
+    "model": "myApp.comment",
+    "pk": 6,
+    "fields": {
+        "property": 15,
+        "user": [
+            "mamaruth"
+        ],
+        "content": "good one",
+        "timestamp": "2025-07-17T08:14:12.157Z",
+        "is_approved": true
+    }
+},
+{
+    "model": "myApp.comment",
+    "pk": 7,
+    "fields": {
+        "property": 14,
+        "user": [
+            "moses123"
+        ],
+        "content": "Amazing bedroom and sitting room!",
+        "timestamp": "2025-07-17T18:39:38.031Z",
+        "is_approved": true
+    }
+},
+{
+    "model": "myApp.comment",
+    "pk": 8,
+    "fields": {
+        "property": 15,
+        "user": [
+            "moses123"
+        ],
+        "content": "Nice room",
+        "timestamp": "2025-07-17T18:42:32.472Z",
+        "is_approved": true
+    }
+},
+{
+    "model": "myApp.comment",
+    "pk": 9,
+    "fields": {
+        "property": 17,
+        "user": [
+            "mulundak"
+        ],
+        "content": "I like the internet connection",
+        "timestamp": "2025-07-17T19:01:02.911Z",
+        "is_approved": true
+    }
+},
+{
+    "model": "myApp.comment",
+    "pk": 10,
+    "fields": {
+        "property": 14,
+        "user": [
+            "moses123"
+        ],
+        "content": "Specious rooms",
+        "timestamp": "2025-07-17T19:17:01.877Z",
+        "is_approved": true
+    }
+},
+{
+    "model": "myApp.comment",
+    "pk": 11,
+    "fields": {
+        "property": 12,
+        "user": [
+            "moses123"
+        ],
+        "content": 

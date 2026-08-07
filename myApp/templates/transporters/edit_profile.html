@@ -1,0 +1,643 @@
+{% extends 'myApp/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container py-5">
+    <!-- Header Section -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{% url 'transporter_dashboard' %}" class="text-decoration-none">Dashboard</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Edit Profile</li>
+                </ol>
+            </nav>
+            <hr>
+            <h2 class="display-7 fw-bold text-secondary mb-0">Edit Your Profile</h2>
+            <p class="text-muted">Update your transporter information and preferences</p>
+        </div>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="card shadow-lg border-0 rounded-4">
+                <div class="card-body p-4 p-md-5">
+                    <form action="{% url 'edit_transporter_profile' %}" method="post" enctype="multipart/form-data" class="needs-validation" novalidate>
+                        {% csrf_token %}
+                        
+
+                            <!-- Availability Section -->
+                        <div class="row mb-5">
+                            <div class="col-12">
+                                <div class="section-header mb-4">
+                                    <i class="fas fa-toggle-on text-dark me-2 fa-lg"></i>
+                                    <h4 class="d-inline-block text-secondary mb-0">Availability Settings</h4>
+                                </div>
+                                
+                                <div class="row">
+                                    <div class="col-md-6 mb-4">
+                                        <div class="availability-card p-4 rounded-4 bg-light">
+                                            <label class="form-label fw-semibold mb-3">Online Status</label>
+                                            <div class="d-flex align-items-center justify-content-between">
+                                                <div class="d-flex align-items-center">
+                                                    <label class="toggle-switch me-3">
+                                                        {{ form.online }}
+                                                        <span class="slider"></span>
+                                                    </label>
+                                                    <span class="fw-medium status-text">
+                                                        {% if form.online.value %}
+                                                            Currently Online
+                                                        {% else %}
+                                                            Currently Offline
+                                                        {% endif %}
+                                                    </span>
+                                                </div>
+                                                <i class="fas fa-globe fa-lg text-dark"></i>
+                                            </div>
+                                            <div class="form-text mt-2">Toggle to appear online/offline to clients</div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="col-md-6 mb-4">
+                                        <div class="availability-card p-4 rounded-4 bg-light">
+                                            <label class="form-label fw-semibold mb-3">Availability for Jobs</label>
+                                            <div class="d-flex align-items-center justify-content-between">
+                                                <div class="d-flex align-items-center">
+                                                    <label class="toggle-switch me-3">
+                                                        {{ form.is_available }}
+                                                        <span class="slider"></span>
+                                                    </label>
+                                                    <span class="fw-medium status-text">
+                                                        {% if form.is_available.value %}
+                                                            Available for Jobs
+                                                        {% else %}
+                                                            Not Available
+                                                        {% endif %}
+                                                    </span>
+                                                </div>
+                                                <i class="fas fa-briefcase fa-lg text-dark"></i>
+                                            </div>
+                                            <div class="form-text mt-2">Toggle to accept/reject new job requests</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        
+                        <!-- Personal Information Section -->
+                        <div class="row mb-5">
+                            <div class="col-12">
+                                <div class="section-header mb-4">
+                                    <i class="fas fa-user-circle text-dark me-2 fa-lg"></i>
+                                    <h4 class="d-inline-block text-secondary mb-0">Personal Information</h4>
+                                </div>
+                                
+                                <div class="row">
+                                    <div class="col-md-6 mb-4">
+                                        <label for="id_full_name" class="form-label fw-semibold">Full Name</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text bg-light border-end-0">
+                                                <i class="fas fa-user text-muted"></i>
+                                            </span>
+                                            {{ form.full_name }}
+                                        </div>
+                                        <div class="invalid-feedback">
+                                            Please provide your full name.
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="col-md-6 mb-4">
+                                        <label for="id_phone" class="form-label fw-semibold">Phone Number</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text bg-light border-end-0">
+                                                <i class="fas fa-phone text-muted"></i>
+                                            </span>
+                                            {{ form.phone }}
+                                        </div>
+                                        <div class="invalid-feedback">
+                                            Please provide a valid phone number.
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="col-md-6 mb-4">
+                                        <label for="id_email" class="form-label fw-semibold">Email Address</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text bg-light border-end-0">
+                                                <i class="fas fa-envelope text-muted"></i>
+                                            </span>
+                                            {{ form.email }}
+                                        </div>
+                                        <div class="invalid-feedback">
+                                            Please provide a valid email address.
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6 mb-4">
+                                        <label for="id_city" class="form-label fw-semibold">City</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text bg-light border-end-0">
+                                                <i class="fas fa-city text-muted"></i>
+                                            </span>
+                                            {{ form.city }}
+                                        </div>
+                                        <div class="invalid-feedback">
+                                            Please provide your city.
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6 mb-4">
+                                        <label for="id_city" class="form-label fw-semibold">Address</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text bg-light border-end-0">
+                                                <i class="fas fa-address-card text-muted"></i>
+                                            </span>
+                                            {{ form.address }}
+                                        </div>
+                                        <div class="invalid-feedback">
+                                            Please provide your address.
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Vehicle Information Section -->
+                        <div class="row mb-5">
+                            <div class="col-12">
+                                <div class="section-header mb-4">
+                                    <i class="fas fa-truck text-dark me-2 fa-lg"></i>
+                                    <h4 class="d-inline-block text-secondary mb-0">Vehicle Information</h4>
+                                </div>
+                                
+                                <div class="row">
+                                    <div class="col-md-6 mb-4">
+                                        <label for="id_vehicle_name" class="form-label fw-semibold">Vehicle Name</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text bg-light border-end-0">
+                                                <i class="fas fa-car text-muted"></i>
+                                            </span>
+                                            {{ form.vehicle_name }}
+                                        </div>
+                                        <div class="invalid-feedback">
+                                            Please provide your vehicle model.
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6 mb-4">
+                                        <label for="id_capacity_type" class="form-label fw-semibold">Capacity type</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text bg-light border-end-0">
+                                                <i class="fas fa-balance-scale text-muted"></i>
+                                            </span>
+                                            {{ form.capacity_type }}
+                                        </div>
+                                        <div class="invalid-feedback">
+                                            Please specify your vehicle's capacity.
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="col-md-6 mb-4">
+                                        <label for="id_vehicle_capacity" class="form-label fw-semibold">Capacity Value</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text bg-light border-end-0">
+                                                <i class="fas fa-sort-numeric-up-alt text-muted"></i>
+                                            </span>
+                                            {{ form.vehicle_capacity }}
+                                        </div>
+                                        <div class="invalid-feedback">
+                                            Please specify your vehicle's capacity.
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="col-md-6 mb-4">
+                                        <label for="id_vehicle_plate" class="form-label fw-semibold">License Plate</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text bg-light border-end-0">
+                                                <i class="fas fa-id-card text-muted"></i>
+                                            </span>
+                                            {{ form.vehicle_plate }}
+                                        </div>
+                                        <div class="invalid-feedback">
+                                            Please provide your vehicle's license plate.
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Vehicle Image Section -->
+                        <div class="row mb-5">
+                            <div class="col-12">
+                                <div class="section-header mb-4">
+                                    <i class="fas fa-camera text-dark me-2 fa-lg"></i>
+                                    <h4 class="d-inline-block text-secondary mb-0">Vehicle Image</h4>
+                                </div>
+                                
+                                <div class="row align-items-center">
+                                    <div class="col-md-6 mb-4">
+                                        <div class="image-upload-container border rounded-4 p-4 text-center bg-light">
+                                            <div class="mb-3">
+                                                <i class="fas fa-cloud-upload-alt display-4 text-dark opacity-50"></i>
+                                            </div>
+                                            <label for="id_vehicle_image" class="btn btn-secondary mb-2">
+                                                <i class="fas fa-upload me-2"></i>Choose New Image
+                                            </label>
+                                            {{ form.vehicle_image }}
+                                            <p class="small text-muted mt-2">JPG, PNG or GIF. Max size 5MB.</p>
+                                            
+                                            <div class="form-text fw-semibold mt-3">Current Image:</div>
+                                            {% if transporter and transporter.vehicle_image %}
+                                                <img src="{{ transporter.vehicle_image.url }}" 
+                                                     alt="Current Vehicle Image" 
+                                                     class="img-fluid rounded-3 mt-2 shadow" 
+                                                     style="max-height: 150px; border: 3px solid #f8f9fa;">
+                                            {% else %}
+                                                <p class="text-muted small mt-2">No vehicle image uploaded yet.</p>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="col-md-6 mb-4">
+                                        <div class="alert alert-dark border-0 rounded-4">
+                                            <h6 class="alert-heading d-flex align-items-center">
+                                                <i class="fas fa-lightbulb text-dark me-2"></i>Image Tips
+                                            </h6>
+                                            <ul class="small mb-0 ps-3">
+                                                <li>Use a clear, well-lit photo of your vehicle</li>
+                                                <li>Show the entire vehicle in the frame</li>
+                                                <li>Make sure the license plate is visible</li>
+                                                <li>Image will be cropped to a square aspect ratio</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                    
+                        
+                        <!-- Description Section -->
+                        <div class="row mb-5">
+                            <div class="col-12">
+                                <div class="section-header mb-4">
+                                    <i class="fas fa-file-alt text-dark me-2 fa-lg"></i>
+                                    <h4 class="d-inline-block text-secondary mb-0">Service Description</h4>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label for="id_description" class="form-label fw-semibold">Describe your services</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text bg-light border-end-0 align-items-start">
+                                            <i class="fas fa-comment text-muted mt-1"></i>
+                                        </span>
+                                        {{ form.description }}
+                                    </div>
+                                    <div class="form-text">Let clients know what makes your service special</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Map section -->
+                         <div class="row mb-5">
+                            <div class="col-12">
+                                <div class="section-header mb-4">
+                                <i class="fas fa-map-marker-alt text-dark me-2 fa-lg"></i>
+                                <h4 class="d-inline-block text-secondary mb-0">Location</h4>
+                                </div>
+
+                                <div id="map" style="height: 400px; border-radius: 10px; margin-bottom: 10px;"></div>
+                                <button type="button" id="locateMe" class="btn btn-primary mb-3">
+                                <i class="fas fa-map-marker-alt text-light me-2 fa-sm"></i>
+                                Locate Me</button>
+
+                                <!-- Hidden fields to store lat/lng -->
+                                {{ form.latitude }}
+                                {{ form.longitude }}
+
+                                <div class="form-text mt-2">
+                                <p class="text-muted">Drag the marker or click on Locate Me button to set your new location and save
+
+                                </p>
+                                
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="id_transporter_license" class="form-label fw-semibold">Transporter License</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light border-end-0 align-items-start">
+                                    <i class="fas fa-file-alt text-muted mt-1"></i>
+                                </span>
+                                {{ form.transporter_license }}
+                            </div>
+                            {% if not form.transporter_license.value %}
+                                <strong style="color: red;" class="form-text">Upload a copy of your valid driving license to verify your identity</strong>
+                            {% endif %}   
+                        </div>
+
+                        <!-- Form Actions -->
+                        <div class="row mt-5">
+                            <div class="col-12">
+                                <div class="d-flex flex-column flex-md-row justify-content-between align-items-center">
+                                    <a href="{% url 'transporter_dashboard' %}" class="btn btn-outline-secondary btn-lg mb-3 mb-md-0">
+                                        <i class="fas fa-arrow-left me-2"></i>Back to Dashboard
+                                    </a>
+                                    <button type="submit" class="btn btn-secondary btn-lg px-5 py-2">
+                                        <i class="fas fa-save me-2"></i>Save
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .toggle-switch {
+        position: relative;
+        width: 60px;
+        height: 30px;
+    }
+
+    .toggle-switch input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+    }
+
+    .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #ccc;
+        transition: .4s;
+        border-radius: 34px;
+    }
+
+    .slider:before {
+        position: absolute;
+        content: "";
+        height: 22px;
+        width: 22px;
+        left: 4px;
+        bottom: 4px;
+        background-color: white;
+        transition: .4s;
+        border-radius: 50%;
+    }
+
+    input:checked + .slider {
+        background-color: #0d3f72;
+    }
+
+    input:checked + .slider:before {
+        transform: translateX(30px);
+    }
+    
+    /* Form styling */
+    .form-label {
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+        color: #495057;
+    }
+    
+    input[type="text"], 
+    input[type="email"], 
+    input[type="tel"], 
+    input[type="number"],
+    textarea,
+    select {
+        border-radius: 0.5rem;
+        padding: 0.75rem 1rem;
+        border: 1px solid #ced4da;
+        width: 100%;
+        transition: all 0.3s ease;
+    }
+    
+    input[type="text"]:focus, 
+    input[type="email"]:focus, 
+    input[type="tel"]:focus, 
+    input[type="number"]:focus,
+    textarea:focus,
+    select:focus {
+        border-color: #4e73df;
+        box-shadow: 0 0 0 0.2rem rgba(78, 115, 223, 0.25);
+    }
+    
+    .image-upload-container {
+        transition: all 0.3s ease;
+        border: 2px dashed #7de3ff;
+        background-color: #7debff9c !important;
+    }
+    
+    .image-upload-container:hover {
+        border-color: #4e73df !important;
+        background-color: rgba(78, 115, 223, 0.03);
+    }
+    
+    #id_vehicle_image {
+        display: none;
+    }
+    
+    .section-header {
+        padding-bottom: 0.5rem;
+        border-bottom: 2px solid #e9ecef;
+    }
+    
+    .availability-card {
+        transition: all 0.3s ease;
+        border: 1px solid #e9ecef;
+    }
+    
+    .availability-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+    
+    .input-group-text {
+        border-right: none;
+        background-color: #f8f9fa;
+    }
+    
+    .input-group .form-control {
+        border-left: none;
+    }
+    
+    .input-group .form-control:focus {
+        border-left: none;
+        box-shadow: none;
+    }
+    
+    @media (max-width: 768px) {
+        .display-5 {
+            font-size: 2rem;
+        }
+        
+        .card-body {
+            padding: 1.5rem;
+        }
+        
+        .btn-lg {
+            padding: 0.75rem 1.5rem;
+            font-size: 1rem;
+        }
+    }
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Form validation
+        const forms = document.querySelectorAll('.needs-validation');
+        
+        Array.from(forms).forEach(function(form) {
+            form.addEventListener('submit', function(event) {
+                if (!form.checkValidity()) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+                
+                form.classList.add('was-validated');
+            }, false);
+        });
+        
+        // Preview image when selected
+        const imageInput = document.getElementById('id_vehicle_image');
+        if (imageInput) {
+            imageInput.addEventListener('change', function() {
+                const file = this.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        const preview = document.createElement('img');
+                        preview.src = e.target.result;
+                        preview.alt = "New Vehicle Image";
+                        preview.className = "img-fluid rounded-3 mt-2 shadow";
+                        preview.style.maxHeight = "150px";
+                        preview.style.border = "3px solid #f8f9fa";
+                        
+                        const container = document.querySelector('.image-upload-container');
+                        const oldPreview = container.querySelector('img');
+                        if (oldPreview) {
+                            container.replaceChild(preview, oldPreview);
+                        } else {
+                            const text = container.querySelector('.text-muted');
+                            if (text) text.remove();
+                            container.appendChild(preview);
+                        }
+                    }
+                    reader.readAsDataURL(file);
+                }
+            });
+        }
+        
+        // Toggle switch labels update
+        const onlineToggle = document.getElementById('id_online');
+        const availableToggle = document.getElementById('id_is_available');
+        
+        if (onlineToggle) {
+            onlineToggle.addEventListener('change', function() {
+                const label = this.closest('.availability-card').querySelector('.status-text');
+                if (label) {
+                    label.textContent = this.checked ? 'Currently Online' : 'Currently Offline';
+                }
+            });
+        }
+        
+        if (availableToggle) {
+            availableToggle.addEventListener('change', function() {
+                const label = this.closest('.availability-card').querySelector('.status-text');
+                if (label) {
+                    label.textContent = this.checked ? 'Available for Jobs' : 'Not Available';
+                }
+            });
+        }
+    });
+</script>
+
+<!-- Map section -->
+<!-- Google Maps API -->
+<script src="https://maps.googleapis.com/maps/api/js?key={{ GOOGLE_MAPS_API_KEY }}&libraries=places"></script>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    // Default coordinates (Nairobi)
+    var defaultLat = parseFloat("{{ form.latitude.value|default:'-1.286389' }}");
+    var defaultLng = parseFloat("{{ form.longitude.value|default:'36.817223' }}");
+
+    // Initialize map
+    var map = new google.maps.Map(document.getElementById("map"), {
+      center: { lat: defaultLat, lng: defaultLng },
+      zoom: 12,
+      mapTypeId: "roadmap", // default view
+      mapTypeControl: true, // enables the toggle
+      mapTypeControlOptions: {
+        style: google.maps.MapTypeControlStyle.DEFAULT,
+        position: google.maps.ControlPosition.TOP_RIGHT,
+        mapTypeIds: ["roadmap", "satellite", "hybrid", "terrain"] // available options
+      },
+      streetViewControl: false
+    });
+
+    // Custom marker
+    var marker = new google.maps.Marker({
+      position: { lat: defaultLat, lng: defaultLng },
+      map: map,
+      draggable: true,
+      icon: {
+        url: "{% static 'myApp/images/marker-map.png' %}",
+        scaledSize: new google.maps.Size(38, 38),
+        anchor: new google.maps.Point(19, 38)
+      }
+    });
+
+    // Function to update hidden inputs
+    function updateLatLng(lat, lng) {
+      document.getElementById("id_latitude").value = lat.toFixed(6);
+      document.getElementById("id_longitude").value = lng.toFixed(6);
+    }
+
+    // Update when marker is dragged
+    google.maps.event.addListener(marker, "dragend", function (event) {
+      updateLatLng(event.latLng.lat(), event.latLng.lng());
+    });
+
+    // Locate Me button
+    document.getElementById("locateMe").addEventListener("click", function () {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          function (position) {
+            var lat = position.coords.latitude;
+            var lng = position.coords.longitude;
+
+            var pos = { lat: lat, lng: lng };
+
+            // Move marker and map
+            marker.setPosition(pos);
+            map.setCenter(pos);
+            map.setZoom(14);
+
+            // Update hidden inputs
+            updateLatLng(lat, lng);
+          },
+          function () {
+            alert("Unable to retrieve your location. Please check permissions.");
+          }
+        );
+      } else {
+        alert("Geolocation is not supported by your browser.");
+      }
+    });
+  });
+</script>
+
+
+
+{% endblock %}

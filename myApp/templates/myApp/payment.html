@@ -1,0 +1,247 @@
+{% extends 'myApp/base.html' %}
+{% block content %}
+{% load static %}
+
+<style>
+  .payment-container {
+    max-width: 800px;
+    margin: 0 auto;
+  }
+  
+  .plan-card {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    border-radius: 10px;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    border-left: 4px solid #28a745;
+  }
+  
+  .instruction-card {
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    margin-bottom: 2rem;
+  }
+  
+  .instruction-header {
+    background: linear-gradient(135deg, #28a745 0%, #218838 100%);
+    color: white;
+    padding: 1.25rem;
+    font-size: 1.25rem;
+  }
+  
+  .instruction-body {
+    padding: 1.5rem;
+    background-color: #f8f9fa;
+  }
+  
+  .instruction-body ol {
+    padding-left: 1.5rem;
+  }
+  
+  .instruction-body li {
+    margin-bottom: 0.75rem;
+    line-height: 1.6;
+  }
+  
+  .highlight {
+    background-color: #e9ecef;
+    padding: 0.2rem 0.4rem;
+    border-radius: 4px;
+    font-family: monospace;
+  }
+  
+  .payment-form {
+    background: white;
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  }
+  
+  .form-group {
+    margin-bottom: 1.5rem;
+  }
+  
+  .form-control {
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
+    border: 1px solid #ced4da;
+    transition: all 0.3s;
+  }
+  
+  .form-control:focus {
+    border-color: #80bdff;
+    box-shadow: 0 0 0 0.2rem rgba(0,123,255,0.25);
+  }
+  
+  .btn-pay {
+    background: linear-gradient(135deg, #007bff 0%, #0069d9 100%);
+    border: none;
+    padding: 0.75rem 2rem;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    transition: all 0.3s;
+  }
+  
+  .btn-pay:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(0,123,255,0.3);
+  }
+  
+  .nav-link {
+    color: #6c757d;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    transition: all 0.3s;
+    display: inline-flex;
+    align-items: center;
+  }
+  
+  .nav-link:hover {
+    color: #007bff;
+    background-color: #f8f9fa;
+    text-decoration: none;
+  }
+  
+  .nav-link i {
+    margin-right: 0.5rem;
+  }
+  
+  .alert-messages {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1000;
+    max-width: 400px;
+  }
+  
+  @media (max-width: 768px) {
+    .payment-container {
+      padding: 0 15px;
+    }
+    
+    .payment-form {
+      padding: 1.5rem;
+    }
+  }
+</style>
+
+<div class="payment-container">
+  <!-- Back Navigation -->
+  <a href="{% url 'landlord_dashboard' %}" class="nav-link mb-4">
+    <i class="fas fa-arrow-left"></i> Back to Dashboard
+  </a>
+  
+  <!-- Messages Display -->
+  {% if messages %}
+  <div class="alert-messages">
+    {% for message in messages %}
+    <div class="alert alert-dismissible fade show {% if message.tags %}{{ message.tags }}{% else %}alert-info{% endif %}" role="alert">
+      {{ message }}
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+  
+  <!-- Plan Information -->
+  <div class="plan-card">
+    <div class="d-flex justify-content-between align-items-center flex-wrap">
+      <div>
+        <h2 class="mb-1">Make Payment</h2>
+        <h4 class="text-success mb-0">Your Plan: {{ landlord.get_landlord_type_display }}</h4>
+      </div>
+      <div class="mt-2 mt-md-0">
+        <h3 class="mb-0">KES {{ amount }}</h3>
+        <small class="text-muted">Subscription Fee</small>
+      </div>
+    </div>
+  </div>
+
+  <!-- Payment Instructions -->
+  <div class="instruction-card">
+    <div class="instruction-header">
+      <i class="fas fa-mobile-alt mr-2"></i> MPESA Payment Instructions
+    </div>
+    <div class="instruction-body">
+      <p>To complete your payment via <strong>MPESA</strong>, follow these steps:</p>
+      <ol>
+        <li>Go to the <strong>MPESA menu</strong> on your phone</li>
+        <li>Select <strong>Lipa na MPESA</strong></li>
+        <li>Select <strong>Paybill</strong></li>
+        <li>Enter <strong>Business Number</strong>: <span class="highlight">247247</span></li>
+        <li>Enter <strong>Account Number</strong>: <span class="highlight">0700740099</span></li>
+        <li>Enter the <strong>Amount: KES {{ amount }}</strong></li>
+        <li>Enter your <strong>MPESA PIN</strong> and confirm</li>
+      </ol>
+
+      <div class="alert alert-warning mt-4">
+        <div class="d-flex align-items-center">
+          <i class="fas fa-exclamation-circle mr-2"></i>
+          <div>
+            <strong>Important:</strong> After payment, you'll receive an SMS confirmation. Copy the <strong>MPESA Transaction Code</strong> and enter it below.
+          </div>
+        </div>
+      </div>
+      
+      <div class="alert alert-info">
+        <div class="d-flex align-items-center">
+          <i class="fas fa-info-circle mr-2"></i>
+          <div>
+            Your account will be activated within <strong>1-2 hours</strong> after payment verification.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Payment Form -->
+  <div class="payment-form">
+    <h4 class="mb-4"><i class="fas fa-credit-card mr-2"></i> Payment Details</h4>
+
+      <form method="post" action="{% url 'mpesa:landlord_payment' %}">
+        {% csrf_token %}
+        
+        <div class="form-group">
+          <label for="id_amount" class="font-weight-bold">Amount (KES)</label>
+          <input type="text" class="form-control" id="id_amount" name="amount" value="{{ amount }}" readonly>
+          <small class="form-text text-muted">
+            Subscription amount for {{ landlord.get_landlord_type_display }} plan
+          </small>
+        </div>
+
+        <div class="form-group">
+          <label for="id_phone" class="font-weight-bold">MPESA Phone Number</label>
+          <input type="text" class="form-control" id="id_phone" name="phone_number" placeholder="e.g. 2547XXXXXXXX" required>
+          <small class="form-text text-muted">
+            Enter your Safaricom phone number to receive STK push
+          </small>
+        </div>
+
+        <button type="submit" class="btn btn-success btn-pay">
+          <i class="fas fa-coins me-2"></i> Pay with MPESA
+        </button>
+      </form>
+
+    
+    <div class="mt-4 pt-3 border-top">
+      <p class="text-muted small mb-1">
+        <i class="fas fa-question-circle mr-1"></i> Need help with payment?
+      </p>
+      <a href="mailto:support@rentalapp.com" class="text-primary">Contact our support team</a>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Auto-dismiss alerts after 5 seconds
+  $(document).ready(function() {
+    setTimeout(function() {
+      $('.alert').alert('close');
+    }, 5000);
+  });
+</script>
+{% endblock %}

@@ -1,0 +1,184 @@
+{% extends 'myApp/base.html' %}
+{% block content %}
+{% load static %}
+
+<div class="container py-4">
+  <!-- Back Navigation -->
+  <div class="mb-4">
+    <a href="{% url 'landlord_dashboard' %}" class="btn btn-outline-secondary">
+      <i class="fas fa-arrow-left me-2"></i> Back to Dashboard
+    </a>
+  </div>
+
+  <!-- Profile Header -->
+  <div class=" align-items-right mb-4">
+    <h2 class="mb-0">
+      <i class="fas fa-user-circle text-primary me-2"></i>My Profile
+    </h2>
+    <a href="{% url 'edit_landlord_profile' %}" class="btn btn-primary">
+      <i class="fas fa-edit me-1"></i> Edit Profile
+    </a>
+    
+     <a href="{% url 'change_password' %}" class="btn btn-warning">
+      <i class="fas fa-cog"></i> Change password
+    </a>
+  </div>
+
+  <!-- Profile Card -->
+  <div class="card shadow-sm border-0 overflow-hidden">
+    <div class="row g-0">
+      <!-- Profile Picture Column -->
+      <div class="col-md-4 bg-light d-flex align-items-center justify-content-center p-4">
+        <div class="text-center">
+          {% if landlord.profile_photo %}
+            <img src="{{ landlord.profile_photo.url }}" 
+                 alt="Profile Photo" 
+                 class="img-fluid rounded-circle mb-3 profile-picture">
+          {% else %}
+            <div class="profile-picture-default rounded-circle mb-3">
+              <i class="fas fa-user text-muted"></i>
+            </div>
+          {% endif %}
+          <h5 class="mb-1">{{ landlord.first_name }} {{ landlord.last_name }}</h5>
+          <small class="text-muted">{{ landlord.get_landlord_type_display }}</small>
+          {% if subscription_plan %}
+            <p class="text-muted">Plan: {{ subscription_plan.landlord_type|title }}</p>
+            <p class="text-muted">Monthly Price: KES {{ subscription_plan.price }}</p>
+          {% else %}
+            <p class="text-muted">No subscription plan assigned.</p>
+          {% endif %}
+          
+          {% if landlord.is_verified %}
+            <span class="verified-badge">
+              <i class="fas fa-check-circle"></i> Verified
+            </span>
+          {% endif %}
+
+            
+
+
+        </div>
+      </div>
+      
+      <!-- Profile Info Column -->
+      <div class="col-md-8">
+        <div class="card-body p-4">
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <h6 class="text-muted mb-2">
+                <i class="fas fa-envelope text-primary me-2"></i>Email
+              </h6>
+              <p class="mb-0">{{ landlord.user.email }}</p>
+            </div>
+
+            <div class="col-md-6 mb-3">
+              <h6 class="text-muted mb-2">
+                <i class="fas fa-envelope text-primary me-2"></i>ID number
+              </h6>
+              <p class="mb-0">{{ landlord.user.id_number }}</p>
+            </div>
+            
+            <div class="col-md-6 mb-3">
+              <h6 class="text-muted mb-2">
+                <i class="fas fa-phone text-primary me-2"></i>Phone
+              </h6>
+              <p class="mb-0">{{ landlord.phone_number }}</p>
+            </div>
+            
+            <div class="col-md-6 mb-3">
+              <h6 class="text-muted mb-2">
+                <i class="fas fa-calendar text-primary me-2"></i>Member Since
+              </h6>
+              <p class="mb-0">{{ landlord.date_joined|date:"F j, Y" }}</p>
+            </div>
+            
+            <div class="col-md-6 mb-3">
+              <h6 class="text-muted mb-2">
+                <i class="fas fa-id-card text-primary me-2"></i>Account Status
+              </h6>
+              
+              {% if not landlord.is_paid  %}
+                <span class="badge bg-danger">
+                  <i class="fas fa-ban"></i> Inactive
+                </span>
+                {% else %}
+                  <span class="badge bg-success">
+                  <i class="fas fa-check-circle me-1"></i> Active
+                </span>
+              {% endif %}
+                
+              
+            </div>
+          </div>
+          
+          <!-- Additional Info Section -->
+          <div class="mt-4 pt-3 border-top">
+            <h5 class="mb-3">
+              <i class="fas fa-info-circle text-primary me-2"></i>Additional Information
+            </h5>
+            <p class="text-muted">You can update your profile information anytime by clicking the "Edit Profile" button.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .verified-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: linear-gradient(135deg, #0d8d91, #05274c); /* blue gradient */
+  color: #fff;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 3px 8px;
+  border-radius: 12px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+  animation: fadeIn 0.5s ease;
+}
+
+.verified-badge i {
+  color: #ffc107; /* gold checkmark */
+  font-size: 14px;
+}
+
+@keyframes fadeIn {
+  from {opacity: 0; transform: scale(0.9);}
+  to {opacity: 1; transform: scale(1);}
+}
+
+
+  .profile-picture {
+    width: 180px;
+    height: 180px;
+    object-fit: cover;
+    border: 3px solid #e9ecef;
+  }
+  
+  .profile-picture-default {
+    width: 180px;
+    height: 180px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f8f9fa;
+    font-size: 4rem;
+    border: 3px solid #e9ecef;
+  }
+  
+  .card {
+    border-radius: 0.75rem;
+  }
+  
+  @media (max-width: 767.98px) {
+    .profile-picture,
+    .profile-picture-default {
+      width: 120px;
+      height: 120px;
+    }
+  }
+</style>
+
+{% endblock %}

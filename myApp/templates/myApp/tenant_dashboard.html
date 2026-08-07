@@ -1,0 +1,775 @@
+{% extends 'myApp/base.html' %}
+{% load humanize %}
+{% block content %}
+<style>
+  :root {
+    --primary: #1a3a5c; /* Navy Blue */
+    --primary-light: #c8a173; /* Warm Taupe (Kenyan Gold) */
+    --secondary: #2a5a78; /* Lighter Navy Blue */
+    --success: #4cc9f0;
+    --warning: #f8961e;
+    --danger: #f94144;
+    --dark: #212529;
+    --light: #f8f9fa;
+    --glass-bg: rgba(255, 255, 255, 0.85);
+    --glass-border: rgba(255, 255, 255, 0.2);
+  }
+
+  body {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    min-height: 100vh;
+  }
+
+  .dashboard-header {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+    color: #fff;
+    padding: 2rem;
+    border-radius: 20px;
+    margin-bottom: 2rem;
+    position: relative;
+    overflow: hidden;
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--glass-border);
+    box-shadow: 0 8px 32px rgba(26, 58, 92, 0.15);
+  }
+
+  .dashboard-header::before {
+    content: "";
+    position: absolute;
+    top: -50%;
+    right: -50%;
+    width: 100%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+    transform: rotate(30deg);
+  }
+
+  .glass-card {
+    background: var(--glass-bg);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--glass-border);
+    border-radius: 20px;
+    padding: 1.5rem;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.08);
+    transition: all 0.3s ease;
+    
+  }
+
+  .glass-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 40px rgba(0,0,0,0.15);
+    border-color: rgba(200, 161, 115, 0.3);
+  }
+
+  .stat-card {
+    background: linear-gradient(135deg, var(--glass-bg) 0%, rgba(255,255,255,0.95) 100%);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--glass-border);
+    border-radius: 16px;
+    padding: 2rem;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+    height: 100%;
+    text-align: center;
+    transition: all 0.3s ease;
+  }
+
+  .stat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+  }
+
+  .stat-card i {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    color: var(--primary);
+    background: linear-gradient(135deg, var(--primary-light) 0%, #d4b18a 100%);
+    width: 80px;
+    height: 80px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    box-shadow: 0 4px 15px rgba(200, 161, 115, 0.3);
+  }
+
+  .activity-card {
+    background: var(--glass-bg);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--glass-border);
+    border-radius: 20px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.08);
+    overflow: hidden;
+    margin-bottom: 1.5rem;
+    transition: all 0.3s ease;
+  }
+
+  .activity-card:hover {
+    box-shadow: 0 12px 40px rgba(0,0,0,0.12);
+  }
+
+  .activity-header {
+    background: linear-gradient(135deg, var(--primary-light) 0%, #d4b18a 100%);
+    padding: 1.25rem 1.5rem;
+    cursor: pointer;
+    user-select: none;
+    transition: all 0.3s ease;
+    color: #000;
+    border-bottom: 1px solid rgba(255,255,255,0.2);
+  }
+
+  .activity-header:hover {
+    background: linear-gradient(135deg, #ba936a 0%, #c8a173 100%);
+  }
+
+  .activity-content {
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    overflow: hidden;
+  }
+
+  .activity-item {
+    padding: 1.25rem 1.5rem;
+    transition: all 0.3s ease;
+    color: #000;
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+  }
+
+  .activity-item:hover {
+    background: rgba(200, 161, 115, 0.1);
+    transform: translateX(5px);
+  }
+
+  .countdown-timer {
+    display: inline-block;
+  }
+
+  
+
+  .nav-link {
+    color: rgba(255,255,255,0.9) !important;
+    transition: all 0.3s ease;
+    padding: 0.5rem 1rem !important;
+    border-radius: 12px;
+    margin: 0 0.25rem;
+  }
+
+  .nav-link:hover {
+    color: #fff !important;
+    background: rgba(255,255,255,0.1);
+    transform: translateY(-2px);
+  }
+
+  /* Token circle enhancements */
+  .token-circle {
+    width: 140px;
+    height: 140px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #ff7801 0%, #ffb55b 100%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 
+      0 0 30px rgba(255, 120, 1, 0.6),
+      inset 0 0 20px rgba(255, 255, 255, 0.3);
+    position: relative;
+    overflow: hidden;
+    transition: all 0.4s ease;
+    border: 4px solid rgba(255, 255, 255, 0.3);
+    animation: float 3s ease-in-out infinite;
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    50% { transform: translateY(-10px) rotate(2deg); }
+  }
+
+  .token-circle::before {
+    content: "";
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(45deg, transparent, rgba(255,255,255,0.3), transparent);
+    transform: rotate(45deg);
+    transition: all 0.6s ease;
+  }
+
+  .token-circle:hover::before {
+    transform: rotate(45deg) translate(50%, 50%);
+  }
+
+  .token-amount {
+    font-size: 28px;
+    font-weight: 800;
+    color: #092d47;
+    line-height: 1;
+    text-shadow: 0 2px 4px rgba(255,255,255,0.5);
+    position: relative;
+    z-index: 2;
+  }
+
+  /* Button enhancements */
+  .btn-primary {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+    border: none;
+    border-radius: 12px;
+    padding: 0.75rem 1.5rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(26, 58, 92, 0.3);
+  }
+
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(26, 58, 92, 0.4);
+  }
+
+  .btn-outline-primary {
+    border: 2px solid var(--primary);
+    color: var(--primary);
+    border-radius: 12px;
+    padding: 0.75rem 1.5rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+  }
+
+  .btn-outline-primary:hover {
+    background: var(--primary);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(26, 58, 92, 0.3);
+  }
+
+  /* Badge enhancements */
+  .badge {
+    border-radius: 10px;
+    padding: 0.5rem 1rem;
+    font-weight: 600;
+  }
+
+  /* Table enhancements */
+  .table a{
+    border-radius: 12px;
+    overflow: hidden;
+  }
+
+  .table-hover tbody tr {
+    transition: all 0.3s ease;
+  }
+
+  .table-hover tbody tr:hover {
+    background: rgba(200, 161, 115, 0.1);
+    transform: translateX(5px);
+  }
+
+  tbody, th, td {
+    font-size: medium;
+  }
+
+  /* Text contrast */
+  body, h1, h2, h3, h4, h5, h6,
+  .card-title, .card-text, .text-dark, 
+  .text-muted, .text-justify, p, strong,
+  .activity-header, .activity-item {
+    color: #000 !important;
+  }
+
+  .dashboard-header,
+  .dashboard-header h2,
+  .dashboard-header p,
+  .dashboard-header a {
+    color: #fff !important;
+  }
+
+  /* Responsive improvements */
+  @media (max-width: 768px) {
+    .dashboard-header {
+      padding: 1.5rem;
+      border-radius: 16px;
+    }
+    
+    .glass-card, .stat-card {
+      padding: 1.25rem;
+      border-radius: 16px;
+    }
+    
+    .token-circle {
+      width: 100px;
+      height: 100px;
+    }
+    
+    .token-amount {
+      font-size: 20px;
+    }
+  }
+  .date_expiry {
+    font-size: 1.0rem;
+    font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    background: #0427474b;
+    border-radius: 8px;
+    padding: 2px 6px;
+    color: #11540e;
+  }
+
+
+  /* Toggle Switch */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
+}
+
+.switch input { display:none; }
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-color: #ccc;
+  transition: .4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  transition: .4s;
+}
+
+input:checked + .slider {
+  background-color: #4CAF50;
+}
+
+input:checked + .slider:before {
+  transform: translateX(26px);
+}
+
+.slider.round { border-radius: 34px; }
+.slider.round:before { border-radius: 50%; }
+
+</style>
+
+<div class="container py-4">
+  <!-- Welcome Header -->
+  <div class="dashboard-header">
+    <div class="row align-items-center">
+      <div class="col-md-8">
+        <nav class="navbar navbar-expand-lg p-0">
+          <div class="container-fluid p-0">
+            <a class="navbar-brand" href="{% url 'tenant_landing' %}"><i class="fas fa-home me-2"></i>XbS</a>
+            
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" 
+                    aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+              <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+              <div class="navbar-nav ms-auto">
+                <a href="{% url 'property_map' %}" class="nav-link">
+                  <i class="fas fa-map-marked-alt me-1"></i> Property Map
+                </a>
+                
+                <a href="{% url 'transporter_map' %}" class="nav-link">
+                  <i class="fas fa-truck-moving me-1"></i> Movers
+                </a>
+
+                <a href="{% url 'tenant_profile' %}" class="nav-link">
+                  <i class="fas fa-user-circle me-1"></i> Profile
+                </a>
+
+              </div>
+            </div>
+          </div>
+        </nav>
+      </div>
+      
+      <div class="col-md-4 text-md-end mt-3 mt-md-0">
+        <div class="token-display d-inline-block">
+          <div class="token-circle">
+            {% if token_balance > 1 %}
+              <div class="token-amount">{{ token_balance }}</div>
+              <div class="token-label"><strong>Swifts</strong></div>
+            {% else %}
+              <div class="token-amount">{{ token_balance }}</div>
+              <div class="token-label"><strong>Swift</strong></div>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Stats Row -->
+  <div class="row g-4 mb-4">
+    <!-- Profile Card -->
+    <div class="col-lg-6 col-md-12">
+      <div class="glass-card">
+        <!-- Swifts expiry section -->
+        {% if token_balance > 0 and token_expiry_date %}
+          <div class="alert alert-success d-flex align-items-center mb-3">
+            <i class="fas fa-clock me-3 fs-5" style="color: #0a754f;"></i>
+            <div>
+              <strong>{{ token_balance }}</strong> active Swifts
+              <div class="date_expiry">
+                <small class=" d-block text-muted">Expires in {{ token_expiry_date }}<br> </small>
+                <small><i class="fas fa-hourglass-half"></i> <span id="countdown-timer" data-expiry="{{ token_expiry_date|date:'U' }}"> </span> remaining</small>
+              </div>
+              
+            </div>
+          </div>
+          
+        {% elif token_expiry_date and token_expiry_date <= now %}
+          <div class="alert alert-danger d-flex align-items-center mb-3">
+            <i class="fas fa-exclamation-triangle me-3"></i>
+            Your Swifts have expired
+          </div>
+        {% else %}
+          <div class="alert alert-info d-flex align-items-center mb-3">
+            <i class="fas fa-info-circle me-3"></i>
+            <div>
+              No active Swifts
+              <a href="{% url 'mpesa:buy_token' %}" class="alert-link d-block">Get Swifts now</a>
+            </div>
+          </div>
+        {% endif %}
+
+        
+
+        <div class="glass-card mt-3 p-3" style="background: rgba(200, 161, 115, 0.1); border: 1px solid rgba(200, 161, 115, 0.2);">
+          <div class="d-flex justify-content-between align-items-center">
+            <div class="d-flex align-items-center">
+              <i class="fas fa-exchange-alt me-2 text-primary"></i>
+              <a href="{% url 'token_history' %}" class="text-decoration-none fw-semibold">Transactions</a>
+            </div>
+            <span class="badge" style="background: linear-gradient(135deg, var(--primary-light) 0%, #d4b18a 100%); color: #000;">
+              {{ transactions|length }}
+              {% if transactions|length > 0 %}
+                <i class="fas fa-check-circle ms-1"></i>
+              {% endif %}
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="col-lg-3 col-md-6">
+      <div class="stat-card">
+        <i class="fas fa-heart"></i>
+        <h3 class="fw-bold">{{ favorites|length }}</h3>
+        <p class="text-muted mb-0">Wishlist</p>
+      </div>
+    </div>
+
+    <div class="col-lg-3 col-md-6">
+      <div class="stat-card">
+        <i class="fas fa-eye"></i>
+        <h3 class="fw-bold">{{ recent_views|length }}</h3>
+        <p class="text-muted mb-0">Recent Views</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Favorites Section -->
+  <div class="activity-card">
+    <div class="activity-header d-flex justify-content-between align-items-center" onclick="toggleSection('favorites')">
+      <div class="d-flex align-items-center">
+        <i class="fas fa-heart me-3 fs-5"></i>
+        <h4 class="mb-0">Wishlist</h4>
+      </div>
+      <div class="d-flex align-items-center">
+        <span class="badge bg-primary me-3">{{ favorites|length }}</span>
+        <i class="fas fa-chevron-down toggle-icon"></i>
+      </div>
+    </div>
+    
+    <div class="activity-content" id="favorites-content">
+      {% if favorites %}
+        <div class="table-responsive">
+          <table class="table table-hover mb-0">
+            <thead class="table-light">
+              <tr>
+                <th>Property</th>
+                <th>Added On</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for fav in favorites %}
+              <tr>
+                <td>
+                  <a href="{% url 'property_detail' fav.property.id %}" class="text-decoration-none fw-semibold">
+                    <i style="color: #febb02;" class="fas fa-home me-2"></i>{{ fav.property.title }}
+                  </a><br>
+                  <i style="color: rgb(141, 139, 131);" class="fas fa-map-marker-alt me-1"></i><small style="color: #753f0a;">{{ fav.property.estate }}, {{ fav.property.city }}</small>
+                </td>
+                <td>{{ fav.added_on|date:"M d, Y" }}</td>
+                <td>
+                  <form method="post" action="{% url 'remove_favorite' fav.property.id %}">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-sm btn-outline-danger">
+                      <i class="fas fa-trash me-1"></i>Remove
+                    </button>
+                  </form>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      {% else %}
+        <div class="text-center py-5">
+          <i class="fas fa-heart-broken fa-4x text-muted mb-4"></i>
+          <h5 class="text-muted mb-3">No favorite properties yet</h5>
+          <a href="{% url 'tenant_landing' %}" class="btn btn-primary">
+            <i class="fas fa-search me-2"></i>Browse Properties
+          </a>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- Recently Viewed Section -->
+  <div class="activity-card">
+    <div class="activity-header d-flex justify-content-between align-items-center" onclick="toggleSection('recent-views')">
+      <div class="d-flex align-items-center">
+        <i class="fas fa-history me-3 fs-5"></i>
+        <h4 class="mb-0">Recently Viewed</h4>
+      </div>
+      <div class="d-flex align-items-center">
+        <span class="badge bg-primary me-3">{{ recent_views|length }}</span>
+        <i class="fas fa-chevron-down toggle-icon"></i>
+      </div>
+    </div>
+    
+    <div class="activity-content" id="recent-views-content">
+      {% if recent_views %}
+        <div class="table-responsive">
+          <table class="table table-hover mb-0">
+            <thead class="table-light">
+              <tr>
+                <th>Property</th>
+                <th>Viewed On</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for view in recent_views %}
+              <tr>
+                <td>
+                  <a href="{% url 'property_detail' view.property.id %}" class="text-decoration-none fw-semibold">
+                    <i style="color: #febb02;" class="fas fa-home me-2"></i>{{ view.property.title }}
+                  </a><br>
+                  <i style="color: rgb(141, 139, 131);" class="fas fa-map-marker-alt me-1"></i><small style="color: #753f0a;">{{ view.property.estate }}, {{ view.property.city }}</small>
+                </td>
+                <td>{{ view.viewed_on|date:"M d, Y H:i" }}</td>
+                <td>
+                  <a style="font-size: small !important;" href="{% url 'property_detail' view.property.id %}" class="btn btn-sm btn-primary">
+                    <i style="font-size: small !important;" class="fas fa-eye"></i>View Again
+                  </a>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      {% else %}
+        <div class="text-center py-5">
+          <i class="fas fa-eye-slash fa-4x text-muted mb-4"></i>
+          <h5 class="text-muted mb-3">No recently viewed properties</h5>
+          <a href="{% url 'tenant_landing' %}" class="btn btn-primary">
+            <i class="fas fa-search me-2"></i>Browse Properties
+          </a>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+<script>
+  // Initialize sections
+  document.addEventListener('DOMContentLoaded', function() {
+    // Initialize sections as collapsed by default
+    initializeSections();
+    
+    // Add smooth animations to cards on load
+    const cards = document.querySelectorAll('.glass-card, .stat-card');
+    cards.forEach((card, index) => {
+      card.style.opacity = '0';
+      card.style.transform = 'translateY(20px)';
+      
+      setTimeout(() => {
+        card.style.transition = 'all 0.6s ease';
+        card.style.opacity = '1';
+        card.style.transform = 'translateY(0)';
+      }, index * 100);
+    });
+  });
+
+  function initializeSections() {
+    // Set initial state for all collapsible sections
+    const sections = ['favorites', 'recent-views'];
+    
+    sections.forEach(sectionId => {
+      const header = document.querySelector(`[onclick="toggleSection('${sectionId}')"]`);
+      const content = document.getElementById(`${sectionId}-content`);
+      const icon = header?.querySelector('.toggle-icon');
+      
+      if (header && content && icon) {
+        // Start with sections collapsed
+        header.classList.add('collapsed');
+        content.classList.add('collapsed');
+        content.style.maxHeight = '0';
+        icon.style.transform = 'rotate(0deg)';
+      }
+    });
+  }
+
+  function toggleSection(sectionId, animate = true) {
+    const header = document.querySelector(`[onclick="toggleSection('${sectionId}')"]`);
+    const content = document.getElementById(`${sectionId}-content`);
+    const icon = header?.querySelector('.toggle-icon');
+    
+    if (!header || !content || !icon) {
+      console.error('Section elements not found for:', sectionId);
+      return;
+    }
+    
+    const isCollapsed = header.classList.contains('collapsed');
+    
+    if (animate) {
+      content.style.transition = 'max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease';
+    } else {
+      content.style.transition = 'none';
+    }
+    
+    if (isCollapsed) {
+      // Expanding the section
+      header.classList.remove('collapsed');
+      content.classList.remove('collapsed');
+      content.style.maxHeight = content.scrollHeight + 'px';
+      icon.style.transform = 'rotate(180deg)';
+      
+      // After expansion, remove max-height to allow for dynamic content
+      setTimeout(() => {
+        if (!header.classList.contains('collapsed')) {
+          content.style.maxHeight = 'none';
+        }
+      }, 400);
+    } else {
+      // Collapsing the section
+      header.classList.add('collapsed');
+      // Set current height before collapsing for smooth animation
+      content.style.maxHeight = content.scrollHeight + 'px';
+      
+      // Force reflow
+      content.offsetHeight;
+      
+      // Start collapse animation
+      content.style.maxHeight = '0';
+      content.classList.add('collapsed');
+      icon.style.transform = 'rotate(0deg)';
+    }
+  }
+
+  // Enhanced subscription alerts
+  {% if expiry_date %}
+    const expiry = new Date("{{ expiry_date|date:'Y-m-d H:i:s' }}").getTime();
+    const now = new Date().getTime();
+    const timeLeft = expiry - now;
+
+    const threeDays = 3 * 24 * 60 * 60 * 1000;
+    const twoDays = 2 * 24 * 60 * 60 * 1000;
+    const oneDay = 1 * 24 * 60 * 60 * 1000;
+
+    if (timeLeft <= threeDays && timeLeft > twoDays) {
+      setTimeout(() => {
+        showNotification("🔔 Your subscription will expire in less than 3 days. Please consider renewing.", 'warning');
+      }, 2000);
+    } else if (timeLeft <= twoDays && timeLeft > oneDay) {
+      setTimeout(() => {
+        showNotification("⏳ Your subscription will expire in less than 2 days. Renew soon to avoid interruption.", 'warning');
+      }, 2000);
+    } else if (timeLeft <= oneDay && timeLeft > 0) {
+      setTimeout(() => {
+        showNotification("⚠️ Your subscription expires within 24 hours. Click to renew now!", 'danger', true);
+      }, 2000);
+    }
+
+    function showNotification(message, type, actionable = false) {
+      const notification = document.createElement('div');
+      notification.className = `alert alert-${type} position-fixed`;
+      notification.style.cssText = `
+        top: 20px;
+        right: 20px;
+        z-index: 9999;
+        min-width: 350px;
+        box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+        border: none;
+        border-radius: 16px;
+        backdrop-filter: blur(10px);
+        cursor: ${actionable ? 'pointer' : 'default'};
+      `;
+      
+      notification.innerHTML = `
+        <div class="d-flex align-items-center">
+          <i class="fas fa-${type === 'danger' ? 'exclamation-triangle' : 'bell'} me-3 fs-5"></i>
+          <span class="flex-grow-1">${message}</span>
+          <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+      `;
+      
+      if (actionable) {
+        notification.addEventListener('click', () => {
+          window.location.href = "{% url 'tenant_subscription_page' %}";
+        });
+      }
+      
+      document.body.appendChild(notification);
+      
+      setTimeout(() => {
+        if (notification.parentNode) {
+          notification.parentNode.removeChild(notification);
+        }
+      }, 6000);
+    }
+  {% endif %}
+</script>
+
+<!-- Swifts Countdown Timer -->
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    const timerElement = document.getElementById('countdown-timer');
+    if (!timerElement) return;
+    
+    const expiryTimestamp = parseInt(timerElement.getAttribute('data-expiry')) * 1000;
+
+    function updateCountdown() {
+      const now = new Date().getTime();
+      const distance = expiryTimestamp - now;
+
+      if (distance < 0) {
+        timerElement.innerHTML = "<span class='badge bg-danger'>Expired</span>";
+        clearInterval(interval);
+        return;
+      }
+
+      const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+      timerElement.innerHTML = `<span class="countdown-timer">${days}d ${hours}h ${minutes}m ${seconds}s</span>`;
+    }
+
+    updateCountdown();
+    const interval = setInterval(updateCountdown, 1000);
+  });
+</script>
+
+{% endblock %}

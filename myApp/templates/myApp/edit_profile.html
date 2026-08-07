@@ -1,0 +1,170 @@
+{% extends 'myApp/base.html' %}
+{% block content %}
+{% load static %}
+
+<div class="container py-4">
+  <!-- Back Navigation -->
+  <div class="mb-4">
+    <a href="{% url 'landlord_dashboard' %}" class="btn btn-outline-secondary">
+      <i class="fas fa-arrow-left me-2"></i> Back to Dashboard
+    </a>
+  </div>
+
+  <!-- Form Header -->
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="mb-0">
+      <i class="fas fa-user-edit text-primary me-2"></i>Edit Profile
+    </h2>
+  </div>
+
+  <!-- Profile Edit Form -->
+  <div class="card shadow-sm border-0 p-3 p-md-4">
+    <form method="POST" enctype="multipart/form-data" class="needs-validation" novalidate>
+      {% csrf_token %}
+      
+      <div class="row g-3">
+        <!-- Profile Picture Upload -->
+        <div class="col-md-4 text-center">
+          <div class="mb-3">
+            {% if form1.instance.profile_photo %}
+              <img src="{{ form1.instance.profile_photo.url }}" 
+                   alt="Current Profile Photo" 
+                   class="img-thumbnail mb-3 current-profile-pic">
+            {% else %}
+              <div class="profile-pic-placeholder mb-3">
+                <i class="fas fa-user text-muted"></i>
+              </div>
+            {% endif %}
+            <div class="form-group">
+              <label for="id_profile_photo" class="btn btn-outline-primary w-100">
+                <i class="fas fa-camera me-2"></i>Change Photo
+                {{ form1.profile_photo }}
+              </label>
+              <small class="form-text text-muted">JPG or PNG, max 2MB</small>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Form Fields -->
+        <div class="col-md-8">
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label class="form-label">First Name</label>
+              {{ form1.first_name }}
+              <div class="invalid-feedback">
+                Please provide a valid first name.
+              </div>
+            </div>
+            
+            <div class="col-md-6">
+              <label class="form-label">Last Name</label>
+              {{ form1.last_name }}
+              <div class="invalid-feedback">
+                Please provide a valid last name.
+              </div>
+            </div>
+            
+            <div class="col-12">
+              <label class="form-label">Phone Number</label>
+              {{ form1.phone_number }}
+              <div class="invalid-feedback">
+                Please provide a valid phone number.
+              </div>
+            </div>
+            
+            <div class="col-12">
+              <label class="form-label">Email Address</label>
+              {{ form2.email }}
+              <div class="invalid-feedback">
+                Please provide a valid email address.
+              </div>
+            </div>
+            
+            <div class="col-12 mt-4">
+              <button type="submit" class="btn btn-primary px-4 py-2">
+                <i class="fas fa-save me-2"></i>Save Changes
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+<style>
+  .current-profile-pic {
+    width: 200px;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 0.5rem;
+  }
+  
+  .profile-pic-placeholder {
+    width: 200px;
+    height: 200px;
+    background: #f8f9fa;
+    border: 2px dashed #dee2e6;
+    border-radius: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 3rem;
+    margin: 0 auto;
+  }
+  
+  #id_profile_photo {
+    display: none;
+  }
+  
+  @media (max-width: 767.98px) {
+    .current-profile-pic,
+    .profile-pic-placeholder {
+      width: 150px;
+      height: 150px;
+    }
+  }
+</style>
+
+<script>
+  // Client-side form validation
+  (function() {
+    'use strict';
+    window.addEventListener('load', function() {
+      var forms = document.getElementsByClassName('needs-validation');
+      var validation = Array.prototype.filter.call(forms, function(form) {
+        form.addEventListener('submit', function(event) {
+          if (form.checkValidity() === false) {
+            event.preventDefault();
+            event.stopPropagation();
+          }
+          form.classList.add('was-validated');
+        }, false);
+      });
+    }, false);
+  })();
+  
+  // Preview uploaded image
+  document.getElementById('id_profile_photo').addEventListener('change', function(e) {
+    if (e.target.files.length > 0) {
+      const file = e.target.files[0];
+      const reader = new FileReader();
+      
+      reader.onload = function(event) {
+        const preview = document.querySelector('.current-profile-pic') || 
+                       document.querySelector('.profile-pic-placeholder');
+        if (preview) {
+          if (preview.classList.contains('profile-pic-placeholder')) {
+            preview.innerHTML = `<img src="${event.target.result}" class="current-profile-pic" alt="Preview">`;
+          } else {
+            preview.src = event.target.result;
+          }
+        }
+      };
+      
+      reader.readAsDataURL(file);
+    }
+  });
+</script>
+
+{% endblock %}

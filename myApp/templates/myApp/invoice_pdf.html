@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <style>
+    body { font-family: "Arial", sans-serif; padding: 30px; }
+    h2 { color: #333; }
+    .info { margin-bottom: 10px; }
+    .label { font-weight: bold; width: 180px; display: inline-block; }
+    hr { margin: 20px 0; }
+  </style>
+</head>
+<body>
+  <h2>Payment Invoice</h2>
+  <hr>
+  <div class="info"><span class="label">Landlord:</span> {{ payment.landlord.first_name }}</div>
+  <div class="info"><span class="label">Email:</span> {{ payment.landlord.user.email }}</div>
+  <div class="info"><span class="label">Phone:</span> {{ payment.landlord.phone_number }}</div>
+  <div class="info"><span class="label">Amount:</span> Ksh {{ payment.amount }}</div>
+  <div class="info"><span class="label">Payment Method:</span> {{ payment.get_payment_method_display }}</div>
+  <div class="info"><span class="label">Transaction ID:</span> {{ payment.transaction_id }}</div>
+  <div class="info"><span class="label">Status:</span>
+    {% if payment.is_successful %} Successful {% else %} Pending {% endif %}
+  </div>
+  <div class="info"><span class="label">Date:</span> {{ payment.timestamp|date:"M d, Y H:i A" }}</div>
+</body>
+</html>

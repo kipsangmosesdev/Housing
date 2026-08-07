@@ -1,0 +1,1236 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>XbomaSwift AI Chat</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#2a5a78" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+/* --- General Styles --- */
+:root {
+  --primary: #007d91;
+  --primary-gradient: linear-gradient(135deg, #103f75, #007d91);
+  --secondary: #25a2d3;
+  --secondary-gradient: linear-gradient(135deg, #113c6e, #174f8e);
+  --accent: #ff914d;
+  --accent-gradient: linear-gradient(135deg, #ff914d, #ff7b2e);
+  --light-bg: #f7f9fb;
+  --card-bg: #ffffff;
+  --text-dark: #2d3748;
+  --text-light: #718096;
+  --shadow-sm: 0 2px 4px rgba(0,0,0,0.05);
+  --shadow-md: 0 4px 6px rgba(0,0,0,0.07);
+  --shadow-lg: 0 10px 15px rgba(0,0,0,0.1);
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 18px;
+}
+
+* { 
+  margin:0; 
+  padding:0; 
+  box-sizing:border-box; 
+  font-family: 'Segoe UI', 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif; 
+}
+
+body { 
+  display:flex; 
+  flex-direction:column; 
+  height:100vh; 
+  background-color: var(--light-bg);
+  color: var(--text-dark);
+}
+
+
+
+
+/* Chat Container */
+#chat-container {
+  flex: 1; 
+  overflow-y: auto; 
+  padding: 20px;
+  display: flex; 
+  flex-direction: column;
+  background-color: var(--light-bg);
+  background-image: 
+    radial-gradient(#e2e8f0 1px, transparent 1px),
+    radial-gradient(#e2e8f0 1px, transparent 1px);
+  background-size: 30px 30px;
+  background-position: 0 0, 15px 15px;
+}
+
+/* Messages */
+.message {
+  max-width: 85%; 
+  margin-bottom: 16px;
+  padding: 14px 18px; 
+  border-radius: var(--radius-lg);
+  word-wrap: break-word; 
+  animation: fadeIn 0.4s ease;
+  box-shadow: var(--shadow-sm);
+  line-height: 1.5;
+  position: relative;
+}
+
+.user-msg {
+  background: var(--secondary-gradient);
+  color: white; 
+  align-self: flex-end;
+  border-bottom-right-radius: var(--radius-sm);
+}
+
+.bot-msg {
+  background: var(--card-bg); 
+  align-self: flex-start;
+  border-bottom-left-radius: var(--radius-sm); 
+  border: 1px solid #e8ecef;
+  box-shadow: var(--shadow-sm);
+}
+
+.tip-msg {
+    background: #fff8d9; /* soft yellow */
+    padding: 12px 16px;
+    border-radius: 12px;
+    margin: 10px 0;
+    font-size: 15px;
+    line-height: 1.5;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+.tip-msg i {
+    color: #ffb400; /* light bulb color */
+    margin-right: 6px;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+/* Message Tail Effect */
+.bot-msg::before {
+  content: '';
+  position: absolute;
+  left: -8px;
+  bottom: 0;
+  width: 0;
+  height: 0;
+  border: 8px solid transparent;
+  border-right-color: var(--card-bg);
+  border-left: 0;
+}
+
+.user-msg::after {
+  content: '';
+  position: absolute;
+  right: -8px;
+  bottom: 0;
+  width: 0;
+  height: 0;
+  border: 8px solid transparent;
+  
+  border-right: 0;
+}
+
+/* Separator */
+.separator { 
+  text-align: center; 
+  color: var(--text-light); 
+  margin: 16px 0; 
+  font-size: 0.85rem; 
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.separator::before,
+.separator::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: #e2e8f0;
+}
+
+/* Property Card */
+.property-card {
+  background: var(--card-bg); 
+  border-radius: var(--radius-md);
+  margin: 16px 0; 
+  padding: 16px;
+  box-shadow: var(--shadow-md);
+  border: 1px solid #e8ecef;
+  opacity: 0; 
+  transition: opacity 0.5s, transform 0.3s;
+  transform: translateY(10px);
+}
+
+.property-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
+
+.property-info { 
+  margin-top: 10px; 
+  font-size: 0.95rem; 
+  line-height: 1.5; 
+  color: var(--text-dark);
+}
+
+.property-info strong {
+  color: var(--primary);
+  font-size: 1.1rem;
+  display: block;
+  margin-bottom: 4px;
+}
+
+.view-btn {
+  display: inline-flex; 
+  align-items: center;
+  gap: 6px;
+  margin-top: 12px;
+  padding: 8px 18px;
+  background: var(--accent-gradient);
+  color: white; 
+  text-decoration: none;
+  border-radius: 20px; 
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: all 0.3s;
+  box-shadow: 0 2px 4px rgba(255, 123, 46, 0.3);
+}
+
+.view-btn:hover { 
+  background: linear-gradient(135deg, #ff7b2e, #ff914d); 
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(255, 123, 46, 0.4);
+}
+
+.view-btn:active {
+  transform: translateY(0);
+}
+
+.timestamp { 
+  font-size: 0.75rem; 
+  color: var(--text-light); 
+  margin-top: 6px; 
+  text-align: right;
+}
+
+/* Carousel */
+.carousel-container {
+  position: relative; 
+  width: 100%; 
+  height: 200px;
+  overflow: hidden; 
+  border-radius: var(--radius-md); 
+  margin-bottom: 12px;
+}
+
+.carousel-slide { 
+  width: 100%; 
+  height: 100%;
+  display: none; 
+  object-fit: cover; 
+  transition: opacity 0.5s;
+}
+
+.carousel-slide.active { 
+  display: block; 
+  animation: fadeIn 0.5s;
+}
+
+.prev-btn, .next-btn {
+  position: absolute; 
+  top: 50%; 
+  transform: translateY(-50%);
+  background-color: rgba(255,255,255,0.9); 
+  color: var(--primary);
+  border: none; 
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%; 
+  font-size: 0.9rem; 
+  cursor: pointer;
+  box-shadow: var(--shadow-md);
+  transition: all 0.2s;
+}
+
+.prev-btn { left: 12px; } 
+.next-btn { right: 12px; }
+
+.prev-btn:hover, .next-btn:hover { 
+  background-color: white; 
+  transform: translateY(-50%) scale(1.1);
+}
+
+/* Input Area */
+#input-area {
+  display: flex; 
+  padding: 16px 20px;
+  background-color: var(--card-bg);
+  border-top: 1px solid #e2e8f0;
+  box-shadow: 0 -2px 10px rgba(0,0,0,0.03);
+  position: relative;
+  z-index: 5;
+}
+
+#user-input {
+  flex: 1; 
+  padding: 14px 20px;
+  border-radius: 25px; 
+  border: 1px solid #e2e8f0; 
+  outline: none;
+  font-size: 1rem;
+  background: var(--card-bg);
+  box-shadow: inset 0 2px 4px rgba(0,0,0,0.03);
+  transition: all 0.3s;
+}
+
+#user-input:focus {
+  border-color: var(--primary);
+  box-shadow: inset 0 2px 4px rgba(0,0,0,0.05), 0 0 0 3px rgba(0,125,145,0.1);
+}
+
+/* Send Button */
+#send-btn {
+  position: relative;
+  background: var(--secondary-gradient);
+  color: white; 
+  border: none; 
+  margin-left: 12px;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  cursor: pointer; 
+  font-size: 1.2rem;
+  display: flex; 
+  align-items: center; 
+  justify-content: center;
+  box-shadow: var(--shadow-md);
+  transition: all 0.2s ease;
+}
+
+#send-btn:hover { 
+  transform: scale(1.05); 
+  box-shadow: 0 6px 12px rgba(37, 211, 102, 0.25);
+}
+
+#send-btn:active { 
+  transform: scale(0.95); 
+}
+
+.ripple {
+  position: absolute; 
+  border-radius: 50%;
+  transform: scale(0); 
+  animation: ripple-animation 0.6s linear;
+  background-color: rgba(255,255,255,0.6);
+  pointer-events: none;
+}
+
+@keyframes ripple-animation { 
+  to { 
+    transform: scale(4); 
+    opacity: 0; 
+  } 
+}
+
+/* Typing Indicator */
+#typing {
+  display: none; 
+  margin-bottom: 12px; 
+  align-self: flex-start;
+  background: #e8f4fc; 
+  padding: 12px 18px; 
+  border-radius: 20px;
+  font-style: italic; 
+  color: var(--primary);
+  box-shadow: var(--shadow-sm);
+  align-items: center;
+  gap: 8px;
+}
+
+.typing-dots {
+  display: flex;
+  gap: 4px;
+}
+
+.typing-dot {
+  width: 6px;
+  height: 6px;
+  background: var(--primary);
+  border-radius: 50%;
+  opacity: 0.6;
+  animation: typing-dot 1.4s infinite ease-in-out;
+}
+
+.typing-dot:nth-child(1) { animation-delay: 0s; }
+.typing-dot:nth-child(2) { animation-delay: 0.2s; }
+.typing-dot:nth-child(3) { animation-delay: 0.4s; }
+
+@keyframes typing-dot {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-5px); opacity: 1; }
+}
+
+/* Animations */
+@keyframes fadeIn { 
+  from { 
+    opacity: 0; 
+    transform: translateY(10px);
+  } 
+  to { 
+    opacity: 1; 
+    transform: translateY(0);
+  } 
+}
+
+/* Scrollbar styling */
+#chat-container::-webkit-scrollbar {
+  width: 6px;
+}
+
+#chat-container::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+#chat-container::-webkit-scrollbar-thumb {
+  background: #cbd5e0;
+  border-radius: 3px;
+}
+
+#chat-container::-webkit-scrollbar-thumb:hover {
+  background: #a0aec0;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .message {
+    max-width: 90%;
+  }
+  
+ 
+  
+  #chat-container {
+    padding: 16px;
+  }
+  
+  .carousel-container {
+    height: 180px;
+  }
+}
+
+/* Badge for property features */
+.feature-badge {
+  display: inline-block;
+  background: #edf2f7;
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  margin: 4px 4px 4px 0;
+  color: var(--text-dark);
+}
+
+/* Price highlighting */
+.price-tag {
+  font-weight: 700;
+  color: var(--primary);
+  font-size: 1.1rem;
+}
+
+/*add style for AI profile avatar and tenant */
+.fas.fa-robot {
+    margin-right: 8px;
+}
+.fas.fa-user {
+    margin-right: 8px;
+}
+/* === XbomaSwift Sticky Navigation (with Brand Left + Menu Right) === */
+.xboma-nav {
+  position: sticky;
+  top: 0;
+  z-index: 999;
+  background: #ffffff;
+  border-bottom: 3px solid #c8a173; /* gold accent */
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  padding: 10px 40px;
+  display: flex;
+  justify-content: space-between; /* left & right sections */
+  align-items: center;
+}
+
+/* Brand (Left Section) */
+.nav-left .brand-name {
+  font-weight: 700;
+  font-size: 20px;
+  color: #2a5a78;
+  margin: 0;
+  letter-spacing: 0.5px;
+}
+
+/* Navigation Links (Right Section) */
+.xboma-nav-links {
+  list-style: none;
+  display: flex;
+  gap: 18px;
+  margin: 0;
+  padding: 0;
+}
+
+/* Buttons */
+.xboma-nav-links .nav-btn {
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 15px;
+  border-radius: 25px;
+  padding: 10px 18px;
+  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* Home Button (Blue) */
+.xboma-nav-links .home-btn {
+  background-color: #2a5a78;
+  color: #fff;
+}
+
+.xboma-nav-links .home-btn:hover {
+  background-color: #1f3f56;
+  transform: translateY(-2px);
+}
+
+/* Help Button (Outlined Gold) */
+.xboma-nav-links .help-btn {
+  border: 2px solid #c8a173;
+  color: #c8a173;
+  background: transparent;
+}
+
+.xboma-nav-links .help-btn:hover {
+  background-color: #c8a173;
+  color: #fff;
+  transform: translateY(-2px);
+}
+
+/* Hover Shadow */
+.xboma-nav-links .nav-btn:hover {
+  box-shadow: 0 3px 6px rgba(0,0,0,0.15);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .xboma-nav {
+    flex-direction: column;
+    align-items: center;
+    padding: 8px 20px;
+  }
+
+  .xboma-nav-links {
+    margin-top: 8px;
+    gap: 10px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .xboma-nav-links .nav-btn {
+    font-size: 14px;
+    padding: 8px 14px;
+  }
+
+  .nav-left .brand-name {
+    font-size: 18px;
+  }
+}
+
+</style>
+</head>
+<body>
+
+<header>
+  <nav class="xboma-nav">
+    <div class="nav-left">
+     <p class="brand-name"><i class="fa fa-robot" aria-hidden="true"></i> XbomaSwift Agent</p>
+    </div>
+    <ul class="xboma-nav-links">
+      <li><a href="{% url 'tenant_landing' %}" class="nav-btn home-btn"><i class="fas fa-home"></i> Home</a></li>
+      <li><a href="{% url 'help_ai' %}" class="nav-btn help-btn"><i class="fas fa-question-circle"></i> Help</a></li>
+    </ul>
+  </nav>
+</header>
+
+
+
+<div id="chat-container">
+    <!-- Example Bot Init Message -->
+    <div class="bot-msg message">
+        <div>
+            <p>
+              Hello there 👋! I’m your virtual rental assistant and I am here to help you find properties that match your needs.
+              You can ask me about <strong>locations</strong>, <strong>budgets</strong>, <strong>amenities</strong>, or <strong>property types</strong>.
+              <br>
+              Not sure how to start? Visit the 
+              <a href="{% url 'help_ai' %}" class="help-link"><i class="fa-solid fa-circle-question"></i> Help Guide</a>
+              for tips and sample prompts. 
+            </p>
+        </div>
+        <div class="timestamp" id="init-time"></div>
+    </div>
+
+    <!-- Typing Indicator -->
+    <div id="typing" style="display:none;">
+        <span>AI Agent is typing...</span>
+        <div class="typing-dots">
+            <div class="typing-dot"></div>
+            <div class="typing-dot"></div>
+            <div class="typing-dot"></div>
+        </div>
+    </div>
+</div>
+
+<!-- Input Area -->
+<div id="input-area">
+    <input type="text" id="user-input" placeholder="Type a message..." autofocus>
+    <button id="send-btn">
+        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="white" viewBox="0 0 24 24">
+            <path d="M2 21l21-9L2 3v7l15 2-15 2v7z"/>
+        </svg>
+    </button>
+</div>
+
+
+<script>
+const chatContainer = document.getElementById('chat-container');
+const userInput = document.getElementById('user-input');
+const sendBtn = document.getElementById('send-btn');
+const typingIndicator = document.getElementById('typing');
+const initTimeEl = document.getElementById('init-time');
+if (initTimeEl) initTimeEl.textContent = getTime();
+
+// Updated and deduplicated amenities list
+const AMENITIES = [
+  // Structural & Outdoor Features
+  "Paved Compound", "Driveway", "Perimeter Lighting", "Garden", 
+  "Outdoor Sitting Area", "Rooftop Water Tank", "Rain Gutters", 
+  "Borehole Water", "Reliable Water Supply", "Perimeter Wall", "Gated Community",
+
+  // Flooring & Finishes
+  "Cement Screed Flooring", "Vinyl Flooring", "Marble Flooring", 
+  "Natural Wood Flooring", "Floors Finished with Tiles",
+
+  // Interior Fixtures
+  "Curtain Rods Installed", "Fitted Cabinets", "Wall Mirrors", 
+  "Kitchen Cabinets", "Refrigerator Space", "Chimney",
+
+  // Parking & Storage
+  "Garage", "Parking - Open", "Parking - Covered", "Storage Room",
+
+  // Kitchen Features
+  "Open Plan Kitchen", "Countertop Kitchen", "Modern Kitchen", 
+  "Built-in Kitchen Appliances", "Pantry", "Double Sink", "Single Sink", 
+  "Breakfast Bar", "Dishwashing Machine",
+
+  // Bathroom Features
+  "Hot Shower", "Sitting Toilet", "Squat Toilet", "Shower Cubicle", 
+  "Bathtub", "Anti-slip Tiles in Wet Areas", "Shared Bathroom", 
+  "Shared Toilet", "Ensuite Bathroom", "Heated Water System", "Guest Cloakroom",
+
+  // Laundry & Cleaning
+  "Laundry Room", "In-unit Laundry Machine", "Laundry Drying Area", 
+  "Ironing Station", "Cleaning Services",
+
+  // Living & Comfort
+  "Natural Lighting", "Sliding Doors", "Sliding Windows", 
+  "Soundproof Walls/Windows", "Double Glazed Windows", "Walk-in Closet",
+  "Built-in Wardrobes", "Balcony View", "Air Conditioning", "Ceiling Fan",
+  "Coffered Ceiling", "Metal Ceiling", "Acoustic Ceiling", "Wooden Ceiling", 
+  "PVC Ceiling", "POP Ceiling", "Gypsum Ceiling", "Underfloor Heating", 
+  "Home Office Space", "Fireplace", "TV Wall",
+
+  // Technology & Smart Features
+  "Fiber Internet Ready", "Cable TV Ready", "WiFi", 
+  "Wall-Mounted TV Points", "Satellite Dish Installation Ready", "DSTV",
+  "Electricity - Post-paid", "Electricity - Prepaid (Tokens)",
+  "Smart Doorbell", "Video Doorbell", "Smart Lighting", "Smart Thermostat", 
+  "Smart Water Leak Sensors", "Smart Lock", "Home Automation System",
+
+  // Green & Sustainable Living
+  "Solar Panel System", "Solar Power Backup", "Sun-powered Hot Water System",
+  "Rainwater Harvesting", "Energy-Efficient Appliances",
+  "Composting Facility", "Recycling Pickup", "Recycling Center", 
+  "Greywater Recycling System", "Water Pressure Boosters", 
+  "Wastewater Treatment System",
+
+  // Shared & Community Amenities
+  "Shared Kitchen", "Shared Event/Meeting Space", "Resident Support Staff Available",
+  "Reception Desk", "Visitor Parking", "Daycare", "Game Room", 
+  "Restaurant", "Library", "Shared Study Area", "Jogging Track", 
+  "Children’s Play Area", "Gym", "Outdoor Grilling Spot", 
+  "Pet-Friendly Areas", "Elevator (Lift)", "Fully Furnished",
+  "Rooftop Terrace", "Swimming Pool", "Jacuzzi / Hot Tub", 
+  "Steam Room", "Servant Quarters", "Generator Power Backup", 
+  "Water Backup",
+
+  // Security & Safety
+  "Electric Fence", "Fire Extinguishers", "Fire Exit/Emergency Stairwell",
+  "Sprinkler System", "Smoke Detectors", "Carbon Monoxide Detectors",
+  "Wheelchair Accessible", "Emergency Assembly Point", "Fire Hose Reels",
+  "Security Alarm System", "Video Doorbell", "RFID / Keycard Access",
+  "Double Gate System", "Guard House", "Guard Dogs", "Security Patrols",
+  "Security Lighting", "Boom Gate", "Intercom System (Audio/Video)",
+  "Motion Sensor Lighting", "Visitor Management System", "Emergency Alert System",
+  "Biometric Access", "24/7 CCTV Surveillance", "Security Guard"
+];
+
+
+
+// Track selected amenities
+let selectedAmenities = new Set();
+
+function getTime() {
+    const now = new Date();
+    return now.getHours() + ":" + now.getMinutes().toString().padStart(2,'0');
+}
+
+async function typeMessage(element, text, delay = 30) {
+    element.innerHTML = "";
+    for (let char of text) {
+        element.innerHTML += char;
+        chatContainer.scrollTop = chatContainer.scrollHeight;
+        await new Promise(r => setTimeout(r, delay));
+    }
+}
+
+// Function to display amenities selection panel
+function displayAmenitiesPanel() {
+    const panelContainer = document.createElement('div');
+    panelContainer.className = 'amenities-panel-container';
+    panelContainer.innerHTML = `
+        <div class="amenities-panel-header">
+            <strong>Select Amenities:</strong>
+            <span class="selected-count">Selected: <span id="selected-count">0</span></span>
+        </div>
+        <div class="amenities-panel-subheader">
+            <span>Click amenities to add them to your search</span>
+            <button class="clear-selection-btn">Clear All</button>
+        </div>
+        <div class="amenities-panel-tags">
+            ${AMENITIES.map(amenity => `
+                <span class="amenity-panel-tag" data-amenity="${amenity}">
+                    ${amenity}
+                    <span class="checkmark">✓</span>
+                </span>
+            `).join('')}
+        </div>
+        <div class="amenities-panel-actions">
+            <button class="apply-search-btn">
+                <i class="fas fa-search"></i> Search Properties with Selected Amenities
+            </button>
+        </div>
+    `;
+    
+    chatContainer.appendChild(panelContainer);
+    
+    // Add click listeners to amenity tags
+    panelContainer.querySelectorAll('.amenity-panel-tag').forEach(tag => {
+        tag.addEventListener('click', function() {
+            const amenity = this.getAttribute('data-amenity');
+            
+            if (selectedAmenities.has(amenity)) {
+                selectedAmenities.delete(amenity);
+                this.classList.remove('selected');
+            } else {
+                selectedAmenities.add(amenity);
+                this.classList.add('selected');
+            }
+            
+            updateSelectedAmenitiesDisplay();
+            updateInputField();
+        });
+    });
+    
+    // Clear selection button
+    panelContainer.querySelector('.clear-selection-btn').addEventListener('click', function() {
+        selectedAmenities.clear();
+        panelContainer.querySelectorAll('.amenity-panel-tag').forEach(tag => {
+            tag.classList.remove('selected');
+        });
+        updateSelectedAmenitiesDisplay();
+        updateInputField();
+    });
+    
+    // Apply search button
+    panelContainer.querySelector('.apply-search-btn').addEventListener('click', function() {
+        if (selectedAmenities.size > 0) {
+            // Auto-submit the search
+            const amenitiesText = Array.from(selectedAmenities).join(', ');
+            userInput.value = `Find properties with amenities: ${amenitiesText}`;
+            sendMessage();
+        } else {
+            // Show message if no amenities selected
+            const warningMsg = document.createElement('div');
+            warningMsg.className = 'bot-msg message';
+            warningMsg.textContent = "Please select at least one amenity to search for properties.";
+            chatContainer.appendChild(warningMsg);
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+    });
+    
+    chatContainer.scrollTop = chatContainer.scrollHeight;
+}
+
+// Update the selected count display
+function updateSelectedAmenitiesDisplay() {
+    const countElement = document.getElementById('selected-count');
+    if (countElement) {
+        countElement.textContent = selectedAmenities.size;
+    }
+}
+
+// Update the input field with selected amenities
+function updateInputField() {
+    if (selectedAmenities.size > 0) {
+        const amenitiesText = Array.from(selectedAmenities).join(', ');
+        userInput.value = `Find properties with: ${amenitiesText}`;
+        userInput.focus();
+    } else {
+        userInput.value = '';
+    }
+}
+
+// Function to show amenities quick selection prompt
+function showAmenitiesPrompt() {
+    const promptMsg = document.createElement('div');
+    promptMsg.className = 'bot-msg message';
+    promptMsg.innerHTML = `
+        <p>I can help you find properties based on specific amenities! </p>
+        <p>You can either:</p>
+        <ul>
+            <li>Type your amenity requirements in the chat</li>
+            <li>Click the amenities below to build your search</li>
+        </ul>
+        <button class="show-amenities-btn">
+            <i class="fas fa-list"></i> Show All Amenities to Choose From
+        </button>
+    `;
+    
+    chatContainer.appendChild(promptMsg);
+    
+    // Add click listener to show amenities panel
+    promptMsg.querySelector('.show-amenities-btn').addEventListener('click', function() {
+        displayAmenitiesPanel();
+    });
+    
+    chatContainer.scrollTop = chatContainer.scrollHeight;
+}
+
+async function displayMessagesSequentially(messages) {
+    const normalMessages = messages.filter(m => m.type !== 'tip');
+    const tipMessages = messages.filter(m => m.type === 'tip');
+
+    for (const msg of normalMessages) {
+        if (typingIndicator) typingIndicator.style.display = 'flex';
+        const delay = msg.type === 'property' ? 1200 : 800;
+        await new Promise(r => setTimeout(r, delay));
+        if (typingIndicator) typingIndicator.style.display = 'none';
+
+        let messageElement;
+        if (msg.type === 'property') {
+            messageElement = document.createElement('div');
+            messageElement.className = 'property-card bot-msg message';
+
+            let imagesHTML = '';
+            if (msg.images && msg.images.length > 0) {
+                imagesHTML = `<div class="carousel-container">
+                    ${msg.images.map((img,index)=>`<img src="${img}" class="carousel-slide ${index===0?'active':''}" />`).join('')}
+                    ${msg.images.length > 1 ? `<button class="prev-btn"><i class="fas fa-chevron-left"></i></button>
+                    <button class="next-btn"><i class="fas fa-chevron-right"></i></button>` : ''}
+                </div>`;
+            } else if (msg.image_url) {
+                imagesHTML = `<div class="carousel-container">
+                    <img src="${msg.image_url}" class="carousel-slide active" alt="${msg.title || ''}">
+                </div>`;
+            }
+
+            const amenitiesHTML = msg.amenities && msg.amenities.length > 0 
+                ? msg.amenities.map(a => `<span class="feature-badge">${a}</span>`).join('')
+                : '<span class="feature-badge">None</span>';
+
+            const rentDisplay = (typeof msg.rent === 'number') ? msg.rent.toLocaleString() : (msg.rent || 'N/A');
+
+            messageElement.innerHTML = `
+                ${imagesHTML}
+                <div class="property-info">
+                    <strong>${msg.title || 'Property'}</strong>
+                    <div class="price-tag">Ksh. ${rentDisplay}</div>
+                    <div><i class="fas fa-map-marker-alt"></i> ${msg.city || ''}${msg.city && msg.estate ? ', ' : ''}${msg.estate || ''}</div>
+                    <div style="margin-top:6px;">
+                        <span class="feature-badge"><i class="fas fa-bed"></i> ${msg.bedrooms || 'N/A'} Bed</span>
+                        <span class="feature-badge"><i class="fas fa-bath"></i> ${msg.bathrooms || 'N/A'} Bath</span>
+                  
+                    </div>
+                    <div style="margin-top: 8px;">
+                        <strong>Amenities:</strong> 
+                        <div style="margin-top: 6px;">${amenitiesHTML}</div>
+                    </div>
+                    ${msg.id ? `<a class="view-btn" href="/dashboard/property/${msg.id}/" target="_blank"><i class="fas fa-external-link-alt"></i> View More</a>` : ''}
+                </div>
+                <div class="timestamp">${getTime()}</div>
+            `;
+            chatContainer.appendChild(messageElement);
+
+            const container = messageElement.querySelector('.carousel-container');
+            if (container) {
+                const slides = container.querySelectorAll('.carousel-slide');
+                if (slides.length > 1) {
+                    let currentIndex = 0;
+                    const prevBtn = container.querySelector('.prev-btn');
+                    const nextBtn = container.querySelector('.next-btn');
+                    const showSlide = (i) => {
+                        slides.forEach((s, j) => s.classList.toggle('active', j === i));
+                    };
+                    if (prevBtn) prevBtn.addEventListener('click', () => { 
+                        currentIndex = (currentIndex - 1 + slides.length) % slides.length; 
+                        showSlide(currentIndex); 
+                    });
+                    if (nextBtn) nextBtn.addEventListener('click', () => { 
+                        currentIndex = (currentIndex + 1) % slides.length; 
+                        showSlide(currentIndex); 
+                    });
+                }
+            }
+        } else if (msg.type === 'separator') {
+            messageElement = document.createElement('div');
+            messageElement.className = 'separator';
+            messageElement.innerHTML = `<span>${msg.content}</span>`;
+            chatContainer.appendChild(messageElement);
+        } else if (msg.type === 'reply') {
+            messageElement = document.createElement('div');
+            messageElement.className = 'bot-msg message';
+            chatContainer.appendChild(messageElement);
+            await typeMessage(messageElement, msg.content);
+            messageElement.innerHTML += `<div class="timestamp">${getTime()}</div>`;
+        } else {
+            messageElement = document.createElement('div');
+            messageElement.className = 'bot-msg message';
+            chatContainer.appendChild(messageElement);
+            await typeMessage(messageElement, msg.content || '');
+            messageElement.innerHTML += `<div class="timestamp">${getTime()}</div>`;
+        }
+
+        chatContainer.scrollTop = chatContainer.scrollHeight;
+    }
+
+}
+
+async function sendMessage(){
+    const message = userInput.value.trim();
+    if (!message) return;
+
+    const userMsg = document.createElement('div');
+    userMsg.className = 'user-msg message';
+    userMsg.innerHTML = `${escapeHtml(message)} <div class="timestamp">${getTime()}</div>`;
+    chatContainer.appendChild(userMsg);
+    chatContainer.scrollTop = chatContainer.scrollHeight;
+    userInput.value = '';
+
+    // Clear previous selection
+    selectedAmenities.clear();
+
+    try {
+        const response = await fetch("{% url 'ai_agent' %}", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRFToken": "{{ csrf_token }}"
+            },
+            body: JSON.stringify({ message })
+        });
+
+        const data = await response.json();
+        const messagesToShow = [];
+      
+
+        if (data.reply) {
+            let cleanedReply = data.reply
+                .replace(/(Here'?s a tip:|Rental Tip:)[^.?!]*[.?!]\s*/gi, "")
+                .replace(/I found some options for you! Here'?s what I think:\s*/gi, "")
+                .trim();
+
+            if (cleanedReply) {
+                messagesToShow.push({ type: 'reply', sender: 'AI agent', content: cleanedReply });
+            }
+        }
+
+        if (data.properties && data.properties.length > 0) {
+            messagesToShow.push({ type: 'separator', content: "Here are some properties you might like" });
+            data.properties.forEach(p => messagesToShow.push({ type: 'property', ...p }));
+        }
+
+        if (data.tip) {
+            messagesToShow.push({ type: 'tip', content: data.tip });
+        }
+
+        // Show amenities prompt if no properties found or after properties are shown
+        if (data.properties && data.properties.length === 0) {
+            setTimeout(() => {
+                showAmenitiesPrompt();
+            }, 1000);
+        }
+
+        await displayMessagesSequentially(messagesToShow);
+
+    } catch (err) {
+        if (typingIndicator) typingIndicator.style.display = 'none';
+        const errorMsg = document.createElement('div');
+        errorMsg.className = 'bot-msg message';
+        errorMsg.textContent = "Sorry, I encountered an error. Please try again.";
+        chatContainer.appendChild(errorMsg);
+    }
+}
+
+function escapeHtml(str){
+    if (!str) return '';
+    return str.replace(/[&<>"']/g, (s) => {
+        const map = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' };
+        return map[s];
+    });
+}
+
+// Initialize chat with amenities prompt
+setTimeout(() => {
+    showAmenitiesPrompt();
+}, 1500);
+
+sendBtn.addEventListener('click', sendMessage);
+userInput.addEventListener('keypress', e => { if (e.key === 'Enter') sendMessage(); });
+</script>
+
+<style>
+/* Amenities Panel Styles */
+.amenities-panel-container {
+    background: var(--card-bg);
+    border-radius: var(--radius-md);
+    padding: 20px;
+    margin: 16px 0;
+    border: 1px solid #e8ecef;
+    box-shadow: var(--shadow-md);
+}
+
+.amenities-panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #e8ecef;
+}
+
+.amenities-panel-subheader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    font-size: 0.9rem;
+    color: var(--text-light);
+}
+
+.selected-count {
+    font-weight: 600;
+    color: var(--primary);
+}
+
+.clear-selection-btn {
+    background: transparent;
+    border: 1px solid #dc3545;
+    color: #dc3545;
+    padding: 4px 12px;
+    border-radius: 15px;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.clear-selection-btn:hover {
+    background: #dc3545;
+    color: white;
+}
+
+.amenities-panel-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    max-height: 300px;
+    overflow-y: auto;
+    padding: 15px;
+    border: 1px solid #e8ecef;
+    border-radius: var(--radius-sm);
+    background: #fafbfc;
+    margin-bottom: 20px;
+}
+
+.amenity-panel-tag {
+    background: #f8f9fa;
+    border: 2px solid #e9ecef;
+    border-radius: 25px;
+    padding: 10px 20px;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    user-select: none;
+    position: relative;
+    overflow: hidden;
+}
+
+.amenity-panel-tag:hover {
+    background: #e9ecef;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.amenity-panel-tag.selected {
+    background: var(--primary-gradient);
+    color: white;
+    border-color: var(--primary);
+    box-shadow: 0 4px 12px rgba(0, 125, 145, 0.3);
+    transform: translateY(-2px);
+}
+
+.amenity-panel-tag .checkmark {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    background: var(--secondary);
+    color: white;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.7rem;
+    opacity: 0;
+    transform: scale(0.5);
+    transition: all 0.3s ease;
+}
+
+.amenity-panel-tag.selected .checkmark {
+    opacity: 1;
+    transform: scale(1);
+}
+
+.amenities-panel-actions {
+    text-align: center;
+}
+
+.apply-search-btn {
+    background: var(--secondary-gradient);
+    color: white;
+    border: none;
+    padding: 12px 30px;
+    border-radius: 25px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(37, 211, 102, 0.3);
+}
+
+.apply-search-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(37, 211, 102, 0.4);
+}
+
+.apply-search-btn:active {
+    transform: translateY(0);
+}
+
+.show-amenities-btn {
+    background: var(--accent-gradient);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: all 0.3s;
+}
+
+.show-amenities-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(255, 123, 46, 0.3);
+}
+
+/* Scrollbar styling for amenities panel */
+.amenities-panel-tags::-webkit-scrollbar {
+    width: 8px;
+}
+
+.amenities-panel-tags::-webkit-scrollbar-thumb {
+    background: #cbd5e0;
+    border-radius: 4px;
+}
+
+.amenities-panel-tags::-webkit-scrollbar-thumb:hover {
+    background: #a0aec0;
+}
+
+/* Tip bubble styling */
+.tip-msg {
+    background: #fff8d9; /* soft yellow */
+    border-left: 5px solid #ffcc00;
+    padding: 12px 16px;
+    border-radius: 12px;
+    margin: 10px 0;
+    font-size: 15px;
+    line-height: 1.5;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+    animation: fadeIn 0.35s ease-in-out;
+    max-width: 95%;
+    word-wrap: break-word;
+}
+
+.tip-msg i {
+    color: #ffb400; /* light bulb color */
+    margin-right: 6px;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* small helper for carousel slides visibility */
+.carousel-container { position: relative; overflow: hidden; }
+.carousel-slide { display: none; width: 100%; height: auto; max-height: 220px; object-fit: cover; }
+.carousel-slide.active { display: block; }
+
+/* simple prev/next buttons (adjust to your theme) */
+.prev-btn, .next-btn {
+    position: absolute; top: 50%; transform: translateY(-50%);
+    background: rgba(255,255,255,0.9); border: none; padding: 6px; border-radius: 50%;
+    cursor: pointer;
+}
+.prev-btn { left: 8px; }
+.next-btn { right: 8px; }
+
+/* timestamp small style */
+.timestamp { font-size: 11px; color: #666; margin-top: 6px; text-align: right; }
+
+/* small ripple helper (optional) */
+.ripple { position: absolute; width: 10px; height: 10px; background: rgba(0,0,0,0.12); border-radius: 50%; transform: translate(-50%,-50%); pointer-events: none; }
+
+/* keep message transition pleasant */
+.bot-msg.message, .user-msg.message, .property-card { transition: all .18s ease; opacity: 0.98; transform: translateY(0); }
+</style>
+
+
+</body>
+</html>

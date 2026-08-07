@@ -1,0 +1,177 @@
+{% extends 'myApp/base.html' %}
+
+{% block content %}
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-lg-6">
+      <div class="card border-0 shadow-lg rounded-4 overflow-hidden animate-fade-in">
+        
+        <!-- Header -->
+        <div class="card-header text-center text-white py-4" 
+             style="background: linear-gradient(135deg, #0F3C4C, #1E566B);">
+          <h3 class="mb-0 fw-bold">
+            <i class="fas fa-coins me-2 text-warning"></i> Buy Swift Coins
+          </h3>
+          <p class="small mb-0 text-light opacity-75">
+            Top up to unlock landlord's contact details
+          </p>
+        </div>
+
+        <!-- Body -->
+        <div class="card-body p-4 bg-light">
+          <form method="POST" action="{% url 'mpesa:buy_token' %}" novalidate>
+            {% csrf_token %}
+
+            {% if form.errors %}
+              <div class="alert alert-danger">
+                <ul>
+                  {% for field in form %}
+                    {% for error in field.errors %}
+                      <li><strong>{{ field.label }}:</strong> {{ error }}</li>
+                    {% endfor %}
+                  {% endfor %}
+                </ul>
+              </div>
+            {% endif %}
+
+            <!-- Token Bundle Dropdown -->
+            <div class="mb-4">
+              <label for="id_token_count" class="form-label fw-semibold" style="color: #0F3C4C;">
+                Choose Coin Bundle
+              </label>
+              <p>
+                1 Swift = Ksh.15
+              </p>
+              <select name="token_count" id="id_token_count" class="form-select border-0 shadow-sm">
+                <!-- <option value="1">1 Swift - Ksh.15</option> -->
+                <option value="3">3 Swifts - Ksh.40 (Save 5)</option>
+                <option value="5">5 Swifts - Ksh.65 (Save 10)</option>
+                <option value="10">10 Swifts - Ksh.120 (Save 30)</option>
+                <option value="15">15 Swifts - Ksh.175 (Save 50)</option>
+              </select>
+            </div>
+
+            <!-- Total Amount Display -->
+            <div class="mb-4">
+              <label class="form-label fw-semibold" style="color: #0F3C4C;">Total Amount</label>
+              <div class="input-group shadow-sm">
+                <span class="input-group-text" style="background-color: #E9ECEF;">Ksh</span>
+                <input type="text" id="total_amount" class="form-control border-0" value="15" readonly>
+              </div>
+            </div>
+
+            <!-- Phone Number -->
+            <div class="mb-4">
+              <label for="id_phone_number" class="form-label fw-semibold" style="color: #0F3C4C;">
+                {{ form.phone_number.label }}
+              </label>
+              <div class="input-group shadow-sm">
+                <span class="input-group-text" style="background-color: #E9ECEF;">+254</span>
+                {{ form.phone_number }}
+              </div>
+              <small class="text-muted">You’ll receive an M-Pesa prompt shortly after submission.</small>
+            </div>
+
+            <!-- Submit and Back -->
+            <div class="d-grid gap-2 mt-4">
+              <button type="submit" class="btn pay-btn py-2 fw-semibold">
+                <i class="fas fa-lock me-2"></i> Initiate Payment
+              </button>
+              <a href="{% url 'tenant_dashboard' %}" class="btn btn-outline-secondary py-2 fw-semibold">
+                <i class="fas fa-arrow-left me-2"></i> Back to Dashboard
+              </a>
+            </div>
+          </form>
+        </div>
+
+        <!-- Footer -->
+        <div class="card-footer text-center py-3 small bg-white border-top">
+          <i class="bi bi-info-circle me-1" style="color: #1E566B;"></i>
+          <span class="text-muted">
+            Coins help you access landlords and agents contacts  on
+            <strong style="color: #0F3C4C;">XbomaSwift</strong>.
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  function updateTotal() {
+    const select = document.getElementById('id_token_count');
+    const amountField = document.getElementById('total_amount');
+    let total = 0;
+    switch (parseInt(select.value)) {
+      case 1: total = 15; break;
+      case 3: total = 40; break;
+      case 5: total = 65; break;
+      case 10: total = 120; break;
+      case 15: total = 175; break;
+      default: total = 0;
+    }
+    amountField.value = total;
+  }
+  updateTotal();
+  document.getElementById('id_token_count').addEventListener('change', updateTotal);
+</script>
+
+<style>
+  .animate-fade-in {
+    animation: fadeIn 0.7s ease-in-out;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .form-control, .form-select {
+    height: 45px;
+    border-radius: 0.5rem;
+  }
+h3{
+    font-weight: 700;
+    color: rgb(214, 185, 111);
+  }
+  .form-control:focus, .form-select:focus {
+    border-color: #D9A441;
+    box-shadow: 0 0 0 0.25rem rgba(217, 164, 65, 0.3);
+  }
+
+  .input-group-text {
+    color: #5a5a5a;
+    border: none;
+  }
+
+  .btn-outline-secondary {
+    border-color: #1E566B;
+    color: #1E566B;
+  }
+
+  .btn-outline-secondary:hover {
+    background-color: #D9A441;
+    color: #0F3C4C;
+    border-color: #D9A441;
+  }
+
+  .pay-btn {
+    background: linear-gradient(135deg, #D9A441, #EABF69);
+    color: #0F3C4C;
+    border: none;
+    border-radius: 10px;
+    transition: all 0.3s ease-in-out;
+  }
+
+  .pay-btn:hover {
+    background: linear-gradient(135deg, #EABF69, #F4D88D);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+    color: #0F3C4C;
+  }
+
+  .card {
+    border-radius: 1rem !important;
+  }
+</style>
+{% endblock %}

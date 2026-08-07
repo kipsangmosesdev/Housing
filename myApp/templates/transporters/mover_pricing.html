@@ -1,0 +1,120 @@
+{% extends "myApp/base.html" %}
+
+{% block content %}
+<section class="py-5 bg-light min-vh-100">
+  <div class="container py-4">
+    <!-- Friendly Header -->
+    <div class="text-center mb-5">
+      <h1 class="fw-bold text-dark mb-3" style="font-size: 2.5rem;">
+         Plans
+      </h1>
+      <p class="text-muted fs-5 mb-3">
+        Get your vehicle on the map and start connecting with clients today.<br>
+        Simple, fair pricing for all vehicle types.
+      </p>
+      <div class="mx-auto bg-primary rounded-pill" style="width: 80px; height: 4px;"></div>
+    </div>
+
+    <!-- Simple Pricing Cards -->
+    <div class="row justify-content-center">
+      {% for plan in plans %}
+      <div class="col-md-6 col-lg-4 mb-4">
+        <div class="card h-100 shadow border-0 rounded-3">
+          <div class="card-body text-center p-4">
+            <!-- Vehicle Icon -->
+            <div class="mb-3">
+              {% if plan.vehicle_type == "pickup" %}
+                <span style="font-size: 3rem;"><i style="color: rgba(66, 65, 64, 0.706);" class="fas fa-truck-pickup"></i></span>
+              {% elif plan.vehicle_type == "canter" %}
+                <span style="font-size: 3rem;"><i style="color: rgba(66, 65, 64, 0.706);" class="fas fa-truck"></i></span>
+              {% elif plan.vehicle_type == "lorry" %}
+                <span style="font-size: 3rem;"><i style="color: rgba(66, 65, 64, 0.706);" class="fas fa-truck"></i></span>
+              {% elif plan.vehicle_type == "truck" %}
+                <span style="font-size: 3rem;"><i style="color: rgba(66, 65, 64, 0.706);" class="fas fa-truck"></i></span>
+              {% elif plan.vehicle_type == "trailer" %}
+                <span style="font-size: 3rem;"><i style="color: rgba(66, 65, 64, 0.706);" class="fas fa-truck"></i></span>
+              {% else %}
+                <span style="font-size: 3rem;">🚗</span>
+              {% endif %}
+            </div>
+
+            <!-- Vehicle Name -->
+            <h5 class="card-title fw-bold text-primary mb-2">
+              {{ plan.vehicle_type|title }}
+            </h5>
+
+            <!-- Price -->
+            <div class="mb-3">
+              <span class="h3 fw-bold text-dark">Ksh.{{ plan.price|floatformat:0 }}</span>
+              <span class="text-muted">/month</span>
+            </div>
+
+            <!-- Simple Description -->
+            <p class="text-muted small mb-4">
+              {% if plan.vehicle_type == "pickup" %}
+                Perfect for small moves around town
+              {% elif plan.vehicle_type == "canter" %}
+                Great for medium-sized furniture moves
+              {% elif plan.vehicle_type == "lorry" %}
+                Ideal for full house relocations
+              {% elif plan.vehicle_type == "truck" %}
+                For commercial and large moves
+              {% elif plan.vehicle_type == "trailer" %}
+                Maximum capacity for big projects
+              {% else %}
+                Professional moving services
+              {% endif %}
+            </p>
+
+            
+          </div>
+        </div>
+      </div>
+      {% empty %}
+      <!-- Empty State -->
+      <div class="col-12 text-center py-5">
+        <div class="mb-4">
+          <span style="font-size: 4rem;">📦</span>
+        </div>
+        <h4 class="text-muted mb-3">Plans Coming Soon!</h4>
+        <p class="text-muted">
+          We're setting up simple, fair pricing for all vehicle types.<br>
+          Check back in a little while.
+        </p>
+      </div>
+      {% endfor %}
+    </div>
+
+    <!-- Simple Footer Note -->
+    <div class="text-center mt-5">
+      <div class="bg-light rounded-3 p-4">
+        <h6 class="fw-semibold text-dark mb-2">Simple & Fair Pricing</h6>
+        <p class="text-muted small mb-0">
+          All plans include map visibility • No hidden fees • Change or cancel anytime
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .card {
+    transition: transform 0.2s ease-in-out;
+  }
+  
+  .card:hover {
+    transform: translateY(-5px);
+  }
+  
+  .btn-primary {
+    background: linear-gradient(135deg, #214063 0%, #082939 100%);
+    border: none;
+    transition: all 0.3s ease;
+  }
+  
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(33, 64, 99, 0.3);
+  }
+</style>
+{% endblock %}

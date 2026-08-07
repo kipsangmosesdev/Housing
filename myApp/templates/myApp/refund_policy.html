@@ -1,0 +1,219 @@
+{% extends 'myApp/base.html' %}
+{% load static %}
+
+{% block title %}Refund Policy - XbomaSwift{% endblock %}
+
+{% block content %}
+<style>
+    :root {
+        --green: #2a5a78;
+        --gold: #c8a173;
+        --light-bg: #f9f9f9;
+        --text-dark: #333;
+        --text-gray: #555;
+    }
+
+    .refund-container {
+        max-width: 1100px;
+        margin: auto;
+        padding: 20px;
+        font-family: "Segoe UI", Roboto, sans-serif;
+        color: var(--text-dark);
+        line-height: 1.6;
+    }
+
+    .refund-header {
+        text-align: center;
+        margin-bottom: 25px;
+    }
+
+    .refund-header h1 {
+        color: var(--green);
+        font-weight: 700;
+        font-size: 2rem;
+    }
+
+    .divider {
+        width: 70px;
+        height: 3px;
+        margin: 10px auto;
+        background: linear-gradient(90deg, var(--green), var(--gold));
+        border-radius: 2px;
+    }
+
+    .effective-date {
+        color: var(--text-gray);
+        font-size: 0.9rem;
+    }
+
+    .refund-content {
+        background: white;
+        border-radius: 10px;
+        padding: 25px;
+        box-shadow: 0 3px 15px rgba(0, 0, 0, 0.05);
+    }
+
+    .refund-section {
+        margin-bottom: 25px;
+        border-bottom: 1px solid #eee;
+        padding-bottom: 15px;
+    }
+
+    .refund-section h2 {
+        font-size: 1.3rem;
+        color: var(--green);
+        font-weight: 600;
+        margin-bottom: 10px;
+    }
+
+    .subsection h3 {
+        color: var(--gold);
+        font-size: 1.1rem;
+        margin-top: 10px;
+        margin-bottom: 8px;
+    }
+
+    .refund-section p,
+    .refund-section li {
+        font-size: 0.95rem;
+        color: var(--text-gray);
+    }
+
+    .note-box {
+        background: #fff8e6;
+        border-left: 4px solid var(--gold);
+        padding: 12px 15px;
+        border-radius: 5px;
+        font-size: 0.9rem;
+        margin-top: 10px;
+    }
+
+    .refund-footer {
+        text-align: center;
+        color: var(--text-gray);
+        margin-top: 25px;
+        font-size: 0.85rem;
+        border-top: 1px solid #eee;
+        padding-top: 15px;
+    }
+
+    @media (max-width: 768px) {
+        .refund-header h1 { font-size: 1.7rem; }
+        .refund-section h2 { font-size: 1.1rem; }
+        .refund-section p, .refund-section li { font-size: 0.9rem; }
+    }
+
+    @media (max-width: 480px) {
+        .refund-header h1 { font-size: 1.5rem; }
+        .refund-content { padding: 15px; box-shadow: none; }
+    }
+</style>
+
+<div class="refund-container">
+    <div class="refund-header">
+        <h1>Refund Policy</h1>
+        <div class="divider"></div>
+        <p class="effective-date">Effective Date: October 2025</p>
+    </div>
+
+    <div class="refund-content">
+
+        <div class="refund-section">
+            <h2>1. Overview</h2>
+            <p>
+                At <strong>XbomaSwift</strong>, we value fairness, transparency, and accountability in all transactions involving tenants, landlords, and movers.
+                This Refund Policy outlines the conditions under which refunds may be granted and how they are processed.
+            </p>
+        </div>
+
+        <div class="refund-section">
+            <h2>2. Refunds for Tenants</h2>
+            <div class="subsection">
+                <h3>2.1 Swift Purchases</h3>
+                <p>
+                    Tenants purchasing swifts to contact landlords or access premium features are advised to verify listings before completing payments.
+                    Refunds will be issued <strong>only</strong> under the following conditions:
+                </p>
+                <ul>
+                    <li>A system or technical failure prevented swift crediting after a successful payment.</li>
+                </ul>
+                <div class="note-box">
+                    <strong>Note:</strong> Swifts that have already been used to contact landlords or unlock premium listings are non-refundable.
+                </div>
+            </div>
+        </div>
+
+        <div class="refund-section">
+            <h2>3. Refunds for Landlords</h2>
+            <div class="subsection">
+                <h3>3.1 Subscription Plans</h3>
+                <p>
+                    Landlords subscribing to XbomaSwift plans may qualify for a refund only if:
+                </p>
+                <ul>
+                    <li>The subscription was not activated after a successful payment.</li>
+                    <li>A billing or technical error occurred preventing access to features.</li>
+                    <li>A refund request was made within <strong>2 days</strong> of payment, and the plan has not been used.</li>
+                </ul>
+                <div class="note-box">
+                    <strong>Important:</strong> Double or duplicate subscriptions are <strong>non-refundable</strong>.  
+                    Instead, the landlord will receive an <strong>extra month of service</strong> to cover the additional payment.  
+                    Partially used or expired subscriptions are not eligible for refunds.
+                </div>
+            </div>
+        </div>
+
+        <div class="refund-section">
+            <h2>4. Refunds for Movers</h2>
+            <div class="subsection">
+                <h3>4.1 Premium Visibility or Bookings</h3>
+                <p>
+                    Movers who pay for premium promotion or booking visibility on XbomaSwift may be eligible for refunds in the following circumstances:
+                </p>
+                <ul>
+                    <li>The payment was successful, but the service did not activate due to a system error.</li>
+                </ul>
+                <div class="note-box">
+                    <strong>Important:</strong> Double payments for the same promotion are <strong>non-refundable</strong>.  
+                    The mover will automatically receive an <strong>extra month of premium visibility</strong> instead.  
+                    Completed or active bookings are not eligible for refunds once initiated.
+                </div>
+            </div>
+        </div>
+
+        <div class="refund-section">
+            <h2>5. Refund Request Process</h2>
+            <p>
+                Refund requests must be submitted through the official XbomaSwift Support Desk or via email.  
+                To process your request, please include:
+            </p>
+            <ul>
+                <li>Full name and registered account email</li>
+                <li>Payment reference or transaction ID</li>
+                <li>Reason for refund request</li>
+                <li>Any relevant supporting documents or screenshots</li>
+            </ul>
+            <p>
+                Requests are reviewed within <strong>5–10 business days</strong>. Approved refunds are processed using the original payment method.
+            </p>
+        </div>
+
+        <div class="refund-section">
+            <h2>6. Contact Us</h2>
+            <p>
+                For assistance or inquiries regarding refunds, reach out to:
+            </p>
+            <ul class="contact-list">
+                <li><i class="fa fa-envelope"></i>kipsangmoses@outlook.com</li>
+                <li><i class="fa fa-phone"></i> +254 113 131 983</li>
+                <li><i class="fa fa-map-marker"></i> XbomaSwift HQ, Nakuru, Kenya</li>
+            </ul>
+        </div>
+
+        <div class="refund-footer">
+            <p>© {{ year }} XbomaSwift. All rights reserved.</p>
+        </div>
+
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,334 @@
+{% extends 'myApp/base.html' %}
+{% load static %}
+
+{% block content %}
+<header class="ai-header">
+  <nav class="xboma-nav">
+    <div class="nav-left">
+      <strong class="brand-name"><i class="fa-solid fa-bolt"></i> XbomaSwift AI</strong>
+    </div>
+    <ul class="xboma-nav-links">
+      <a href="{% url 'chat_page' %}" class="nav-btn home-btn">
+        <i class="fas fa-arrow-left"></i> Back
+      </a>
+    </ul>
+  </nav>
+</header>
+
+<section class="help-container">
+  <div class="help-header">
+    <h2>Welcome to <span>XbomaSwift AI Assistant</span></h2>
+    <p>Discover how to chat with our AI to find your perfect property quickly, easily, and intelligently.</p>
+  </div>
+  <hr>
+  <div class="help-content">
+    <div class="help-card">
+      <h3><i class="fas fa-lightbulb"></i> How to Prompt the AI</h3>
+      <p>
+        You can speak naturally! Just describe what you want i.e. number of bedrooms, city, rent range, or amenities.
+        The AI will understand and find properties that match.
+      </p>
+    </div>
+
+    <div class="help-card">
+      <h3><i class="fa-solid fa-brain"></i> What XbomaSwift AI Understands</h3>
+      <ul class="filters-list">
+        <li><i class="fa-solid fa-shield-check"></i> <strong>Verification:</strong> Verified or Featured properties</li>
+
+        <li><i class="fa-solid fa-bed"></i> <strong>Bedrooms:</strong> 1 to 5 Bedrooms</li>
+        <li><i class="fa-solid fa-shower"></i> <strong>Bathrooms:</strong> 1 to 4 Bathrooms</li>
+
+        <li><i class="fa-solid fa-building"></i> <strong>Property Types:</strong> 
+          Studio, Bedsitter, Cottage, Villa, Townhouse, Maisonette, Apartment, 
+          Bungalow, Hostel, Condo, Double Room, Single Room
+        </li>
+
+        <li><i class="fa-solid fa-location-dot"></i> <strong>Location:</strong> 
+          City, Area, or Estate (e.g., Nairobi, Kilimani, Nakuru)
+        </li>
+
+        <li><i class="fa-solid fa-person-swimming"></i> <strong>Amenities:</strong> 
+          Swimming Pool, Gym, Parking, Wi-Fi, Security, Balcony, Water,etc.
+        </li>
+
+        <li><i class="fa-solid fa-money-bill-wave"></i> <strong>Rent Range:</strong> 
+          Below 10k, 15k to 20k, 20k to 50k, etc.
+        </li>
+      </ul>
+
+    </div>
+
+    <div class="help-card">
+      <h3><i class="fas fa-keyboard"></i> Sample Prompts</h3>
+        <ul class="prompt-list">
+          <li><i class="fa-solid fa-comments"></i> “Find me a <strong>2 bedroom apartment</strong> in <strong>Nairobi</strong> with a budget of <strong>20k</strong>.”</li>
+          <li><i class="fa-solid fa-comments"></i> “Find <strong>verified and featured</strong> properties in <strong>Nakuru</strong> below <strong>60k</strong>.”</li>
+          <li><i class="fa-solid fa-comments"></i> “Show properties with a <strong>swimming pool</strong> and <strong>gym</strong> in <strong>Kilimani</strong>.”</li>
+          <li><i class="fa-solid fa-comments"></i> “List all <strong>3 bedroom bungalows</strong> in <strong>Eldoret</strong> below <strong>50k</strong>.”</li>
+          <!-- Kiswahili Prompts -->
+          <li><i class="fa-solid fa-comments"></i> “Nionyeshe <strong>bedsitter</strong> huko <strong>Thika</strong> ya under <strong>10k</strong>.”</li>
+          <li><i class="fa-solid fa-comments"></i> “Tafuta <strong>2 bedroom</strong> katika <strong>Nakuru</strong> yenye <strong>Wi-Fi na CCTV cameras</strong>.”</li>
+          <li><i class="fa-solid fa-comments"></i> “Onyesha <strong>nyumba ambazo ziko verified</strong> karibu na <strong>Chuka University</strong>.”</li>
+          <li><i class="fa-solid fa-comments"></i> “Tafuta <strong>apartment yenye parking na maji</strong> na rent ni below <strong>20k</strong>.”</li>
+        </ul>
+      <p class="note"><i class="fas fa-bulb"></i> <strong>Tip:</strong> Be specific with city, budget, or amenities. XbomaSwift AI listens closely.</p>
+    </div>
+  </div>
+
+  <div class="help-footer">
+    <p>Ready to explore smarter?</p>
+    <a href="{% url 'chat_page' %}" class="ai-btn"><i class="fas fa-robot"></i> Chat with XbomaSwift AI</a>
+  </div>
+</section>
+
+<style>
+/* 🌤️ === Root Variables === */
+:root {
+  --green: #2a5a78;
+  --gold: #c8a173;
+  --bg-gradient: linear-gradient(135deg, #f7fbff 0%, #fdfcfb 100%);
+  --text-dark: #1f2a33;
+  --radius: 14px;
+  --shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+  --glass-bg: rgba(255, 255, 255, 0.8);
+}
+
+/* === Page Background === */
+body {
+  background: var(--bg-gradient);
+  font-family: 'Poppins', sans-serif;
+  color: var(--text-dark);
+  margin: 0;
+  padding: 0;
+  scroll-behavior: smooth;
+  padding-top: 70px; /* To offset fixed navbar */
+}
+
+h3{
+  color: #c8a173 !important;
+}
+
+/* === Navigation === */
+.ai-header {
+  background: linear-gradient(90deg, var(--green), var(--gold));
+  padding: 0.5rem 0;
+  box-shadow: var(--shadow);
+}
+
+.xboma-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.8rem 1.8rem;
+  color: #fff;
+}
+
+.brand-name {
+  font-weight: 700;
+  font-size: 1.2rem;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.nav-btn {
+  background: #fff;
+  color: var(--green);
+  padding: 6px 14px;
+  border-radius: 20px;
+  text-decoration: none;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  font-size: 0.9rem;
+}
+
+.nav-btn:hover {
+  background: var(--gold);
+  color: #fff;
+  transform: scale(1.05);
+}
+
+/* === Help Container === */
+.help-container {
+  max-width: 950px;
+  margin: 50px auto;
+  padding: 35px;
+  background: var(--glass-bg);
+  backdrop-filter: blur(8px);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  animation: fadeIn 0.9s ease;
+}
+
+/* === Header Section === */
+.help-header {
+  text-align: center;
+  margin-bottom: 35px;
+}
+
+.help-header h2 {
+  color: var(--green);
+  font-size: 1.8rem;
+  font-weight: 700;
+}
+
+.help-header span {
+  color: var(--gold);
+}
+
+.help-header p {
+  color: #555;
+  margin-top: 10px;
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+/* === Cards === */
+.help-content {
+  display: grid;
+  gap: 25px;
+}
+
+.help-card {
+  background: #e4dbc5ec;
+  border-radius: var(--radius);
+  padding: 22px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+  transition: all 0.4s ease;
+}
+
+.help-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+}
+
+.help-card h3 {
+  color: var(--green);
+  font-size: 1.05rem;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+.help-card p {
+  color: #333;
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+/* === Lists === */
+.filters-list, .prompt-list {
+  margin-top: 10px;
+  padding-left: 20px;
+}
+
+.filters-list li, .prompt-list li {
+  margin-bottom: 6px;
+  color: #383535;
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+.filters-list i {
+  color: var(--green);
+  margin-right: 8px;
+}
+
+.prompt-list i {
+  color: var(--green);
+  margin-right: 8px;
+  font-size: 1.1rem;
+}
+.prompt-list li {
+  margin: 8px 0;
+  line-height: 1.6;
+  list-style: none;
+}
+
+
+/* === Note === */
+.note {
+  margin-top: 12px;
+  background: #e5d4b8;
+  padding: 10px 15px;
+  border-left: 4px solid var(--gold);
+  border-radius: 8px;
+  font-size: 0.9rem;
+}
+
+/* === Footer CTA === */
+.help-footer {
+  text-align: center;
+  margin-top: 40px;
+}
+
+.help-footer p {
+  color: var(--green);
+  font-weight: 500;
+  font-size: 1rem;
+}
+
+.ai-btn {
+  background: var(--green);
+  color: #fff;
+  padding: 10px 26px;
+  border-radius: 25px;
+  font-size: 1rem;
+  font-weight: 600;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 12px;
+  transition: all 0.4s ease;
+  animation: pulse 2.5s infinite;
+}
+
+.ai-btn:hover {
+  background: var(--gold);
+  transform: translateY(-2px);
+}
+
+/* === Animations === */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(15px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes pulse {
+  0% { box-shadow: 0 0 0 0 rgba(42,90,120,0.4); }
+  70% { box-shadow: 0 0 0 10px rgba(42,90,120,0); }
+  100% { box-shadow: 0 0 0 0 rgba(42,90,120,0); }
+}
+
+/* === Responsive Design === */
+@media (max-width: 768px) {
+  .help-container {
+    padding: 25px;
+  }
+
+  .help-header h2 {
+    font-size: 1.4rem;
+  }
+
+  .help-card h3 {
+    font-size: 1rem;
+  }
+
+  .ai-btn {
+    font-size: 0.9rem;
+    padding: 8px 20px;
+  }
+}
+
+.message_font{
+  color: #c8a173;
+}
+</style>
+{% endblock %}
+
+
+
+

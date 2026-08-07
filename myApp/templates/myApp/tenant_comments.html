@@ -1,0 +1,14 @@
+{% extends 'myApp/base.html' %}
+
+{% block content %}
+  <h2>Your Comments</h2>
+  <ul>
+    {% for comment in comments %}
+      <li>
+        <strong>{{ comment.property.title }}</strong>: {{ comment.text }} (Rating: {{ average_ratings|get_item:comment.property }} )
+      </li>
+    {% empty %}
+      <li>No comments found.</li>
+    {% endfor %}
+  </ul>
+{% endblock %}

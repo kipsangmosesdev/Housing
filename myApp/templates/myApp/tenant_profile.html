@@ -1,0 +1,358 @@
+{% extends 'myApp/base.html' %}
+
+{% block title %}Tenant Profile - XbomaSwift{% endblock %}
+
+{% block content %}
+<style>
+  :root {
+    --primary: #1a3a5c;
+    --primary-light: #c8a173;
+    --secondary: #2a5a78;
+    --glass-bg: rgba(255, 255, 255, 0.85);
+    --glass-border: rgba(255, 255, 255, 0.2);
+  }
+
+  .profile-container {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    min-height: 100vh;
+    padding: 2rem 0;
+  }
+
+  .profile-header {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+    color: #fff;
+    padding: 2rem;
+    border-radius: 20px;
+    margin-bottom: 2rem;
+    position: relative;
+    overflow: hidden;
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--glass-border);
+    box-shadow: 0 8px 32px rgba(26, 58, 92, 0.15);
+  }
+
+  .profile-header::before {
+    content: "";
+    position: absolute;
+    top: -50%;
+    right: -50%;
+    width: 100%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+    transform: rotate(30deg);
+  }
+
+  .glass-card {
+    background: var(--glass-bg);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--glass-border);
+    border-radius: 20px;
+    padding: 2rem;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.08);
+    transition: all 0.3s ease;
+  }
+
+  .glass-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 40px rgba(0,0,0,0.15);
+    border-color: rgba(200, 161, 115, 0.3);
+  }
+
+  .profile-icon {
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(135deg, var(--primary-light) 0%, #d4b18a 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--primary);
+    font-size: 1.5rem;
+    box-shadow: 0 4px 15px rgba(200, 161, 115, 0.3);
+    transition: all 0.3s ease;
+  }
+
+  .info-item {
+    padding: 1rem 0;
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+    transition: all 0.3s ease;
+  }
+
+  .info-item:hover {
+    background: rgba(200, 161, 115, 0.05);
+    border-radius: 12px;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    margin: 0 -1rem;
+  }
+
+  .info-item:last-child {
+    border-bottom: none;
+  }
+
+  .text-muted {
+    color: #6c757d !important;
+    font-size: 0.875rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .fw-semibold {
+    color: #2c3e50;
+    font-size: 1.1rem;
+    font-weight: 600;
+  }
+
+  .action-buttons {
+    margin-top: 2rem;
+    padding-top: 2rem;
+    border-top: 1px solid rgba(0,0,0,0.1);
+  }
+
+  .btn-modern {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+    border: none;
+    border-radius: 12px;
+    padding: 0.75rem 1.5rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(26, 58, 92, 0.3);
+    color: white;
+  }
+
+  .btn-modern:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(26, 58, 92, 0.4);
+    color: white;
+  }
+
+  .btn-outline-modern {
+    border: 2px solid var(--primary);
+    color: var(--primary);
+    border-radius: 12px;
+    padding: 0.75rem 1.5rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    background: transparent;
+  }
+
+  .btn-outline-modern:hover {
+    background: var(--primary);
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(26, 58, 92, 0.3);
+  }
+
+  @media (max-width: 768px) {
+    .profile-container {
+      padding: 1rem 0;
+    }
+    
+    .glass-card {
+      padding: 1.5rem;
+      border-radius: 16px;
+    }
+    
+    .profile-header {
+      padding: 1.5rem;
+      border-radius: 16px;
+    }
+  }
+</style>
+
+<div class="profile-container">
+  <div class="container">
+    <!-- Profile Header -->
+    <div class="profile-header">
+      <div class="row align-items-center">
+        <div class="col-md-8">
+          <h1 class="h2 mb-2">Your Profile</h1>
+          <p class="mb-0 opacity-75">Manage your personal information and account settings</p>
+        </div>
+        <div class="col-md-4 text-md-end">
+          <div class="profile-icon">
+            <i class="fas fa-user"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Profile Information -->
+    <div class="glass-card">
+      <div class="row">
+        <!-- Personal Information -->
+        <div class="col-lg-6">
+          <h5 class="mb-4 d-flex align-items-center">
+            <i class="fas fa-user-circle me-2 text-primary"></i>
+            Personal Information
+          </h5>
+          
+          <div class="info-item">
+            <div class="d-flex align-items-center">
+              <div class="profile-icon me-3" style="width: 50px; height: 50px;">
+                <i class="fas fa-user"></i>
+              </div>
+              <div>
+                <small class="text-muted">Full Name</small>
+                <div class="fw-semibold">{{ tenant.user.first_name }} {{ tenant.user.last_name }}</div>
+              </div>
+            </div>
+          </div>
+
+         
+          <!-- KRA PIN -->
+           <div class="info-item">
+            <div class="d-flex align-items-center">
+              <div class="profile-icon me-3" style="width: 50px; height: 50px;">
+                <i class="fas fa-id-badge"></i>
+              </div>
+              <div>
+                <small class="text-muted">KRA PIN</small>
+                <div class="fw-semibold">{{ tenant.kra_pin }}</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="info-item">
+            <div class="d-flex align-items-center">
+              <div class="profile-icon me-3" style="width: 50px; height: 50px;">
+                <i class="fas fa-id-card"></i>
+              </div>
+              <div>
+                <small class="text-muted">ID Number</small>
+                <div class="fw-semibold">{{ tenant.id_number }}</div>
+              </div>
+            </div>
+          </div>
+
+        <!-- Contact Information -->
+        <div class="col-lg-6">
+          <h5 class="mb-4 d-flex align-items-center">
+            <i class="fas fa-address-card me-2 text-primary"></i>
+            Contact Information
+          </h5>
+
+          <div class="info-item">
+            <div class="d-flex align-items-center">
+              <div class="profile-icon me-3" style="width: 50px; height: 50px;">
+                <i class="fas fa-phone"></i>
+              </div>
+              <div>
+                <small class="text-muted">Phone Number</small>
+                <div class="fw-semibold">{{ tenant.phone_number }}</div>
+              </div>
+            </div>
+          </div>
+
+           <!-- Email address -->
+          <div class="info-item">
+            <div class="d-flex align-items-center">
+              <div class="profile-icon me-3" style="width: 50px; height: 50px;">
+                <i class="fas fa-envelope"></i>
+              </div>
+              <div>
+                <small class="text-muted">Email Address</small>
+                <div class="fw-semibold">{{ tenant.user.email }}</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="info-item">
+            <div class="d-flex align-items-center">
+              <div class="profile-icon me-3" style="width: 50px; height: 50px;">
+                <i class="fas fa-calendar-plus"></i>
+              </div>
+              <div>
+                <small class="text-muted">Member Since</small>
+                <div class="fw-semibold">{{ tenant.date_joined|date:"F d, Y" }}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="action-buttons">
+        <div class="row">
+          <div class="col-md-6 mb-3 mb-md-0">
+            <a href="{% url 'change_password' %}" class="btn btn-modern w-100">
+              <i class="fas fa-key me-2"></i>Change Password
+            </a>
+          </div>
+          <div class="col-md-6">
+            <a href="{% url 'edit_tenant_profile' %}" class="btn btn-outline-modern w-100">
+              <i class="fas fa-edit me-2"></i>Edit Profile
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Additional Info Cards -->
+    <div class="row mt-4">
+      <div class="col-md-4 mb-4">
+        <div class="glass-card text-center h-100">
+          <div class="profile-icon mx-auto mb-3" style="width: 70px; height: 70px;">
+            <i class="fas fa-home"></i>
+          </div>
+          <h5>Properties Viewed</h5>
+          <p class="text-muted">Track your property viewing history</p>
+          <div class="fw-semibold fs-4 text-primary">{{ recent_views.count|default:"0" }}</div>
+        </div>
+      </div>
+
+      <div class="col-md-4 mb-4">
+        <div class="glass-card text-center h-100">
+          <div class="profile-icon mx-auto mb-3" style="width: 70px; height: 70px;">
+            <i class="fas fa-heart"></i>
+          </div>
+          <h5>Wishlist</h5>
+          <p class="text-muted">Your favorite properties</p>
+          <div class="fw-semibold fs-4 text-primary">{{ favorites.count|default:"0" }}</div>
+        </div>
+      </div>
+
+      <div class="col-md-4 mb-4">
+        <div class="glass-card text-center h-100">
+          <div class="profile-icon mx-auto mb-3" style="width: 70px; height: 70px;">
+            <i class="fas fa-shield-alt"></i>
+          </div>
+          <h5>Account Status</h5>
+          <p class="text-muted">Your account information</p>
+          <span class="badge bg-success py-2 px-3">Active</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Add smooth entrance animation to cards
+    const cards = document.querySelectorAll('.glass-card');
+    cards.forEach((card, index) => {
+      card.style.opacity = '0';
+      card.style.transform = 'translateY(30px)';
+      
+      setTimeout(() => {
+        card.style.transition = 'all 0.6s ease';
+        card.style.opacity = '1';
+        card.style.transform = 'translateY(0)';
+      }, index * 200);
+    });
+
+    // Add hover effects to info items
+    const infoItems = document.querySelectorAll('.info-item');
+    infoItems.forEach(item => {
+      item.addEventListener('mouseenter', function() {
+        this.style.transform = 'translateX(5px)';
+      });
+      
+      item.addEventListener('mouseleave', function() {
+        this.style.transform = 'translateX(0)';
+      });
+    });
+  });
+</script>
+{% endblock %}

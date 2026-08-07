@@ -1,0 +1,140 @@
+{% extends "myApp/base.html" %}
+{% load static %}
+{% block content %}
+<style>
+    body {
+        background-color: #f8f9fa;
+    }
+
+    .referral-card {
+        background-color: #ffffff;
+        border: 1px solid #dee2e6;
+        border-radius: 12px;
+        padding: 2rem;
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.05);
+        max-width: 650px;
+        margin: 0 auto;
+    }
+
+    .referral-card h2 {
+        color: #1a3a5c;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+    }
+
+    .referral-card p {
+        color: #2a5a78;
+        font-size: 1rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .referral-card label {
+        font-weight: 500;
+        color: #1a3a5c;
+    }
+
+    .referral-card .form-control {
+        border-radius: 8px;
+        border: 1px solid #ced4da;
+    }
+
+    .referral-card .btn-submit {
+        background-color: #c8a173;
+        color: white;
+        font-weight: 600;
+        border: none;
+        border-radius: 8px;
+        padding: 0.6rem 1.2rem;
+        transition: background-color 0.3s ease;
+    }
+
+    .referral-card .btn-submit:hover {
+        background-color: #b18a5f;
+    }
+
+    .alert-info {
+        background-color: #e9f5ff;
+        border-left: 5px solid #2a5a78;
+        color: #1a3a5c;
+    }
+
+    .instructions {
+        background-color: #f1f5f9;
+        border-left: 5px solid #1a3a5c;
+        padding: 1rem 1.2rem;
+        margin-bottom: 1.5rem;
+        border-radius: 10px;
+    }
+
+    .instructions h4 {
+        color: #1a3a5c;
+        font-weight: bold;
+        margin-bottom: 0.8rem;
+    }
+
+    .instructions ul {
+        padding-left: 1.2rem;
+    }
+
+    .instructions li {
+        margin-bottom: 0.5rem;
+        color: #2a5a78;
+    }
+
+    .instructions li::marker {
+        color: #c8a173;
+    }
+
+    @media (max-width: 576px) {
+        .referral-card {
+            padding: 1.5rem;
+        }
+
+        .referral-card h2 {
+            font-size: 1.4rem;
+        }
+
+        .referral-card p,
+        .instructions li {
+            font-size: 0.95rem;
+        }
+    }
+</style>
+
+<div class="container mt-5">
+    <div class="referral-card">
+        <h2>Refer a Landlord & Earn Ksh. 100</h2>
+        <p>Submit the M-Pesa code of the landlord's payment to claim your reward.</p>
+
+        <div class="instructions">
+            <h4>Referral Instructions</h4>
+            <p>To qualify for the reward, ensure you collect and submit the following:</p>
+            <ul>
+                <li><strong>Landlord’s Full Name</strong> – as used when registering on the platform.</li>
+                <li><strong>Landlord’s Phone Number</strong> – the one used to make the M-Pesa payment.</li>
+                <li><strong>M-Pesa Transaction Code</strong> – from a successful payment.</li>
+            </ul>
+
+            <h4>Disqualification Conditions</h4>
+            <ul>
+                <li>If the name does not match the registered landlord.</li>
+                <li>If the phone number is different from the one used to pay.</li>
+                <li>If the M-Pesa code is invalid or has already been used.</li>
+                <li>If the landlord has already been referred (only one referral per landlord).</li>
+            </ul>
+        </div>
+
+        <form method="post" novalidate>
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="btn btn-submit mt-2">Submit Referral</button>
+        </form>
+
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-info mt-3">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

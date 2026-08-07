@@ -1,0 +1,108 @@
+{% extends 'myApp/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container-fluid min-vh-100 d-flex align-items-center bg-light">
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-8 col-md-10">
+                <div class="card shadow-lg border-0 rounded-lg overflow-hidden">
+                    <!-- Header with warning icon -->
+                    <div class="card-header bg-danger text-white text-center py-4">
+                        <div class="d-flex justify-content-center mb-3">
+                            <div class="warning-icon-circle bg-white text-danger rounded-circle d-flex align-items-center justify-content-center">
+                                <i class="fas fa-exclamation-triangle fa-3x"></i>
+                            </div>
+                        </div>
+                        <h2 class="h1 mb-0">Subscription Expired</h2>
+                    </div>
+                    
+                    <!-- Card Body -->
+                    <div class="card-body p-4 p-md-5 text-center">
+                        <div class="mb-4">
+                            <h3 class="h4 mb-3">Hi {{ landlord.first_name }},</h3>
+                            <p class="lead mb-4">Your premium subscription has expired.</p>
+                            
+                            <div class="alert alert-warning text-start mx-auto" style="max-width: 500px;">
+                                <div class="d-flex align-items-center">
+                                    <i class="fas fa-info-circle fa-lg me-3"></i>
+                                    <div>
+                                        <strong>What this means:</strong>
+                                        <ul class="mt-2 mb-0 ps-3">
+                                            <li>Limited access to your dashboard</li>
+                                            <li>Premium features disabled</li>
+                                            <li>Property listings hidden from the tenants and public</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Action Buttons -->
+                        <div class="d-flex flex-column flex-md-row justify-content-center gap-3 mt-4">
+                            <a href="{% url 'mpesa:landlord_payment' %}" class="btn btn-danger btn-lg px-4 py-3">
+                                <i class="fas fa-sync-alt me-2"></i>
+                                Renew Subscription
+                            </a>
+                            
+                        </div>
+                    </div>
+                    
+                    <!-- Footer -->
+                    <div class="card-footer bg-light text-center py-3">
+                        <p class="small text-muted mb-0">
+                            Need help? Call us at <a href="tel:+1234567890">(123) 456-7890</a> or 
+                            <a href="mailto:support@example.com">email support</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .warning-icon-circle {
+        width: 80px;
+        height: 80px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+    
+    .card {
+        border: none;
+        transition: transform 0.3s ease;
+    }
+    
+    .card:hover {
+        transform: translateY(-5px);
+    }
+    
+    .card-header {
+        border-radius: 0 !important;
+    }
+    
+    @media (max-width: 768px) {
+        .warning-icon-circle {
+            width: 60px;
+            height: 60px;
+        }
+        
+        .warning-icon-circle i {
+            font-size: 2rem !important;
+        }
+        
+        .card-body {
+            padding: 1.5rem !important;
+        }
+        
+        .btn-lg {
+            padding: 0.75rem 1rem !important;
+            font-size: 1rem !important;
+        }
+        
+        .h1 {
+            font-size: 1.75rem !important;
+        }
+    }
+</style>
+{% endblock %}

@@ -1,0 +1,466 @@
+{% extends "myApp/base.html" %}
+{% load static %}
+{% load compress static %}
+{% block content %}
+<div class="container py-5">
+    <!-- Header Section -->
+    <div class="row mb-5">
+        <div class="col-12 text-center">
+            <div class="mb-4">
+                <div class="faq-icon-container bg-secondary bg-opacity-10 rounded-circle p-4 d-inline-flex">
+                    <i class="fas fa-question-circle fa-3x text-secondary"></i>
+                </div>
+            </div>
+            <h1 class="display-5 fw-bold text-dark mb-3">Frequently Asked Questions</h1>
+            <p class="lead text-muted">Find answers to common questions about our services</p>
+            
+            <!-- Search Bar -->
+            <div class="row justify-content-center mt-4">
+                <div class="col-md-8 col-lg-6">
+                    <div class="input-group">
+                        <span class="input-group-text bg-light border-end-0">
+                            <i class="fas fa-search text-muted"></i>
+                        </span>
+                        <input type="text" id="faqSearch" class="form-control border-start-0" placeholder="Search questions...">
+                        <button class="btn btn-outline-secondary" type="button" id="clearSearch">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- FAQ Accordion -->
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="accordion" id="faqAccordion">
+                {% for faq in faqs %}
+                <div class="accordion-item border-0 mb-3 shadow-sm faq-item">
+                    <h2 class="accordion-header" id="heading{{ forloop.counter }}">
+                        <button class="accordion-button collapsed py-3" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ forloop.counter }}" aria-expanded="false">
+                            <div class="d-flex align-items-center">
+                                <span class="faq-number badge bg-secondary rounded-circle me-3">{{ forloop.counter }}</span>
+                                <span class="faq-question fw-semibold">{{ faq.question }}</span>
+                            </div>
+                        </button>
+                    </h2>
+                    <div id="collapse{{ forloop.counter }}" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body pt-3">
+                            <div class="d-flex">
+                                <div class="flex-shrink-0 me-3">
+                                    <i class="fas fa-lightbulb text-warning fa-lg"></i>
+                                </div>
+                                <div class="flex-grow-1">
+                                    {{ faq.answer }}
+                                </div>
+                            </div>
+                            
+                            <!-- FAQ Actions -->
+                            <div class="mt-3 pt-3 border-top">
+                                <small class="text-muted me-3">
+                                    <i class="fas fa-thumbs-up me-1"></i>
+                                    <span class="helpful-text">Was this helpful?</span>
+                                </small>
+                                <button class="btn btn-sm btn-outline-success me-2 helpful-btn" data-faq-id="{{ forloop.counter }}">
+                                    <i class="fas fa-thumbs-up me-1"></i> Yes
+                                </button>
+                                <button class="btn btn-sm btn-outline-secondary me-2 helpful-btn" data-faq-id="{{ forloop.counter }}">
+                                    <i class="fas fa-thumbs-down me-1"></i> No
+                                </button>
+                                <button class="btn btn-sm btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#shareModal" data-faq-id="{{ forloop.counter }}">
+                                    <i class="fas fa-share-alt me-1"></i> Share
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            
+            <!-- No results message (initially hidden) -->
+            <div id="noResults" class="text-center py-5" style="display: none;">
+                <div class="mb-4">
+                    <i class="fas fa-search fa-3x text-muted opacity-25"></i>
+                </div>
+                <h5 class="text-muted mb-3">No matching questions found</h5>
+                <p class="text-muted">Try different keywords or browse all questions</p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Contact Support Section -->
+    <div class="row mt-5">
+        <div class="col-12">
+            <div class="card border-0 shadow-sm bg-light">
+                <div class="card-body p-4 text-center">
+                    <h5 class="card-title mb-3">Still have questions?</h5>
+                    <p class="card-text text-muted mb-4">Can't find the answer you're looking for? Please contact our support team.</p>
+                    <a href="#" class="btn btn-secondary me-3">
+                        <i class="fas fa-envelope me-2"></i>Contact Support
+                    </a>
+                    <a href="#" class="btn btn-outline-secondary">
+                        <i class="fas fa-phone me-2"></i>Call Us
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Share Modal -->
+<div class="modal fade" id="shareModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Share This Answer</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p class="text-muted">Share this FAQ answer with others</p>
+                <div class="d-flex justify-content-around mb-4">
+                    <!-- Facebook -->
+                    <a href="https://www.facebook.com/sharer/sharer.php?u={{ request.build_absolute_uri }}" 
+                    target="_blank"
+                    class="text-dark text-decoration-none d-flex flex-column align-items-center share-option">
+                        <div class="bg-light p-3 rounded-circle mb-2">
+                            <i class="fab fa-facebook-f fa-lg text-primary"></i>
+                        </div>
+                        <small>Facebook</small>
+                    </a>
+
+                    <!-- Twitter -->
+                    <a href="https://twitter.com/intent/tweet?text=Check%20this%20FAQ!%20{{ request.build_absolute_uri }}" 
+                    target="_blank"
+                    class="text-dark text-decoration-none d-flex flex-column align-items-center share-option">
+                        <div class="bg-light p-3 rounded-circle mb-2">
+                            <i class="fab fa-twitter fa-lg text-info"></i>
+                        </div>
+                        <small>Twitter</small>
+                    </a>
+
+                    <!-- WhatsApp -->
+                    <a href="https://wa.me/?text=Check%20this%20FAQ!%20{{ request.build_absolute_uri }}" 
+                    target="_blank"
+                    class="text-dark text-decoration-none d-flex flex-column align-items-center share-option">
+                        <div class="bg-light p-3 rounded-circle mb-2">
+                            <i class="fab fa-whatsapp fa-lg text-success"></i>
+                        </div>
+                        <small>WhatsApp</small>
+                    </a>
+
+                    <!-- Email -->
+                    <a href="mailto:?subject=Check this FAQ&body=Here is something useful: {{ request.build_absolute_uri }}" 
+                    class="text-dark text-decoration-none d-flex flex-column align-items-center share-option">
+                        <div class="bg-light p-3 rounded-circle mb-2">
+                            <i class="fas fa-envelope fa-lg text-danger"></i>
+                        </div>
+                        <small>Email</small>
+                    </a>
+                </div>
+
+                <!-- Copy link -->
+                <div class="input-group">
+                    <input type="text" class="form-control" id="shareLink" value="{{ request.build_absolute_uri }}" readonly>
+                    <button class="btn btn-outline-secondary" type="button" id="copyLink">
+                        <i class="fas fa-copy"></i>
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+{% compress css %}
+<style>
+     body{
+    font-family: "Segoe UI", Roboto, sans-serif !important;
+  }
+    /* FAQ icon hover animation */
+    .faq-icon-container {
+        transition: transform 0.3s ease;
+    }
+    
+    .faq-icon-container:hover {
+        transform: scale(1.05);
+    }
+
+    /* Accordion buttons */
+    .accordion-button {
+        border-radius: 0.75rem !important;
+        background-color: #ffffff; /* white background */
+        color: #61503d; /* primary text brown */
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+        font-weight: 500;
+    }
+    
+    .accordion-button:not(.collapsed) {
+        background-color: #c0ac7b; /* gold highlight when expanded */
+        color: #ffffff; /* white text on gold */
+        box-shadow: 0 2px 8px rgba(97, 80, 61, 0.25); /* brown shadow */
+    }
+    
+    .accordion-button:focus {
+        border-color: #61503d; /* brown focus ring */
+        box-shadow: 0 0 0 0.25rem rgba(230, 205, 136, 0.25); /* subtle gold focus */
+    }
+    
+    .accordion-body {
+        border-radius: 0 0 0.75rem 0.75rem;
+        background-color: #ffffff;
+        color: #61503d;
+    }
+
+    /* FAQ number badge */
+    .faq-number {
+        width: 30px;
+        height: 30px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.8rem;
+        background-color: #61503d; /* brown circle */
+        color: #ffffff;
+        font-weight: bold;
+    }
+
+    /* FAQ item hover */
+    .faq-item {
+        transition: transform 0.2s ease;
+        border-radius: 0.75rem;
+        background-color: #ffffff;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+    
+    .faq-item:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 10px rgba(97, 80, 61, 0.15);
+    }
+
+    /* Helpful button hover */
+    .helpful-btn {
+        transition: all 0.2s ease;
+        background-color: #e6cd88; /* gold */
+        color: #61503d; /* brown */
+        border: none;
+        border-radius: 0.5rem;
+        padding: 0.4rem 0.8rem;
+    }
+
+    .helpful-btn:hover {
+        transform: scale(1.05);
+        background-color: #61503d;
+        color: #ffffff;
+    }
+
+    /* Share option hover */
+    .share-option {
+        transition: transform 0.2s ease;
+        color: #61503d;
+    }
+
+    .share-option:hover {
+        transform: translateY(-3px);
+        color: #e6cd88;
+    }
+
+    /* Accordion collapse animation */
+    .accordion-collapse {
+        transition: all 0.3s ease;
+    }
+
+    /* Highlight search results */
+    .highlight {
+        background-color: rgba(230, 205, 136, 0.3); /* gold highlight */
+        padding: 0 2px;
+        border-radius: 3px;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+        .display-5 {
+            font-size: 2.2rem;
+        }
+        
+        .accordion-button {
+            padding: 1rem;
+        }
+        
+        .faq-number {
+            margin-right: 1rem;
+        }
+    }
+</style>
+{% endcompress %}
+
+{% compress js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Search functionality
+        const faqSearch = document.getElementById('faqSearch');
+        const clearSearch = document.getElementById('clearSearch');
+        const faqItems = document.querySelectorAll('.faq-item');
+        const noResults = document.getElementById('noResults');
+        const accordion = document.getElementById('faqAccordion');
+        
+        if (faqSearch) {
+            faqSearch.addEventListener('input', function() {
+                const searchTerm = this.value.toLowerCase();
+                let hasResults = false;
+                
+                faqItems.forEach(item => {
+                    const question = item.querySelector('.faq-question').textContent.toLowerCase();
+                    const answer = item.querySelector('.accordion-body').textContent.toLowerCase();
+                    
+                    if (question.includes(searchTerm) || answer.includes(searchTerm)) {
+                        item.style.display = 'block';
+                        hasResults = true;
+                        
+                        // Highlight matching text
+                        if (searchTerm) {
+                            const regex = new RegExp(searchTerm, 'gi');
+                            const questionElement = item.querySelector('.faq-question');
+                            const answerElement = item.querySelector('.accordion-body');
+                            
+                            questionElement.innerHTML = questionElement.textContent.replace(regex, match => 
+                                `<span class="highlight">${match}</span>`
+                            );
+                            
+                            answerElement.innerHTML = answerElement.textContent.replace(regex, match => 
+                                `<span class="highlight">${match}</span>`
+                            );
+                        }
+                    } else {
+                        item.style.display = 'none';
+                    }
+                });
+                
+                // Show/hide no results message
+                if (!hasResults && searchTerm) {
+                    noResults.style.display = 'block';
+                    accordion.style.display = 'none';
+                } else {
+                    noResults.style.display = 'none';
+                    accordion.style.display = 'block';
+                }
+            });
+        }
+        
+        if (clearSearch) {
+            clearSearch.addEventListener('click', function() {
+                faqSearch.value = '';
+                faqItems.forEach(item => {
+                    item.style.display = 'block';
+                    // Remove highlights
+                    const questionElement = item.querySelector('.faq-question');
+                    const answerElement = item.querySelector('.accordion-body');
+                    
+                    if (questionElement) {
+                        questionElement.innerHTML = questionElement.textContent;
+                    }
+                    
+                    if (answerElement) {
+                        answerElement.innerHTML = answerElement.textContent;
+                    }
+                });
+                noResults.style.display = 'none';
+                accordion.style.display = 'block';
+            });
+        }
+        
+        // Helpful buttons
+        const helpfulButtons = document.querySelectorAll('.helpful-btn');
+        helpfulButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const faqId = this.getAttribute('data-faq-id');
+                const isHelpful = this.textContent.includes('Yes');
+                
+                // Update button appearance
+                if (isHelpful) {
+                    this.classList.remove('btn-outline-success');
+                    this.classList.add('btn-success');
+                    this.innerHTML = '<i class="fas fa-check me-1"></i> Thank you!';
+                } else {
+                    this.classList.remove('btn-outline-secondary');
+                    this.classList.add('btn-secondary');
+                    this.innerHTML = '<i class="fas fa-times me-1"></i> Noted';
+                }
+                
+                // Disable both buttons after click
+                const allButtons = document.querySelectorAll(`.helpful-btn[data-faq-id="${faqId}"]`);
+                all.forEach(btn => {
+                    btn.disabled = true;
+                });
+                
+                // Update helpful text
+                const helpfulText = document.querySelector(`.helpful-btn[data-faq-id="${faqId}"]`).closest('.border-top').querySelector('.helpful-text');
+                if (helpfulText) {
+                    helpfulText.textContent = 'Thanks for your feedback!';
+                }
+            });
+        });
+        
+        // Share functionality
+        const shareModal = document.getElementById('shareModal');
+        if (shareModal) {
+            shareModal.addEventListener('show.bs.modal', function(event) {
+                const button = event.relatedTarget;
+                const faqId = button.getAttribute('data-faq-id');
+                const question = document.querySelector(`#heading${faqId} .faq-question`).textContent;
+                
+                // Set share link (in a real app, this would be a direct link to the FAQ)
+                const shareLink = document.getElementById('shareLink');
+                shareLink.value = `${window.location.origin}${window.location.pathname}#faq-${faqId}`;
+                
+                // Set up share options
+                const shareOptions = document.querySelectorAll('.share-option');
+                const encodedQuestion = encodeURIComponent(question);
+                const encodedUrl = encodeURIComponent(shareLink.value);
+                
+                shareOptions[0].href = `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`;
+                shareOptions[1].href = `https://twitter.com/intent/tweet?text=${encodedQuestion}&url=${encodedUrl}`;
+                shareOptions[2].href = `https://wa.me/?text=${encodedQuestion} ${encodedUrl}`;
+                shareOptions[3].href = `mailto:?subject=${encodedQuestion}&body=${encodedQuestion}%0A%0A${encodedUrl}`;
+            });
+        }
+        
+        // Copy link functionality
+        const copyLink = document.getElementById('copyLink');
+        if (copyLink) {
+            copyLink.addEventListener('click', function() {
+                const shareLink = document.getElementById('shareLink');
+                shareLink.select();
+                document.execCommand('copy');
+                
+                // Show feedback
+                const originalText = this.innerHTML;
+                this.innerHTML = '<i class="fas fa-check"></i>';
+                
+                setTimeout(() => {
+                    this.innerHTML = originalText;
+                }, 2000);
+            });
+        }
+        
+        // Open FAQ if URL has hash
+        if (window.location.hash) {
+            const faqId = window.location.hash.replace('#faq-', '');
+            if (faqId) {
+                const collapseElement = document.getElementById(`collapse${faqId}`);
+                if (collapseElement) {
+                    const bsCollapse = new bootstrap.Collapse(collapseElement, {
+                        toggle: true
+                    });
+                    
+                    // Scroll to element
+                    setTimeout(() => {
+                        collapseElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }, 300);
+                }
+            }
+        }
+    });
+</script>
+{% endcompress %}
+{% endblock content %}

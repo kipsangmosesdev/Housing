@@ -1,0 +1,155 @@
+{% extends 'myApp/base.html' %}
+{% block content %}
+
+<div class="container py-4">
+  <!-- Back Navigation -->
+  <div class="mb-4">
+    <a href="{% url 'landlord_dashboard' %}" class="btn btn-outline-secondary">
+      <i class="fas fa-arrow-left me-2"></i> Back to Dashboard
+    </a>
+  </div>
+
+  <!-- Invoices Card -->
+  <div class="card border-0 shadow-sm">
+    <div class="card-body p-0">
+      <!-- Card Header -->
+      <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center p-4 border-bottom">
+        <h2 class="mb-3 mb-md-0">
+          <i class="fas fa-receipt text-primary me-2"></i>Payment History
+        </h2>
+        <div class="d-flex">
+          <input type="text" class="form-control form-control-sm" placeholder="Search invoices..." id="invoiceSearch">
+        </div>
+      </div>
+
+      <!-- Invoices Table -->
+      {% if invoices %}
+      <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0" id="invoicesTable">
+          <thead class="table-light">
+            <tr>
+              <th class="ps-4">Date & Time</th>
+              <th>Amount</th>
+              <th>Payment Method</th>
+              <th>Status</th>
+              <th class="text-end pe-4">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for invoice in invoices %}
+            <tr>
+              <td class="ps-4">
+                <div class="d-flex flex-column">
+                  <span class="fw-medium">{{ invoice.timestamp|date:"M d, Y" }}</span>
+                  <small class="text-muted">{{ invoice.timestamp|date:"h:i A" }}</small>
+                </div>
+              </td>
+              <td>
+                <span class="fw-medium">Ksh {{ invoice.amount|floatformat:2 }}</span>
+              </td>
+              <td>
+                <span class="badge bg-light text-dark">
+                  <i class="fas fa-credit-card me-1 text-muted"></i>
+                  {{ invoice.get_payment_method_display }}
+                </span>
+              </td>
+              <td>
+                {% if invoice.is_successful %}
+                  <span class="badge bg-success bg-opacity-10 text-success">
+                    <i class="fas fa-check-circle me-1"></i> Completed
+                  </span>
+                {% else %}
+                  <span class="badge bg-warning bg-opacity-10 text-warning">
+                    <i class="fas fa-clock me-1"></i> Pending
+                  </span>
+                {% endif %}
+              </td>
+              <td class="text-end pe-4">
+                <a href="{% url 'invoice_view' invoice.id %}" 
+                   class="btn btn-sm btn-outline-primary"
+                   data-bs-toggle="tooltip"
+                   title="View Details">
+                  <i class="fas fa-eye"></i>
+                </a>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      {% else %}
+      <!-- Empty State -->
+      <div class="text-center py-5">
+        <i class="fas fa-receipt text-muted mb-3" style="font-size: 3rem;"></i>
+        <h4 class="text-muted">No Payment Records</h4>
+        <p class="text-muted">You haven't made any payments yet.</p>
+        <a href="{% url 'mpesa:landlord_payment' %}" class="btn btn-primary mt-2">
+          <i class="fas fa-credit-card me-2"></i> Make a Payment
+        </a>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+<!-- Search Functionality -->
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Initialize tooltips
+    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+      return new bootstrap.Tooltip(tooltipTriggerEl);
+    });
+
+    // Search functionality
+    const searchInput = document.getElementById('invoiceSearch');
+    const tableRows = document.querySelectorAll('#invoicesTable tbody tr');
+    
+    searchInput.addEventListener('keyup', function() {
+      const searchTerm = this.value.toLowerCase();
+      
+      tableRows.forEach(row => {
+        const rowText = row.textContent.toLowerCase();
+        row.style.display = rowText.includes(searchTerm) ? '' : 'none';
+      });
+    });
+  });
+</script>
+
+<style>
+  .table th {
+    font-weight: 600;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: #6c757d;
+    white-space: nowrap;
+  }
+  
+  .table td {
+    vertical-align: middle;
+  }
+  
+  .badge {
+    font-weight: 500;
+    padding: 0.35em 0.65em;
+  }
+  
+  #invoiceSearch {
+    max-width: 250px;
+  }
+  
+  @media (max-width: 767.98px) {
+    .card-header {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+    
+    #invoiceSearch {
+      max-width: 100%;
+      margin-top: 1rem;
+    }
+  }
+</style>
+
+{% endblock %}

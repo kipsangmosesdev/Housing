@@ -1,0 +1,239 @@
+{% extends 'myApp/base.html' %}
+{% load static %}
+{% block content %}
+<div class="container my-4">
+  <div class="card shadow-lg rounded-4">
+    <div class="card-body p-4">
+      <!-- Header -->
+      <h2 class="text-center mb-4 fw-bold text-warning">
+        <i class="fas fa-truck-moving me-2"></i> Register as a Mover
+      </h2>
+      <p class="text-center text-muted">
+        Complete the steps below to join our platform
+      </p>
+      <hr>
+
+      <!-- Step Indicator -->
+      <div class="progress mb-4" style="height: 20px;">
+        <div id="progressBar" class="progress-bar bg-success" role="progressbar" style="width: 33%">
+          Step 1 of 3
+        </div>
+      </div>
+
+      <!-- Form -->
+      <form method="post" enctype="multipart/form-data" id="transporterForm">
+        {% csrf_token %}
+
+        <!-- Step 1: Personal Info -->
+        <div class="form-step active">
+          <h5 class="mb-3"><i class="fas fa-user text-primary"></i> Personal Information</h5>
+          <div class="row g-3">
+            <div class="col-md-6">{{ form.full_name.label_tag }} {{ form.full_name }}</div>
+            <div class="col-md-6">{{ form.id_number.label_tag }} {{ form.id_number }}</div>
+            <div class="col-md-6">{{ form.kra_pin.label_tag }} {{ form.kra_pin }}</div>
+            <div class="col-md-6">{{ form.username.label_tag }} {{ form.username }}</div>
+            <div class="col-md-6">{{ form.email.label_tag }} {{ form.email }}</div>
+            <div class="col-md-6">{{ form.confirm_email.label_tag }} {{ form.confirm_email }}</div>
+            <div class="col-md-6">{{ form.password.label_tag }} {{ form.password }}</div>
+            <div class="col-md-6">{{ form.confirm_password.label_tag }} {{ form.confirm_password }}</div>
+            <div class="col-md-6">{{ form.phone.label_tag }} {{ form.phone }}</div>
+            <div class="col-md-6">{{ form.city.label_tag }} {{ form.city }}</div>
+            <div class="col-md-6">{{ form.address.label_tag }} {{ form.address }}</div>
+            <div class="col-md-6">{{ form.national_id_image.label_tag }} {{ form.national_id_image }}</div>
+          </div>
+          <div class="text-end mt-4">
+            <button type="button" class="btn btn-primary next-step">Next <i class="fas fa-arrow-right"></i></button>
+          </div>
+        </div>
+
+        <!-- Step 2: Vehicle Info -->
+        <div class="form-step d-none">
+          <h5 class="mb-3"><i class="fas fa-car-side text-success"></i> Vehicle Information</h5>
+          <div class="row g-3">
+            <div class="col-md-6">{{ form.transport_type.label_tag }} {{ form.transport_type }}</div>
+            <div class="col-md-6">{{ form.vehicle_name.label_tag }} {{ form.vehicle_name }}</div>
+            <div class="col-md-6">{{ form.capacity_type.label_tag }} {{ form.capacity_type }}</div>
+            <div class="col-md-6">{{ form.vehicle_capacity.label_tag }} {{ form.vehicle_capacity }}</div>
+            <div class="col-md-6">{{ form.vehicle_plate.label_tag }} {{ form.vehicle_plate }}</div>
+            <div class="col-md-6">{{ form.vehicle_image.label_tag }} {{ form.vehicle_image }}</div>
+            <div class="col-12">{{ form.description.label_tag }} {{ form.description }}</div>
+          </div>
+          <div class="d-flex justify-content-between mt-4">
+            <button type="button" class="btn btn-secondary prev-step"><i class="fas fa-arrow-left"></i> Back</button>
+            <button type="button" class="btn btn-primary next-step">Next <i class="fas fa-arrow-right"></i></button>
+          </div>
+        </div>
+
+        <!-- Step 3: Location -->
+<div class="form-step d-none">
+  <h5 class="mb-2">
+    <i class="fas fa-map-marker-alt text-danger"></i> Location
+  </h5>
+  <p class="text-muted small">
+    Click on the map or search an address to set your exact location.
+  </p>
+
+  <!-- Search Box -->
+  <input id="pac-input" 
+         class="form-control mb-2" 
+         type="text" 
+         placeholder="Search for a location..." 
+         style="max-width: 350px;">
+
+  <!-- Map -->
+  <div id="map" class="rounded shadow-sm mb-3" style="height: 450px;"></div>
+
+  <!-- Hidden fields (linked in JS) -->
+  {{ form.latitude }}
+  {{ form.longitude }}
+
+  <!-- Step navigation -->
+  <div class="d-flex justify-content-between mt-4">
+    <button type="button" class="btn btn-secondary prev-step">
+      <i class="fas fa-arrow-left"></i> Back
+    </button>
+    <button type="submit" class="btn btn-success">
+      Register <i class="fas fa-paper-plane"></i>
+    </button>
+  </div>
+</div>
+
+      </form>
+
+      <!-- Login link -->
+      <div class="text-center mt-3">
+        <p><i class="fas fa-user"></i> Already have an account?
+          <a class="btn btn-outline-primary btn-sm ms-1" href="{% url 'unified_login' %}">Login here</a>
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Scripts -->
+<script>
+  // Step navigation
+  const steps = document.querySelectorAll(".form-step");
+  const nextBtns = document.querySelectorAll(".next-step");
+  const prevBtns = document.querySelectorAll(".prev-step");
+  const progressBar = document.getElementById("progressBar");
+
+  let currentStep = 0;
+
+  function updateStep(step) {
+    steps.forEach((s, i) => {
+      s.classList.toggle("d-none", i !== step);
+      s.classList.toggle("active", i === step);
+    });
+    progressBar.style.width = ((step + 1) / steps.length) * 100 + "%";
+    progressBar.textContent = `Step ${step + 1} of ${steps.length}`;
+  }
+
+  nextBtns.forEach(btn => {
+    btn.addEventListener("click", () => {
+      if (currentStep < steps.length - 1) {
+        currentStep++;
+        updateStep(currentStep);
+      }
+    });
+  });
+
+  prevBtns.forEach(btn => {
+    btn.addEventListener("click", () => {
+      if (currentStep > 0) {
+        currentStep--;
+        updateStep(currentStep);
+      }
+    });
+  });
+
+  // Initialize
+  updateStep(currentStep);
+
+  // Map
+  
+</script>
+
+<script src="https://maps.googleapis.com/maps/api/js?key={{ GOOGLE_MAPS_API_KEY }}&libraries=places&callback=initMap" async defer></script>
+
+<script>
+  let map, marker;
+
+  function initMap() {
+    // Initialize map
+    map = new google.maps.Map(document.getElementById("map"), {
+      center: {lat: -1.286389, lng: 36.817223},
+      zoom: 12,
+      mapTypeId: "roadmap",
+      mapTypeControl: true,
+      mapTypeControlOptions: {
+        style: google.maps.MapTypeControlStyle.DROPDOWN_MENU,
+        mapTypeIds: ["roadmap", "satellite"]
+      }
+    });
+
+    // Search box
+    var input = document.getElementById("pac-input");
+    var searchBox = new google.maps.places.SearchBox(input);
+    map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
+
+    searchBox.addListener("places_changed", function() {
+      var places = searchBox.getPlaces();
+      if (!places.length) return;
+
+      var place = places[0];
+      if (!place.geometry) return;
+
+      var latlng = {
+        lat: place.geometry.location.lat(),
+        lng: place.geometry.location.lng()
+      };
+
+      setMarker(latlng, place.name);
+      map.setCenter(latlng);
+      map.setZoom(15);
+    });
+
+    // Click to set marker
+    map.addListener("click", function(e) {
+      setMarker({lat: e.latLng.lat(), lng: e.latLng.lng()});
+    });
+  }
+
+  // Set marker function
+  function setMarker(latlng, label) {
+    if (marker) { marker.setMap(null); }
+
+    marker = new google.maps.Marker({
+      position: latlng,
+      map: map,
+      title: label || "Selected Location"
+    });
+
+    var info = new google.maps.InfoWindow({
+      content: label || "<i class='fas fa-map-marker-alt'></i> Selected Location"
+    });
+    info.open(map, marker);
+
+    document.getElementById("id_latitude").value = latlng.lat;
+    document.getElementById("id_longitude").value = latlng.lng;
+
+    const msg = document.createElement("div");
+    msg.className = "alert alert-success mt-3 text-center";
+    msg.innerText = "Location set successfully!";
+    document.querySelector("#transporterForm").prepend(msg);
+    setTimeout(() => msg.remove(), 3000);
+  }
+
+  // Prevent form submit if no marker
+  document.querySelector("#transporterForm").addEventListener("submit", function(e) {
+    if (!marker) {
+      alert("Please select your location on the map before submitting.");
+      e.preventDefault();
+    }
+  });
+
+  window.onload = initMap;
+</script>
+
+{% endblock %}

@@ -1,0 +1,596 @@
+{% extends 'myApp/base.html' %}
+{% load static %}
+
+{% block content %}
+
+<!-- Bootstrap CSS -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<!-- Font Awesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<!-- Google Fonts for humanized typography -->
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+<style>
+/* --- 1. Variables & Global Styles --- */
+:root {
+    --primary-color: #0e2a45;
+    --secondary-color: #0a5fa1;
+    --accent-color: #c8a173;
+    --success-color: #10b981;
+    --warning-color: #f59e0b;
+    --danger-color: #ef4444;
+    --light-color: #f8fafc;
+    --dark-color: #1e293b;
+    --gray-light: #e2e8f0;
+    --gray-medium: #94a3b8;
+    --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --shadow-sm: 0 2px 4px rgba(0,0,0,0.05);
+    --shadow-md: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: var(--light-color);
+    color: var(--dark-color);
+    padding-top: 70px;
+    line-height: 1.6;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Karla', sans-serif;
+    font-weight: 700;
+}
+
+/* --- 2. Navbar & Header --- */
+.navbar {
+    background-color: var(--primary-color) !important;
+    backdrop-filter: blur(10px);
+    box-shadow: var(--shadow-md);
+    padding: 0.8rem 0;
+}
+
+.navbar-brand { font-weight: 700; font-size: 1.4rem; letter-spacing: -0.5px; }
+
+.nav-link {
+    font-weight: 500;
+    color: rgba(255,255,255,0.9) !important;
+    transition: var(--transition);
+    padding: 0.5rem 1rem !important;
+    border-radius: 6px;
+}
+
+.nav-link:hover { color: var(--accent-color) !important; background: rgba(255,255,255,0.05); }
+
+.login-link { background: var(--secondary-color); border-radius: 8px; margin-left: 10px; }
+
+/* --- 3. Hero & Landing Page UI --- */
+.py-6 { padding-top: 5rem; padding-bottom: 5rem; }
+.py-7 { padding-top: 7rem; padding-bottom: 7rem; }
+
+.hero-section {
+    min-height: 75vh;
+    display: flex;
+    align-items: center;
+    background: url('https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=1920&q=80');
+    background-size: cover;
+    background-position: center;
+    border-radius: 0 0 40px 40px;
+    position: relative;
+    overflow: hidden;
+}
+
+.hero-overlay {
+    background: linear-gradient(135deg, rgba(14, 42, 69, 0.95) 0%, rgba(10, 95, 161, 0.75) 100%);
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    z-index: 1;
+}
+
+.welcome-badge {
+    font-size: 0.85rem; font-weight: 600; letter-spacing: 1px;
+    text-transform: uppercase; box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+.hover-lift:hover { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(0,0,0,0.15); }
+
+/* --- 4. Announcement Bar --- */
+.announcement-bar { 
+    background: var(--dark-color); 
+    color: white; 
+    padding: 12px 0; 
+    overflow: hidden; 
+    white-space: nowrap; 
+    cursor: default;
+}
+
+.announcement-container { 
+    display: inline-block; 
+    /* Increased from 25s to 80s for a much slower, readable pace */
+    animation: scroll-left 80s linear infinite; 
+}
+
+/* Pause the scrolling when a user hovers over the bar */
+.announcement-bar:hover .announcement-container {
+    animation-play-state: paused;
+}
+
+@keyframes scroll-left { 
+    0% { transform: translateX(100%); } 
+    100% { transform: translateX(-100%); } 
+}
+/* --- 5. Property Cards (Optimized for 4 Columns) --- */
+.property-card {
+    border: none; border-radius: 16px; overflow: hidden;
+    background: #ffffff; transition: var(--transition);
+    box-shadow: var(--shadow-sm); height: 100%;
+}
+
+.property-card:hover { transform: translateY(-8px); box-shadow: 0 12px 24px rgba(0,0,0,0.12); }
+
+.property-image-container { position: relative; height: 180px; overflow: hidden; }
+
+.property-image { width: 100%; height: 100%; object-fit: cover; transition: transform 0.6s ease; }
+.property-card:hover .property-image { transform: scale(1.1); }
+
+.price-badge {
+    background-color: var(--primary-color); color: var(--accent-color);
+    padding: 3px 10px; border-radius: 6px; font-weight: 700; font-size: 0.85rem;
+}
+
+.feature-badge {
+    background: var(--light-color); color: var(--dark-color);
+    padding: 4px 8px; border-radius: 6px; font-size: 0.75rem;
+    border: 1px solid var(--gray-light);
+}
+
+.kenyan-btn-outline {
+    width: 100%; border: 2px solid var(--secondary-color);
+    color: var(--secondary-color); font-weight: 600;
+    padding: 8px; border-radius: 10px; transition: var(--transition);
+}
+
+.kenyan-btn-outline:hover { background-color: var(--secondary-color); color: white; }
+
+/* --- 6. Reviews & Pagination --- */
+.review-card { transition: var(--transition); border: 1px solid var(--gray-light) !important; }
+.review-card:hover { border-color: var(--secondary-color) !important; transform: translateY(-5px); }
+
+.pagination-modern .page-link {
+    border: none; margin: 0 5px; color: var(--primary-color);
+    font-weight: 600; border-radius: 8px !important;
+}
+.pagination-modern .page-item.active .page-link { background-color: var(--secondary-color); color: white; }
+
+/* --- 7. Footer & Extras --- */
+footer { background-color: var(--primary-color); color: white; padding: 60px 0 20px 0; margin-top: 80px; }
+footer a { color: var(--gray-light); text-decoration: none; transition: var(--transition); }
+footer a:hover { color: var(--accent-color); padding-left: 4px; }
+
+.bg-info.bg-gradient {
+    background: linear-gradient(45deg, var(--primary-color), var(--secondary-color)) !important;
+    border-radius: 40px; margin: 20px;
+}
+
+html { scroll-behavior: smooth; }
+</style>
+<!-- ========================= -->
+<!-- ANNOUNCEMENT / UPDATES -->
+<!-- ========================= -->
+{% if admin_updates %}
+<div class="announcement-bar">
+  <div class="announcement-container">
+    {% for update in admin_updates %}
+      <div class="announcement-item">
+        <span class="announcement-badge">NEW</span>
+        <span class="announcement-title">{{ update.title }}</span>
+        <span class="announcement-content">
+          {{ update.content|truncatechars:1500 }}
+        </span>
+      </div>
+    {% endfor %}
+  </div>
+</div>
+{% endif %}
+
+<!-- ========================= -->
+<!-- HERO SECTION -->
+<!-- ========================= -->
+<section class="hero-section py-6 py-lg-7 position-relative overflow-hidden">
+  <div class="container position-relative z-2">
+    <div class="row justify-content-center">
+      <div class="col-12 col-lg-10 col-xl-8 text-center">
+        
+        <!-- Welcome Message -->
+        <div class="mb-4">
+          <span class="welcome-badge d-inline-flex align-items-center gap-2 px-3 py-1 rounded-pill bg-white text-primary mb-3">
+            <i class="fas fa-sparkles fa-xs"></i>
+            <span>Welcome to XbomaSwift</span>
+          </span>
+        </div>
+
+        <!-- Main Heading -->
+        <h1 class="display-5 fw-bold text-white mb-4">
+          Find Your Perfect Home
+          <span class="d-block text-accent mt-2">in Seconds</span>
+        </h1>
+
+        <!-- Subheading -->
+        <p class="lead text-light mb-5 opacity-90">
+          Discover handpicked properties, connect with trusted movers, and make your move seamless
+        </p>
+
+        <!-- Action Buttons -->
+        <div class="d-flex flex-wrap justify-content-center gap-3 mt-5">
+
+          {% if user.is_authenticated %}
+
+            {% if user.tenant %}
+              <!-- Tenant -->
+              <a href="{% url 'property_map' %}" class="btn btn-success btn-lg px-5 py-3 rounded-pill fw-semibold shadow-lg hover-lift">
+                <i class="fas fa-map-marked-alt me-2"></i> Browse Properties
+              </a>
+              <a href="{% url 'transporter_map' %}" class="btn btn-outline-light btn-lg px-5 py-3 rounded-pill fw-semibold hover-lift">
+                <i class="fas fa-truck me-2"></i> Find Movers
+              </a>
+
+            {% elif user.registeruser %}
+              <!-- Landlord -->
+              <a href="{% url 'landlord_dashboard' %}" class="btn btn-success btn-lg px-5 py-3 rounded-pill fw-semibold shadow-lg hover-lift">
+                <i class="fas fa-tachometer-alt me-2"></i> Go to Dashboard
+              </a>
+              <a href="{% url 'property_map' %}" class="btn btn-outline-light btn-lg px-5 py-3 rounded-pill fw-semibold hover-lift">
+                <i class="fas fa-map-marked-alt me-2"></i> View Properties
+              </a>
+
+            {% elif user.transporter %}
+              <!-- Transporter -->
+              <a href="{% url 'transporter_dashboard' %}" class="btn btn-warning btn-lg px-5 py-3 rounded-pill fw-semibold shadow-lg hover-lift">
+                <i class="fas fa-truck me-2"></i> My Dashboard
+              </a>
+              <a href="{% url 'transporter_map' %}" class="btn btn-outline-light btn-lg px-5 py-3 rounded-pill fw-semibold hover-lift">
+                <i class="fas fa-map-marked-alt me-2"></i> View Map
+              </a>
+
+            {% else %}
+              <!-- Fallback -->
+              <div class="alert alert-danger py-3 px-4 rounded-pill border-0 shadow-sm">
+                <i class="fas fa-exclamation-circle me-2"></i> Role not identified
+              </div>
+            {% endif %}
+
+          {% else %}
+            <!-- Guest User -->
+            <div class="d-flex flex-wrap gap-4 justify-content-center">
+              <a href="{% url 'property_map' %}"
+                 class="btn btn-primary btn-lg px-5 py-3 rounded-pill fw-semibold shadow-lg hover-lift">
+                <i class="fas fa-map-marked-alt me-2"></i> Explore Properties
+              </a>
+
+              <a href="{% url 'chat_page' %}"
+                 class="btn btn-light btn-lg px-5 py-3 rounded-pill fw-semibold shadow-sm hover-lift">
+                <i class="fas fa-brain me-2"></i> AI Assistant
+              </a>
+            </div>
+
+            <!-- Guest CTA -->
+            <p class="text-light mt-4 opacity-75">
+              <a href="{% url 'login' %}" class="text-warning text-decoration-none">Sign in</a> 
+              or 
+              <a href="{% url 'landlord_tenant' %}" class="text-warning text-decoration-none">create an account</a> 
+              for personalized experience
+            </p>
+          {% endif %}
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Hero Background -->
+  <div class="hero-overlay position-absolute top-0 start-0 w-100 h-100"></div>
+  
+  <!-- Photo Credit -->
+  <div class="photo-credit position-absolute bottom-0 end-0 m-3">
+    Photo by
+    <a href="https://unsplash.com/@salmansaqib" class="text-warning">Salman Saqib</a>
+    on
+    <a href="https://unsplash.com/photos/7yZcSSzAs8c" class="text-warning">Unsplash</a>
+  </div>
+</section>
+
+<!-- ========================= -->
+<!-- FEATURED PROPERTIES -->
+<!-- ========================= -->
+{% if featured_properties %}
+<section class="py-6 py-lg-7 position-relative">
+  <div class="container position-relative">
+    
+    <!-- Section Header -->
+    <div class="text-center mb-6">
+      <span class="section-label d-inline-block mb-3 text-primary fw-semibold">
+        <i class="fas fa-star me-2"></i>CURATED SELECTION
+      </span>
+      <h2 class="fw-bold text-dark mb-3">Featured Properties</h2>
+      <p class="text-muted mb-0 max-w-600 mx-auto">
+        Handpicked homes that combine comfort, style, and great value
+      </p>
+    </div>
+
+    <!-- Divider - Thin -->
+    <div class="divider-thin mx-auto mb-5"></div>
+
+    <!-- Carousel -->
+    <div id="featuredPropertiesCarousel"
+     class="carousel slide"
+     data-bs-ride="carousel"
+     data-bs-interval="6000"
+     data-bs-wrap="true"
+     data-bs-pause="hover">
+
+  <div class="carousel-inner">
+    {% for property in featured_properties %}
+      {% if forloop.counter0|divisibleby:4 %}
+        <div class="carousel-item {% if forloop.first %}active{% endif %}">
+          <div class="row g-4 justify-content-center">
+      {% endif %}
+
+            <div class="col-12 col-md-6 col-lg-3">
+              {% include "myApp/property_card.html" with property=property %}
+            </div>
+
+      {% if forloop.counter|divisibleby:4 or forloop.last %}
+          </div>
+        </div>
+      {% endif %}
+    {% endfor %}
+  </div>
+
+  <div class="carousel-indicators position-static mt-4">
+    {% for property in featured_properties %}
+      {% if forloop.counter0|divisibleby:4 %}
+        <button type="button"
+                data-bs-target="#featuredPropertiesCarousel"
+                data-bs-slide-to="{{ forloop.counter0|add:0|slugify }}" 
+                class="{% if forloop.first %}active{% endif %} mx-1 rounded-circle">
+        </button>
+      {% endif %}
+    {% endfor %}
+</div>
+
+  <!-- Controls -->
+  <button class="carousel-control-prev" type="button"
+          data-bs-target="#featuredPropertiesCarousel"
+          data-bs-slide="prev">
+    <span class="carousel-control-prev-icon bg-dark bg-opacity-25 rounded-circle p-3"></span>
+  </button>
+
+  <button class="carousel-control-next" type="button"
+          data-bs-target="#featuredPropertiesCarousel"
+          data-bs-slide="next">
+    <span class="carousel-control-next-icon bg-dark bg-opacity-25 rounded-circle p-3"></span>
+  </button>
+
+  <!-- Indicators (FIXED) -->
+  <div class="carousel-indicators position-static mt-4">
+  {% for slide in featured_properties %}
+    {% if forloop.counter0|divisibleby:3 %}
+      <button type="button"
+              data-bs-target="#featuredPropertiesCarousel"
+              data-bs-slide-to="{{ forloop.counter0|add:0|slugify }}" 
+              class="{% if forloop.first %}active{% endif %} mx-1 rounded-circle"
+              style="width: 10px; height: 10px;">
+      </button>
+    {% endif %}
+  {% endfor %}
+</div>
+</div>
+
+    <!-- View All Link -->
+    <div class="text-center mt-5">
+      <a href="{% url 'property_map' %}" class="btn btn-link text-decoration-none text-primary fw-semibold">
+        View all properties
+        <i class="fas fa-arrow-right ms-2"></i>
+      </a>
+    </div>
+  </div>
+</section>
+{% endif %}
+
+<!-- ========================= -->
+<!-- ALL PROPERTIES -->
+<!-- ========================= -->
+<section class="py-6 py-lg-7 bg-light-subtle">
+  <div class="container">
+    
+    <!-- Section Header -->
+    <div class="text-center mb-6">
+      <span class="section-label d-inline-block mb-3 text-primary fw-semibold">
+        <i class="fas fa-home me-2"></i>EXPLORE ALL
+      </span>
+      <h2 class="fw-bold text-dark mb-3">Available Properties</h2>
+      <p class="text-muted mb-0 max-w-600 mx-auto">
+        Browse our complete collection of homes, apartments, and rentals
+      </p>
+    </div>
+
+    <!-- Divider - Thin -->
+    <div class="divider-thin mx-auto mb-5"></div>
+
+    <!-- Properties Grid -->
+    <div class="row g-4">
+      {% for property in all_properties %}
+        <div class="col-md-6 col-lg-3">
+          {% include "myApp/property_card.html" with property=property %}
+        </div>
+      {% empty %}
+        <div class="col-12 text-center py-6">
+          <div class="empty-state-icon mb-4">
+            <i class="fas fa-home fa-3x text-gray-medium"></i>
+          </div>
+          <h4 class="fw-semibold mb-3">No properties available</h4>
+          <p class="text-muted mb-4">Check back soon for new listings</p>
+        </div>
+      {% endfor %}
+    </div>
+
+    <!-- Pagination -->
+    {% if all_properties.paginator.num_pages > 1 %}
+    <div class="d-flex justify-content-center mt-6">
+      <nav aria-label="Property pagination">
+        <ul class="pagination pagination-modern">
+          {% if all_properties.has_previous %}
+            <li class="page-item">
+              <a class="page-link rounded-start-pill" href="?page={{ all_properties.previous_page_number }}">
+                <i class="fas fa-chevron-left me-2"></i>Previous
+              </a>
+            </li>
+          {% else %}
+            <li class="page-item disabled">
+              <span class="page-link rounded-start-pill">Previous</span>
+            </li>
+          {% endif %}
+
+          {% for num in all_properties.paginator.page_range %}
+            <li class="page-item {% if all_properties.number == num %}active{% endif %}">
+              <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+            </li>
+          {% endfor %}
+
+          {% if all_properties.has_next %}
+            <li class="page-item">
+              <a class="page-link rounded-end-pill" href="?page={{ all_properties.next_page_number }}">
+                Next<i class="fas fa-chevron-right ms-2"></i>
+              </a>
+            </li>
+          {% else %}
+            <li class="page-item disabled">
+              <span class="page-link rounded-end-pill">Next</span>
+            </li>
+          {% endif %}
+        </ul>
+      </nav>
+    </div>
+    {% endif %}
+  </div>
+</section>
+
+<!-- ========================= -->
+<!-- USER RATINGS -->
+<!-- ========================= -->
+<section class="py-6 py-lg-7">
+  <div class="container">
+    
+    <!-- Section Header -->
+    <div class="text-center mb-6">
+      <span class="section-label d-inline-block mb-3 text-primary fw-semibold">
+        <i class="fas fa-heart me-2"></i>COMMUNITY VOICES
+      </span>
+      <h2 class="fw-bold text-dark mb-3">What Our Users Say</h2>
+      <p class="text-muted mb-0 max-w-600 mx-auto">
+        Real stories from people who found their perfect home with us
+      </p>
+    </div>
+
+    <!-- Divider - Thin -->
+    <div class="divider-thin mx-auto mb-5"></div>
+
+    <!-- Reviews Grid -->
+    <div class="row g-4">
+      {% for review in recent_reviews %}
+        <div class="col-lg-4 col-md-6">
+          <div class="review-card h-100 border border-gray-light rounded-3 p-4 bg-white shadow-sm">
+            
+            <!-- Reviewer Info -->
+            <div class="d-flex align-items-center mb-4">
+              <div class="reviewer-avatar d-flex align-items-center justify-content-center rounded-circle bg-primary bg-opacity-10 text-primary fw-bold me-3"
+                   style="width: 48px; height: 48px;">
+                {{ review.user.username|slice:":2"|upper }}
+              </div>
+              <div>
+                <h6 class="fw-semibold mb-1">
+                  {{ review.user.get_full_name|default:review.user.username }}
+                </h6>
+                <small class="text-muted d-flex align-items-center">
+                  <i class="far fa-clock me-1 fa-xs"></i>
+                  {{ review.timestamp|date:"M d, Y" }}
+                </small>
+              </div>
+            </div>
+
+            <!-- Stars -->
+            <div class="mb-3">
+              {% for i in "12345" %}
+                {% if forloop.counter <= review.score %}
+                  <i class="fas fa-star text-warning"></i>
+                {% else %}
+                  <i class="far fa-star text-gray-medium"></i>
+                {% endif %}
+              {% endfor %}
+              <span class="ms-2 text-muted fw-medium">{{ review.score }}/5</span>
+            </div>
+
+            <!-- Review Text -->
+            <p class="mb-0 text-dark opacity-90">
+              "{{ review.review|default:"Excellent service and experience" }}"
+            </p>
+
+          </div>
+        </div>
+      {% empty %}
+        <div class="col-12 text-center py-6">
+          <div class="empty-state-icon mb-4">
+            <i class="fas fa-comment-alt fa-3x text-gray-medium"></i>
+          </div>
+          <h4 class="fw-semibold mb-3">No reviews yet</h4>
+          <p class="text-muted mb-4">Be the first to share your experience</p>
+          {% if user.is_authenticated %}
+            <a href="{% url 'rate_system' %}" class="btn btn-outline-primary rounded-pill">
+              Write a Review
+            </a>
+          {% endif %}
+        </div>
+      {% endfor %}
+    </div>
+
+    <!-- View All Reviews -->
+    {% if recent_reviews and user.is_authenticated %}
+      <div class="text-center mt-6">
+        <a href="{% url 'rate_system' %}" class="btn btn-outline-primary rounded-pill px-4">
+          Read All Reviews
+          <i class="fas fa-arrow-right ms-2"></i>
+        </a>
+      </div>
+    {% endif %}
+  </div>
+</section>
+
+<!-- ========================= -->
+<!-- FINAL CTA -->
+<!-- ========================= -->
+<section class="py-6 py-lg-7 bg-info bg-gradient">
+  <div class="container">
+    <div class="row justify-content-center text-center">
+      <div class="col-12 col-lg-10">
+        <h2 class="fw-bold text-white mb-4">
+          Ready to list or find your next home?
+        </h2>
+        <p class="text-light mb-5 lead">
+          Join thousands of satisfied users who trust XbomaSwift for their housing needs
+        </p>
+        <div class="d-flex flex-wrap justify-content-center gap-3">
+          <a href="{% url 'property_map' %}" class="btn btn-light btn-lg px-5 py-3 rounded-pill fw-semibold shadow-lg hover-lift">
+            <i class="fas fa-search me-2"></i>Start Searching
+          </a>
+          {% if not user.is_authenticated %}
+            <a href="{% url 'landlord_tenant' %}" class="btn btn-outline-light btn-lg px-5 py-3 rounded-pill fw-semibold hover-lift">
+              <i class="fas fa-user-plus me-2"></i>Create Account
+            </a>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+{% endblock %}

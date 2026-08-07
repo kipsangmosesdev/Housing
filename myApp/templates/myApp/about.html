@@ -1,0 +1,234 @@
+{% extends 'myApp/base.html' %}
+{% load static %}
+
+{% block title %}About Us - XbomaSwift{% endblock %}
+
+{% block content %}
+<style>
+  body{
+    font-family: "Segoe UI", Roboto, sans-serif;
+  }
+  .about-section {
+    background: linear-gradient(rgba(245, 247, 250, 0.96), rgba(245, 247, 250, 0.96)),
+                url('{% static "myApp/images/kenya-housing-pattern.png" %}');
+    background-size: cover;
+  }
+
+  .mission-card {
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.08);
+    transition: transform 0.3s ease;
+    font-size: 0.95rem;
+  }
+
+  .mission-card:hover {
+    transform: translateY(-4px);
+  }
+
+  .value-item {
+    position: relative;
+    padding-left: 1.3rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .value-item:before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0.45rem;
+    width: 0.6rem;
+    height: 0.6rem;
+    background-color: #c8a173;
+    border-radius: 50%;
+  }
+
+  .about-text {
+    font-size: 0.95rem;
+    line-height: 1.7;
+    color: #555;
+  }
+
+  .btn-custom {
+    border-radius: 8px;
+    padding: 0.6rem 1.2rem;
+    font-size: 0.9rem;
+    font-weight: 500;
+  }
+
+  .kenya-gradient {
+    background: linear-gradient(90deg, #2a5a78 0%, #c8a173 50%, #2e7d32 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+</style>
+
+<section class="py-5 about-section">
+  <div class="container">
+    <div class="text-center mb-5">
+      <h1 style="color: #2a5a78;">About XbomaSwift</h1>
+      <p>Where home meets heart. Bringing trust, technology, and Kenyan warmth into every move you make.</p>
+      <hr>
+    </div>
+
+    <div class="row justify-content-center">
+      <div class="col-lg-10">
+
+        <!-- Our Story -->
+        <div class="mission-card p-4 p-md-5 mb-5">
+          <h4 class="mb-3" style="color: #2a5a78;">Our Story</h4>
+          <p class="about-text">
+            Every Kenyan knows the struggle of finding a decent home. Walking under the hot sun, chasing “TO LET” signs, dealing with brokers, and facing hidden costs can be exhausting.
+          </p>
+          <p class="about-text">
+            <strong>XbomaSwift</strong> was born from that frustration and a dream to make things better. We imagined a Kenya where finding a house is simple, affordable, and honest—where technology works hand in hand with trust.
+          </p>
+          <p class="about-text">
+            Our journey began with one goal: to make renting easier. Along the way, we realized that moving is part of the same story. So, we created a space where you can find your home and your mover—all in one trusted platform.
+          </p>
+          <p class="about-text">
+            We do not own moving trucks. Instead, we empower hardworking movers who are already part of our community to connect directly with tenants who need them. It’s convenience built on collaboration, the Kenyan way.
+          </p>
+        </div>
+
+        <!-- Our Mission -->
+        <div class="mission-card p-4 p-md-5 mb-5">
+          <h4 class="mb-3" style="color: #2a5a78;">Our Mission</h4>
+          <p class="about-text">
+           To empower landlords, tenants, and movers across Kenya with a trusted, technology-driven platform that simplifies renting and relocation.
+          </p>
+        </div>
+
+        <!-- Our Vision -->
+        <div class="mission-card p-4 p-md-5 mb-5">
+          <h4 class="mb-3" style="color: #2a5a78;">Our Vision</h4>
+          <p class="about-text">
+            To be Kenya’s leading digital home for renting and moving, where every Kenyan can find a safe, affordable home and trusted movers with ease.
+          </p>
+        </div>
+
+        <!-- Moving Services -->
+        <div class="mission-card p-4 p-md-5 mb-5">
+          <h4 class="mb-3" style="color: #2a5a78;">Moving Services</h4>
+          <p class="about-text">
+            Moving should be exciting, not stressful. After you find your next home on <strong>XbomaSwift</strong>, we help you take the next step with ease.
+          </p>
+          <p class="about-text">
+            Our verified movers are part of a growing network built on reliability and care. Whether you’re moving across town or to a new county, we make sure your journey is smooth and safe.
+          </p>
+          <p class="about-text">
+            We don’t just move your belongings—we move your experience from stressful to seamless. That’s what makes XbomaSwift different.
+          </p>
+        </div>
+
+        <!-- Reviews & Ratings -->
+        <div class="mission-card p-4 p-md-5 mb-5">
+          <h4 class="mb-3" style="color: #2a5a78;">Reviews and Ratings</h4>
+          <p class="about-text">
+            Trust is earned, not claimed. That’s why <strong>XbomaSwift</strong> is built on openness and real feedback.
+          </p>
+          <p class="about-text">
+            <strong>System Reviews</strong> show what our users love about their experience—from the simplicity of our search tools to the accuracy of our maps.
+          </p>
+          <p class="about-text">
+            <strong>Property Reviews</strong> reveal what living in a home is truly like, shared by real tenants. You’ll know about safety, cleanliness, and accessibility before you even visit.
+          </p>
+          <p class="about-text">
+            We believe honest voices build strong communities. Every review on XbomaSwift strengthens that trust.
+          </p>
+        </div>
+
+        <!-- What We Offer & Core Values -->
+        <div class="row g-4 mb-5">
+          <div class="col-md-6">
+            <div class="h-100 p-4 mission-card">
+              <h5 class="mb-3" style="color: #2a5a78;">What We Offer</h5>
+              <ul class="list-unstyled about-text">
+                <li class="value-item">Verified rental listings from trusted landlords.</li>
+                <li class="value-item">AI-powered property recommendations tailored to your needs.</li>
+                <li class="value-item">Seamless connection to reliable movers.</li>
+                <li class="value-item">Interactive maps showing rent previews and nearby amenities.</li>
+                <li class="value-item">Smart alerts for nearby properties that match your preferences.</li>
+                <li class="value-item">Real-time directions to every property using Google Maps.</li>
+                <li class="value-item">Secure, transparent interactions between tenants and landlords.</li>
+                <li class="value-item">Honest reviews that help you choose with confidence.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <div class="h-100 p-4 mission-card">
+              <h5 class="mb-3" style="color: #2a5a78;">Our Core Values</h5>
+              <ul class="list-unstyled about-text">
+                <li class="value-item">Honesty in every connection.</li>
+                <li class="value-item">Innovation with a human touch.</li>
+                <li class="value-item">Empowering Kenyans through smart technology.</li>
+                <li class="value-item">Dependability that builds lifelong trust.</li>
+                <li class="value-item">Community, because together we go further.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- The XbomaSwift Difference -->
+        <div class="mission-card p-4 p-md-5 mb-5">
+          <h5 class="mb-3" style="color: #2a5a78;">The XbomaSwift Difference</h5>
+          <p class="about-text">
+            <strong>XbomaSwift</strong> isn’t just another housing app—it’s a movement built on trust, speed, and connection.
+          </p>
+          <p class="about-text">
+            Every listing is mapped, verified, and backed by accurate data. We make sure you know exactly what to expect before you make your move.
+          </p>
+          <p class="about-text">
+            Whether you’re a tenant, landlord, or mover, we bring your housing journey together in one place. It’s Kenya’s digital home for all things renting and relocation.
+          </p>
+
+          <div class="row text-center mt-4">
+            <div class="col-md-4 mb-3">
+              <div class="p-3">
+                <i class="fas fa-shield-alt fa-2x mb-2" style="color: #2a5a78;"></i>
+                <h6 class="fw-semibold">Trust & Safety</h6>
+                <p class="about-text mb-0">Every listing verified, every interaction secure.</p>
+              </div>
+            </div>
+            <div class="col-md-4 mb-3">
+              <div class="p-3">
+                <i class="fas fa-bolt fa-2x mb-2" style="color: #c8a173;"></i>
+                <h6 class="fw-semibold">Speed & Convenience</h6>
+                <p class="about-text mb-0">Find, connect, and move with just a few clicks.</p>
+              </div>
+            </div>
+            <div class="col-md-4 mb-3">
+              <div class="p-3">
+                <i class="fas fa-truck-moving fa-2x mb-2" style="color: #2e7d32;"></i>
+                <h6 class="fw-semibold">Seamless Relocation</h6>
+                <p class="about-text mb-0">Move smarter with verified movers you can trust.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Final CTA -->
+        <div class="mission-card p-4 p-md-5 text-center">
+          <h5 class="mb-3 kenya-gradient">Your Next Home is Waiting</h5>
+          <p class="about-text mb-4">
+            <strong>XbomaSwift</strong> is more than a platform—it’s a promise to make renting and moving simpler, safer, and more human.
+          </p>
+          <p class="about-text mb-4">
+            Join thousands of Kenyans who are finding homes the smarter way. Whether you’re searching for your dream home or listing your property, XbomaSwift connects you with real people who care.
+          </p>
+          <div class="d-flex justify-content-center gap-3 flex-wrap">
+            <a href="{% url 'property_map' %}" class="btn btn-custom" style="background-color: #2a5a78; color: white;">
+              Browse Rentals
+            </a>
+            <a href="{% url 'register' %}" class="btn btn-custom" style="background-color: #c8a173; color: white;">
+              List Your Property
+            </a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

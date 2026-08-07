@@ -1,0 +1,989 @@
+{% extends 'myApp/base.html' %}
+{% load custom_filters %}
+{% load humanize %}
+{% load static %}
+
+{% block content %}
+
+<style>
+  /* ===== CLEANED & ORGANIZED CSS ===== */
+
+/* === GLOBAL STYLES & VARIABLES === */
+:root {
+  /* Color Palette */
+  --primary-dark: #254f73;      /* Navy blue */
+  --primary-medium: #1a3a5c;    /* Darker navy */
+  --accent-warm: #c8a173;       /* Warm taupe */
+  --accent-gold: #7d4f2e;       /* Taupe/gold */
+  --kenyan-gold: #db9a1f;       /* Kenyan gold accent */
+  --kenyan-green: #9e4014;      /* Kenyan green */
+  --text-dark: #000000;         /* Black text */
+  --text-muted: #6c757d;        /* Muted text */
+  --bg-light: #f8f9fa;          /* Light background */
+  --border-color: #dee2e6;      /* Border color */
+  --white: #ffffff;
+  
+  /* Shadows */
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.08);
+  --shadow-md: 0 4px 12px rgba(0,0,0,0.1);
+  --shadow-lg: 0 6px 20px rgba(0,0,0,0.15);
+}
+
+/* === THEME & COLOR SYSTEM === */
+/* Primary elements */
+.bg-primary, .btn-primary {
+  background-color: var(--accent-gold) !important;
+  border-color: var(--accent-gold) !important;
+  color: var(--white) !important;
+}
+
+/* Outline buttons */
+.btn-outline-primary {
+  color: var(--primary-dark) !important;
+  border-color: #296273 !important;
+}
+
+.btn-outline-primary:hover {
+  background-color: #ffed7a !important;
+  color: #144863 !important;
+}
+
+/* Text colors */
+.text-primary {
+  color: var(--primary-dark) !important;
+}
+
+.border-primary {
+  border-color: var(--primary-dark) !important;
+}
+
+/* === BADGE STYLES === */
+/* Primary badge */
+.badge.bg-primary {
+  background-color: var(--accent-gold) !important;
+  color: var(--white) !important;
+}
+
+/* Success badge */
+.badge.bg-success {
+  background-color: var(--accent-warm) !important;
+  color: var(--text-dark) !important;
+}
+
+/* Info badge */
+.badge.bg-info {
+  background-color: var(--primary-medium) !important;
+  color: var(--white) !important;
+}
+
+/* Warning button */
+.btn-warning {
+  background-color: #FFC107 !important;
+  color: var(--text-dark) !important;
+  border-color: #FFA000 !important;
+}
+
+/* === CARD STYLES === */
+.card {
+  border: 1px solid var(--border-color) !important;
+  background-color: var(--white) !important;
+}
+
+.amenity-card {
+  background-color: var(--bg-light) !important;
+}
+
+.amenity-icon {
+  background-color: var(--border-color) !important;
+}
+
+/* === CAROUSEL CONTROLS === */
+.carousel-control-prev, 
+.carousel-control-next {
+  width: 40px;
+  height: 40px;
+  background-color: rgba(255,255,255,0.9);
+  border-radius: 50%;
+  top: 50%;
+  transform: translateY(-50%);
+  box-shadow: var(--shadow-sm);
+  transition: 0.2s ease;
+}
+
+.carousel-control-prev:hover,
+.carousel-control-next:hover {
+  background-color: var(--white);
+  box-shadow: var(--shadow-md);
+}
+
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+  background-color: var(--primary-medium) !important;
+  background-size: 1.25rem;
+}
+
+/* === MAP STYLES === */
+#map {
+  height: 500px;
+  background-color: #f5f7fa;
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+  box-shadow: var(--shadow-sm);
+}
+
+/* Map markers */
+.property-marker .marker-pin {
+  background: var(--primary-medium) !important;
+}
+
+.user-location-marker .marker-pin {
+  background: #af784c !important;
+  animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+  0% { transform: rotate(-45deg) scale(1); }
+  50% { transform: rotate(-45deg) scale(1.1); }
+  100% { transform: rotate(-45deg) scale(1); }
+}
+
+/* === RATING SYSTEM === */
+/* Rating container */
+.rating-container {
+  background-color: var(--bg-light) !important;
+  border: 1px solid var(--border-color) !important;
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+/* Star rating */
+.star-rating .star.text-warning {
+  color: #FFC107 !important;
+}
+
+/* === TYPOGRAPHY & TEXT STYLES === */
+/* Ensure text remains black */
+body, .card-title, .card-text, h1, h2, h3, h4, h5, h6,
+.text-dark, .text-muted, .text-justify, .amenity-name,
+.comment-content, .average-rating, .rating-prompt {
+  color: var(--text-dark) !important;
+}
+
+/* Section headers with gold accent */
+h4[style*="color: rgb(202, 147, 6)"] {
+  color: var(--kenyan-gold) !important;
+}
+
+strong[style*="color: rgb(155, 122, 56)"] {
+  color: #9b7a38 !important;
+}
+
+/* === CKEDITOR CONTENT STYLING === */
+.ck-content p {
+  margin-bottom: 0.8rem;
+}
+
+.ck-content ul, .ck-content ol {
+  padding-left: 1.5rem;
+  margin-bottom: 0.8rem;
+}
+
+.ck-content a {
+  color: #007bff;
+  text-decoration: underline;
+}
+
+.ck-content a:hover {
+  color: #0056b3;
+  text-decoration: none;
+}
+
+.ck-content strong {
+  font-weight: bold;
+}
+
+.ck-content em, .ck-content i {
+  font-style: italic;
+}
+
+/* === CUSTOM BADGE STYLES === */
+.badge.status-badge,
+span.status-badge {
+  display: inline-flex !important;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  border-radius: 20px;
+  padding: 6px 14px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
+  border: none !important;
+}
+
+.status-badge i {
+  font-size: 0.95rem !important;
+}
+
+/* Verified Badge */
+.badge.status-badge.verified {
+  background: linear-gradient(90deg, #1e8449, #28b463) !important;
+  color: var(--white) !important;
+}
+
+/* Featured Badge */
+.badge.status-badge.featured {
+  background: linear-gradient(90deg, #ffbf00, #f39c12) !important;
+  color: #222 !important;
+}
+
+/* Hover Effect */
+.badge.status-badge:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.12);
+}
+
+/* === COMMENT SYSTEM STYLES === */
+/* Executive Comment Cards */
+.comment-card {
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+  background-color: var(--white);
+  margin-bottom: 1.5rem;
+}
+
+.comment-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-md) !important;
+  border-color: var(--accent-warm);
+}
+
+.comment-content {
+  white-space: pre-line;
+  line-height: 1.7;
+  color: #4a5568;
+  font-size: 0.95rem;
+}
+
+/* Empty State */
+.empty-state {
+  background-color: var(--bg-light);
+  border-radius: 10px;
+  padding: 2.5rem;
+  text-align: center;
+  border: 1px dashed var(--border-color);
+}
+
+/* Avatar */
+.avatar {
+  font-weight: 600;
+  font-size: 14px;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background-color: var(--primary-medium);
+  color: var(--white);
+  text-transform: uppercase;
+}
+
+/* === AMENITIES SECTION === */
+.amenity-category {
+  background-color: var(--white);
+  border-radius: 8px;
+  padding: 1.25rem;
+  margin-bottom: 1.75rem;
+  transition: 0.3s ease;
+}
+
+.amenity-category:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+}
+
+.amenity-category h4 {
+  color: var(--primary-medium);
+  font-weight: 500;
+  margin-bottom: 1rem;
+}
+
+.amenity-category h4::before {
+  content: "";
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  background-color: var(--accent-warm);
+  border-radius: 50%;
+  margin-right: 10px;
+}
+
+.amenity-category ul {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 0.75rem;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.amenity-category li {
+  background: #cccbc81b;
+  padding: 0.75rem 1rem;
+  border-radius: 50px;
+  font-weight: bold !important;
+  font-style: italic !important;
+  color: var(--accent-maroon);
+  box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+  transition: all 0.2s ease;
+  border: 1px solid #f1f3f4;
+}
+
+.amenity-category li:hover {
+  background: #fafbfc;
+  border-color: var(--kenyan-gold);
+  box-shadow: 0 2px 8px rgba(219, 154, 31, 0.1);
+}
+
+.amenity-category li::before {
+  content: "";
+  display: inline-block;
+  width: 8px;
+  height: 14px;
+  border: solid var(--kenyan-gold);
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+  margin-right: 12px;
+  margin-bottom: 2px;
+}
+/* === RESPONSIVE DESIGN === */
+@media (max-width: 768px) {
+  .comment-card .card-body {
+    padding: 1.25rem;
+  }
+  
+  .d-flex.align-items-center.mb-2 {
+    flex-direction: column;
+    align-items: flex-start !important;
+    gap: 0.75rem;
+  }
+  
+  .text-end {
+    text-align: left !important;
+    margin-top: 0.5rem;
+  }
+  
+  .empty-state {
+    padding: 1.5rem;
+  }
+  
+  .amenity-category ul {
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  }
+  
+  .amenity-category li {
+    padding: 0.6rem 0.8rem;
+    font-size: 0.9rem;
+  }
+  
+  #map {
+    height: 350px;
+  }
+}
+
+@media (max-width: 576px) {
+  .amenity-category ul {
+    grid-template-columns: 1fr;
+  }
+  
+  .amenity-category {
+    padding: 1rem;
+  }
+}
+</style>
+
+<div class="container mt-3 mt-md-4">
+
+  <!-- Navigation and Favorite Button -->
+  <div class="d-flex justify-content-between mb-3">
+    {% if user.is_authenticated and user.registeruser == property.landlord %}
+      <a href="{% url 'landlord_dashboard' %}" class="btn btn-outline-secondary">
+        <i class="fas fa-arrow-left me-1"></i> Dashboard
+      </a>
+    {% else %}
+      <a href="{% url 'tenant_landing' %}" class="btn btn-outline-secondary">
+        <i class="fas fa-arrow-left me-1"></i> Back
+      </a>
+    {% endif %}
+    
+    {% if user.is_authenticated and user.tenant %}
+      {% if is_favorite %}
+        <form method="post" action="{% url 'remove_favorite' property.id %}">
+          {% csrf_token %}
+          <button class="btn btn-danger" type="submit">
+            <i class="fas fa-heart me-1"></i> Remove Favorite
+          </button>
+        </form>
+      {% else %}
+        <form method="post" action="{% url 'add_favorite' property.id %}">
+          {% csrf_token %}
+          <button class="btn btn-outline-danger" type="submit">
+            <i class="far fa-heart me-1"></i> Add Favorite
+          </button>
+        </form>
+      {% endif %}
+    {% endif %}
+  </div>
+ 
+ 
+  
+  <!-- Property Info Card -->
+  <div class="card mb-4 border-0 shadow-sm">
+    <div class="card-body p-3 p-md-4">
+      <h2 class="card-title h4 mb-3">
+        {% if is_verified %}
+          <span class="property-verified-badge" aria-label="Verified property">
+            <i class="bi bi-patch-check-fill text-primary fs-5"></i> 
+          </span>
+        {% endif %}
+        {{ property.title }}
+        
+      </h2>
+      
+      <div class="d-flex flex-wrap gap-2 mb-3">
+        
+
+        <span class="badge bg-primary">
+          <i class="fas fa-tag me-1"></i> {{ property.property_type }}
+        </span>
+        <span class="badge {% if property.is_available %}bg-success{% else %}bg-danger{% endif %}">
+          <i class="fas fa-bed me-1"></i> 
+          {{ property.is_available|yesno:"Available,Occupied" }}
+        </span>
+        <span class="badge bg-info text-dark">
+          <i class="fas fa-map-marker-alt me-1"></i> {{ property.city }}, {{ property.estate }}
+        </span>
+
+        
+        
+        {% if featured %}
+          <span class="badge bg-warning text-dark">
+            <i class="fas fa-heart"></i> <strong>Featured</strong>
+          </span>
+        {% endif %}
+      </div>
+      
+      <hr>
+            <!-- Property Images Carousel -->
+      <div class="card mb-4 border-0 shadow-sm">
+        <div class="card-body p-3 p-md-4">
+          <!-- <h4 class="h5 mb-3"><i class="fas fa-images text-primary me-2"></i>{{ property.title }} gallery</h4> -->
+          
+          {% if property.images.all %}
+            <div id="propertyCarousel" class="carousel slide" data-bs-ride="carousel">
+              <div class="carousel-inner rounded-3 overflow-hidden">
+                {% for img in property.images.all %}
+                  <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                    <img src="{{ img.image.url }}" 
+                      class="d-block w-100" 
+                      style="height: 500px; object-fit: cover;" 
+                      alt="Property image">
+                    {% if img.caption %}
+                      <div class="carousel-caption d-none d-md-block bg-dark bg-opacity-75 rounded-pill px-3 py-1">
+                        <p class="mb-0 small">{{ img.caption }}</p>
+                      </div>
+                    {% endif %}
+                  </div>
+                {% endfor %}
+              </div>
+              
+              <button class="carousel-control-prev" type="button" data-bs-target="#propertyCarousel" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon bg-dark rounded-circle p-3" aria-hidden="true"></span>
+                <span class="visually-hidden">Previous</span>
+              </button>
+              <button class="carousel-control-next" type="button" data-bs-target="#propertyCarousel" data-bs-slide="next">
+                <span class="carousel-control-next-icon bg-dark rounded-circle p-3" aria-hidden="true"></span>
+                <span class="visually-hidden">Next</span>
+              </button>
+            </div>
+            
+            <div class="text-center mt-2">
+              <small class="text-muted">{{ property.images.all|length }} image(s)</small>
+            </div>
+          {% else %}
+            <div class="text-center py-4 bg-light rounded">
+              <i class="fas fa-image fa-3x text-muted mb-3"></i>
+              <p class="text-muted mb-0">No images available</p>
+            </div>
+          {% endif %}
+        </div>
+      </div>
+
+      <!-- Property Stats -->
+      <div class="row g-3 mb-4">
+        <div class="col-6 col-md-3">
+          <div class="p-3 bg-light rounded text-center">
+            <div class="h4 text-primary mb-1">KES {{ property.rent }}</div>
+            <small class="text-muted">Monthly Rent</small>
+          </div>
+        </div>
+        <div class="col-6 col-md-3">
+          <div class="p-3 bg-light rounded text-center">
+            <div class="h4 text-primary mb-1">{{ property.bedrooms }}</div>
+            <small class="text-muted"><i class="fas fa-bed me-1"></i> Bedrooms</small>
+          </div>
+        </div>
+        <div class="col-6 col-md-3">
+          <div class="p-3 bg-light rounded text-center">
+            <div class="h4 text-primary mb-1">{{ property.bathrooms }}</div>
+            <small class="text-muted"><i class="fas fa-bath me-1"></i> Bathrooms</small>
+          </div>
+        </div>
+        <div class="col-6 col-md-3">
+          <div class="p-3 bg-light rounded text-center">
+            <div class="h4 text-primary mb-1">{{ property.has_balcony|yesno:"Yes,No" }}</div>
+            <small class="text-muted"><i class="fas fa-umbrella-beach me-1"></i> Balcony</small>
+          </div>
+        </div>
+
+        <!-- Average Rating -->
+        <div class="average-rating mt-3">
+          <strong>Average Rating:</strong> 
+          <span aria-label="{{ average_rating|floatformat:1 }} out of 5 stars">
+            {{ average_rating|floatformat:1 }} / 5
+          </span>
+          {% if rating_count %}
+            <small class="text-muted">(based on {{ rating_count }} rating{{ rating_count|pluralize }})</small>
+          {% endif %}
+        </div>
+      </div>
+      <hr>
+      <!-- Description -->
+      <div class="mb-4">
+        <h4 style="color: rgb(202, 147, 6) !important;">Overview</h4>
+        
+        <div class="card-text text-justify">
+            {{ property.description|safe }}
+        </div>
+
+      </div>
+      
+      <hr>
+      <!-- Enhanced Amenities Section -->
+     
+        <strong style="color: rgb(202, 147, 6);">Amenities</strong>
+                
+        {% for category, amenities in categorized_amenities.items %}
+          {% comment %} Filter amenities in this category that are present in property_amenities {% endcomment %}
+          {% with filtered_amenities=amenities|intersection:property_amenities %}
+            {% if filtered_amenities %}
+              <div class="amenity-category">
+                <strong style="color: rgb(155, 122, 56);">{{ category }}</strong>
+                <ul>
+                  {% for item in filtered_amenities %}
+                    <li>{{ item }}</li>
+                  {% endfor %}
+                </ul>
+              </div>
+              <hr>
+            {% endif %}
+          {% endwith %}
+        {% endfor %}
+
+    </div>
+  </div>
+
+  <!-- Property Map with Enhanced Directions -->
+  <div class="card mb-4 border-0 shadow-sm">
+    <div class="card-body p-3 p-md-4">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h4 class="h5 mb-0"><i class="fas fa-map-marked-alt text-primary me-2"></i>{{property.title}} Location</h4>
+        <div class="d-flex gap-2">
+          
+          <button id="openDirections" class="btn btn-outline-primary" style="display: none;">
+            <i class="fas fa-directions me-1"></i> Show Route
+          </button>
+        </div>
+      </div>
+      
+      <div class="position-relative">
+        <!-- Map Container -->
+        <div id="map" class="rounded-3" style="height: 500px;"></div>
+        
+        
+      </div>
+      
+      <div class="mt-2 small text-muted">
+        <i class="fas fa-info-circle me-1"></i> {{ property.address }}
+      </div>
+
+      {% if user.is_authenticated and user.tenant and property.is_available%}
+         <a href="{% url 'contact_landlord' property.id %}" class="btn btn-primary flex-grow-1">
+          <i class="fas fa-envelope me-1"></i> Contact Landlord
+        </a>
+      {% endif %}
+        
+    </div>
+
+<!-- Star Rating Form -->
+<!-- First Form: Rating Form -->
+<form method="post" id="rating-form" class="rating-container">
+  {% if user.is_authenticated and user.tenant  %}
+    {% csrf_token %}
+    
+    <!-- Form Fields (hidden if using star click) -->
+    {{ rating_form.as_p }}
+    
+    <!-- Interactive Star Rating -->
+    <div class="star-rating-container">
+      <p class="rating-prompt mb-2">Rate this property:</p>
+      <div class="star-rating d-flex align-items-center gap-1 mb-3">
+        {% for i in "54321" reversed %}
+          <i class="fas fa-star star" 
+             data-value="{{ i }}" 
+             aria-label="{{ i }} star{{ i|pluralize}}"
+             role="button"
+             tabindex="0"></i>
+        {% endfor %}
+      </div>
+      <div class="visually-hidden" id="rating-value-text">Selected rating: 0 stars</div>
+    </div>
+    
+    <!-- Submit Button -->
+    <button type="submit" name="rating_submit" class="btn btn-warning mt-2" aria-describedby="rating-value-text">
+      Submit Rating
+    </button>
+  {% else %}
+    <div class="alert alert-info">
+      {% if not user.is_authenticated %}
+        Please <a href="{% url 'unified_login' %}?next={{ request.path }}">login</a> to rate this property.
+      {% elif not user.tenant.is_paid %}
+        Only paid tenants can submit ratings.
+      {% endif %}
+    </div>
+  {% endif %}
+</form>
+
+<!-- Rating Visualization Section -->
+<section class="rating-visualization mt-5" aria-labelledby="rating-summary-heading">
+  <h5 id="rating-summary-heading"><i class="fas fa-chart-bar me-2"></i> Rating Summary</h5>
+  
+    <div class="chart-container" style="width: 350px; height: 350px; margin: 0 auto;">
+      <canvas id="ratingChart" aria-label="Rating distribution chart"></canvas>
+    </div>
+
+    <!-- Average Rating -->
+    <div class="average-rating mt-3">
+      <strong>Average Rating:</strong> 
+      <span aria-label="{{ average_rating|floatformat:1 }} out of 5 stars">
+        {{ average_rating|floatformat:1 }} / 5
+      </span>
+      {% if rating_count %}
+        <small class="text-muted">(based on {{ rating_count }} rating{{ rating_count|pluralize }})</small>
+      {% endif %}
+    </div>
+  
+  
+</section>
+
+{% load humanize %}
+<!-- Comments Section -->
+<div class="comments-section mt-5">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h4 class="m-0">
+      <i class="fas fa-comments me-2 text-primary"></i>
+      {{ comments.count }} Review{{ comments.count|pluralize }}
+    </h4>
+    {% if comments.count > 3 %}
+      <button class="btn btn-sm btn-outline-primary toggle-comments" type="button">
+        <i class="fas fa-expand"></i> Show all
+      </button>
+    {% endif %}
+  </div>
+
+  <div class="comments-list">
+    {% for comment in comments %}
+      <div class="comment-card card mb-3 border-0 shadow-sm">
+        <div class="card-body p-3 p-md-4">
+          <div class="d-flex align-items-center mb-2">
+            <div class="flex-grow-1">
+              <div class="d-flex align-items-center">
+                <div class="avatar me-3 bg-primary text-white rounded-circle d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
+                  {{ comment.user.first_name|first|upper }}{{ comment.user.last_name|first|upper }}
+                </div>
+                <div>
+                  <strong class="d-block">{{ comment.user.get_full_name|default:comment.user.username }}</strong>
+                  <small class="text-muted">{{ comment.user.get_role_display|default:"Tenant" }}</small>
+                </div>
+              </div>
+            </div>
+            <small class="text-muted text-end">
+              <i class="far fa-clock me-1"></i>
+              {{ comment.timestamp|naturaltime }}
+            </small>
+          </div>
+          <p class="mb-0 comment-content">{{ comment.content }}</p>
+          {% if comment.user == request.user %}
+            <div class="comment-actions mt-2 text-end">
+              <button class="btn btn-sm btn-outline-secondary edit-comment" data-comment-id="{{ comment.id }}">
+                <i class="far fa-edit"></i> Edit
+              </button>
+              <button class="btn btn-sm btn-outline-danger delete-comment" data-comment-id="{{ comment.id }}">
+                <i class="far fa-trash-alt"></i> Delete
+              </button>
+            </div>
+          {% endif %}
+        </div>
+      </div>
+    {% empty %}
+      <div class="empty-state text-center py-5">
+        <i class="far fa-comment-dots fa-3x text-muted mb-3"></i>
+        <p class="text-muted mb-2">No reviews yet</p>
+        <p class="text-muted small">Be the first to share your thoughts!</p>
+      </div>
+    {% endfor %}
+  </div>
+</div>
+
+<script>
+  // Toggle visibility of all comments when there are many
+  document.querySelectorAll('.toggle-comments').forEach(button => {
+    button.addEventListener('click', () => {
+      const commentsList = button.closest('.comments-section').querySelector('.comments-list');
+      commentsList.classList.toggle('show-all');
+      
+      if (commentsList.classList.contains('show-all')) {
+        button.innerHTML = '<i class="fas fa-compress"></i> Show less';
+      } else {
+        button.innerHTML = '<i class="fas fa-expand"></i> Show all';
+      }
+    });
+  });
+</script>
+
+<!-- Second Form: Comment Form -->
+{% if user.is_authenticated and user.tenant %}
+  <div class="card mt-4">
+    <div class="card-body">
+      <h5 class="card-title mb-3">Leave a Comment</h5>
+      <form method="post">
+        {% csrf_token %}
+
+        {{ comment_form.non_field_errors }}
+
+        <div class="mb-3">
+          {{ comment_form.content.label_tag }}
+          {{ comment_form.content }}
+          {% for error in comment_form.content.errors %}
+            <div class="text-danger small">{{ error }}</div>
+          {% endfor %}
+        </div>
+
+        <button type="submit" name="comment_submit" class="btn btn-primary">
+          Post Comment
+        </button>
+      </form>
+    </div>
+  </div>
+{% else %}
+  <div class="alert alert-info mt-4">
+    <strong>Note:</strong> You must <a href="{% url 'unified_login' %}">log in</a> to leave a comment (Tenants only).
+  </div>
+{% endif %}
+
+
+  {% comment %} Rating {% endcomment %}
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+  {% comment %} Rating script {% endcomment %}
+  <script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const stars = document.querySelectorAll('.star-rating .star');
+    const scoreInput = document.querySelector('#id_score');
+    const currentScore = parseInt(scoreInput.value || 0);
+
+    // Highlight stars based on current value
+    highlightStars(currentScore);
+
+    stars.forEach(star => {
+      star.addEventListener('click', function () {
+        const selectedScore = parseInt(this.getAttribute('data-value'));
+        scoreInput.value = selectedScore;
+        highlightStars(selectedScore);
+      });
+    });
+
+    function highlightStars(score) {
+      stars.forEach(star => {
+        const value = parseInt(star.getAttribute('data-value'));
+        star.classList.toggle('text-warning', value <= score);
+        star.classList.toggle('text-muted', value > score);
+      });
+    }
+  });
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  const ctx = document.getElementById('ratingChart').getContext('2d');
+  const ratingChart = new Chart(ctx, {
+    type: 'pie',
+    data: {
+      labels: ['5 Stars', '4 Stars', '3 Stars', '2 Stars', '1 Star'],
+      datasets: [{
+        label: 'Number of Ratings',
+        data: {{ rating_distribution|safe }},
+        backgroundColor: [
+          'rgba(255, 183, 0, 0.8)',   // Green for 5 stars
+          'rgba(81, 114, 78, 0.8)',   // Dark green for 4 stars
+          'rgba(30, 153, 206, 0.8)',    // Darker green for 3 stars
+          'rgba(25, 14, 182, 0.8)',   // Very dark green for 2 stars
+          'rgba(253, 76, 76, 0.8)'    // Forest green for 1 star
+        ],
+        borderColor: [
+          'rgba(255, 183, 0, 1)',
+          'rgba(81, 114, 78, 1)',
+          'rgba(30, 153, 206, 1)',
+          'rgba(25, 14, 182, 1)',
+          'rgba(253, 76, 76, 1)'
+        ],
+        borderWidth: 1
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,  // This allows the chart to fit the container dimensions
+      plugins: {
+        legend: {
+          position: 'right',       // You can change to 'top', 'bottom', or 'left'
+        },
+        tooltip: {
+          callbacks: {
+            label: function(context) {
+              const label = context.label || '';
+              const value = context.raw || 0;
+              const total = context.dataset.data.reduce((a, b) => a + b, 0);
+              const percentage = Math.round((value / total) * 100);
+              return `${label}: ${value} (${percentage}%)`;
+            }
+          }
+        }
+      }
+    }
+  });
+</script>
+
+
+  {% comment %} end of rating script {% endcomment %}
+<script
+    async
+    defer
+    src="https://maps.googleapis.com/maps/api/js?key={{ GOOGLE_MAPS_API_KEY }}&callback=initMap">
+</script>
+
+<script>
+let map, propertyMarker;
+
+function initMap() {
+  // Get property coordinates
+  const lat = parseFloat({{ property.latitude|default:"-1.2921" }});
+  const lng = parseFloat({{ property.longitude|default:"36.8219" }});
+  const propertyPosition = { lat: lat, lng: lng };
+
+  // Check if property is vacant or occupied
+  const isVacant = {{ property.is_available|yesno:"true,false" }};
+  const markerIcon = isVacant
+    ? "{% static 'myApp/images/marker-blue.jpg' %}"
+    : "{% static 'myApp/images/marker-gold.jpg' %}";
+
+  // Initialize Google Map
+  map = new google.maps.Map(document.getElementById("map"), {
+    center: propertyPosition,
+    zoom: 15,
+    mapTypeId: "roadmap",
+    mapTypeControl: true,
+    mapTypeControlOptions: {
+      style: google.maps.MapTypeControlStyle.DROPDOWN_MENU,
+      position: google.maps.ControlPosition.TOP_RIGHT,
+      mapTypeIds: ["roadmap", "satellite"]
+    },
+    zoomControl: true,
+    zoomControlOptions: { position: google.maps.ControlPosition.TOP_RIGHT }
+  });
+
+  // Create property marker
+  propertyMarker = new google.maps.Marker({
+    position: propertyPosition,
+    map: map,
+    icon: {
+      url: "{% static 'myApp/images/marker-blue.png' %}",
+      scaledSize: new google.maps.Size(30, 42)
+    },
+    title: "{{ property.title|escapejs }}",
+    label: {
+      
+      className: isVacant
+        ? "rent-marker-label green-label rotating-label"
+        : "rent-marker-label red-label"
+    }
+  });
+
+  // Create info window
+  const infoWindow = new google.maps.InfoWindow({
+    content:
+      '<div class="property-popup" style="max-width:230px">' +
+        '<h6 style="color: var(--primary-dark); text-align:center;" class="mb-1">{{ property.title|escapejs }}</h6>' +
+        '<p class="mb-1 small text-muted">' +
+          '<i class="fas fa-money-bill-wave me-1" style="color:red"></i>' +
+          '<strong>KSH {{ property.rent|escapejs }} / month</strong>' +
+        '</p>' +
+        '<div class="d-flex gap-2 mt-2">' +
+          '<a href="https://www.google.com/maps/dir/?api=1&destination=' + lat + ',' + lng + '"' +
+            ' target="_blank" class="btn btn-sm btn-outline-primary">' +
+            '<i class="fab fa-google me-1"></i> Directions' +
+          '</a>' +
+        '</div>' +
+      '</div>'
+  });
+
+  // Open info window immediately on map load
+  infoWindow.open(map, propertyMarker);
+
+  // Optional: also keep it open on click
+  propertyMarker.addListener("click", () => {
+    infoWindow.open(map, propertyMarker);
+  });
+}
+
+// Run init
+initMap();
+
+</script>
+
+  <!-- Bottom Navigation -->
+  <div class="d-flex flex-column flex-md-row justify-content-between gap-3 mt-4">
+        {# Back Home or My Properties Button #}
+    {% if user.is_authenticated and user.registeruser == property.landlord %}
+      <a href="{% url 'my_properties' %}" class="btn btn-outline-secondary flex-grow-1">
+        <i class="fas fa-list me-1"></i> My Properties
+      </a>
+    {% else %}
+      <a href="{% url 'tenant_landing' %}" class="btn btn-outline-secondary flex-grow-1">
+        <i class="fas fa-home me-1"></i> Back Home
+      </a>
+    {% endif %}
+
+    {% if not user.is_authenticated or user.tenant and property.is_available%}
+      <a href="{% url 'contact_landlord' property.id %}" class="btn btn-primary flex-grow-1">
+        <i class="fas fa-envelope me-1"></i> Contact Landlord
+      </a>
+    {% endif %}
+
+
+  </div>
+
+</div>
+{% endblock content %}

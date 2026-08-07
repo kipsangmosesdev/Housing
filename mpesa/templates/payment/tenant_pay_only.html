@@ -1,0 +1,65 @@
+{% extends 'myApp/base.html' %}
+{% block content %}
+<div class="container">
+    <div class="payment-warning">
+        <i class="fas fa-alert-triangle"></i><h2>Tenants Only</h2>
+        <p>Please ensure you are logged in as a tenant to proceed.</p>
+        <p>If you are not a tenant, please create a tenant account and login.</p>
+    </div>
+</div>
+
+<style>
+    .payment-warning {
+        background-color: #fff3cd; /* Light yellow background */
+        border-left: 5px solid #ffc107; /* Yellow accent border */
+        padding: 20px;
+        margin: 20px 0;
+        border-radius: 4px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    
+    .payment-warning h2 {
+        color: #856404; /* Dark yellow for heading */
+        margin-top: 0;
+        margin-bottom: 15px;
+    }
+    
+    .payment-warning p {
+        color: #856404;
+        margin-bottom: 10px;
+        line-height: 1.5;
+    }
+    
+    .payment-warning p:last-child {
+        margin-bottom: 0;
+        font-weight: bold;
+    }
+
+    /* In your CSS file */
+.payment-warning {
+    background-color: #fff3cd;
+    border-left: 5px solid #ffc107;
+    padding: 20px;
+    margin: 20px 0;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.payment-warning h2 {
+    color: #856404;
+    margin-top: 0;
+    margin-bottom: 15px;
+}
+
+.payment-warning p {
+    color: #856404;
+    margin-bottom: 10px;
+    line-height: 1.5;
+}
+
+.payment-warning p:last-child {
+    margin-bottom: 0;
+    font-weight: bold;
+}
+</style>
+{% endblock %}

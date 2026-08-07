@@ -1,0 +1,366 @@
+{% extends 'myApp/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="subscription-container">
+  <!-- Minimal Back Button -->
+  <nav class="back-nav">
+    <a href="{% url 'tenant_landing' %}" class="back-link">
+      <span class="chevron">‹</span>
+      <span class="back-text">Back</span>
+    </a>
+  </nav>
+
+  <!-- Modern Header Section -->
+  <header class="subscription-header">
+    <div class="header-icon">
+      <svg width="48" height="48" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M17 2H7C4.79 2 3 3.79 3 6V18C3 20.21 4.79 22 7 22H17C19.21 22 21 20.21 21 18V6C21 3.79 19.21 2 17 2ZM12 19C10.34 19 9 17.66 9 16C9 14.34 10.34 13 12 13C13.66 13 15 14.34 15 16C15 17.66 13.66 19 12 19ZM17 9H7V6H17V9Z" fill="#4CAF50"/>
+      </svg>
+    </div>
+    <h1 class="header-title">M-PESA Subscription</h1>
+    <p class="header-subtitle">Step 2 of 2: Complete Payment</p>
+    <div class="progress-tracker">
+      <div class="progress-step completed"></div>
+      <div class="progress-step completed"></div>
+      <div class="progress-step active"></div>
+    </div>
+  </header>
+
+  <!-- Payment Guide Section -->
+  <section class="payment-guide">
+    <h2 class="section-title">
+      <span class="icon-circle">1</span>
+      Payment Instructions
+    </h2>
+    <div class="guide-steps">
+      <div class="step">
+        <div class="step-number">1</div>
+        <p>Open <strong>M-PESA</strong> on your phone</p>
+      </div>
+      <div class="step">
+        <div class="step-number">2</div>
+        <p>Select <strong>Lipa na M-PESA</strong> then <strong>Paybill</strong></p>
+      </div>
+      <div class="step highlight">
+        <div class="step-number">3</div>
+        <div class="step-details">
+          <p>Enter these details:</p>
+          <div class="detail-row">
+            <span>Business No:</span>
+            <strong>{{ mpesa_instructions.paybill }}</strong>
+          </div>
+          <div class="detail-row">
+            <span>Account No:</span>
+            <strong>{{ mpesa_instructions.account_name }}</strong>
+          </div>
+          <div class="detail-row">
+            <span>Amount:</span>
+            <strong>KES {{ mpesa_instructions.amount }}</strong>
+          </div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-number">4</div>
+        <p>Enter your PIN and confirm payment</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Payment Form Section -->
+  <section class="payment-form-section">
+    <h2 class="section-title">
+      <span class="icon-circle">2</span>
+      Verify Payment
+    </h2>
+    <form method="post">
+      {% csrf_token %}
+
+      <div class="form-group">
+        <label for="{{ form.amount.id_for_label }}">Amount</label>
+        {{ form.amount }}
+        {% if form.amount.errors %}
+          <div class="text-danger">{{ form.amount.errors }}</div>
+        {% endif %}
+      </div>
+
+      <div class="form-group">
+        <label for="{{ form.transaction_code.id_for_label }}">Transaction Code</label>
+        {{ form.transaction_code }}
+        {% if form.transaction_code.errors %}
+          <div class="text-danger">{{ form.transaction_code.errors }}</div>
+        {% endif %}
+      </div>
+
+      <button type="submit" class="btn btn-success">Verify and Complete</button>
+</form>
+
+  </section>
+
+  <!-- Help Section -->
+  <footer class="help-footer">
+    <p>Need assistance? <a href="#" class="help-link">Contact support</a></p>
+  </footer>
+</div>
+
+<style>
+  /* Base Styles */
+  .subscription-container {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem;
+    font-family: 'Segoe UI', Roboto, sans-serif;
+    color: #333;
+  }
+
+  /* Back Navigation */
+  .back-nav {
+    margin-bottom: 2rem;
+  }
+  .back-link {
+    display: inline-flex;
+    align-items: center;
+    text-decoration: none;
+    color: #666;
+    font-size: 0.95rem;
+    transition: color 0.2s;
+  }
+  .back-link:hover {
+    color: #4CAF50;
+  }
+  .chevron {
+    font-size: 1.5rem;
+    margin-right: 0.5rem;
+    line-height: 1;
+  }
+  .back-text {
+    position: relative;
+    top: 1px;
+  }
+
+  /* Header Styles */
+  .subscription-header {
+    text-align: center;
+    margin-bottom: 2.5rem;
+  }
+  .header-icon {
+    margin-bottom: 1rem;
+  }
+  .header-title {
+    font-size: 1.8rem;
+    font-weight: 600;
+    margin: 0 0 0.5rem;
+    color: #2E7D32;
+  }
+  .header-subtitle {
+    color: #666;
+    margin-bottom: 1.5rem;
+    font-size: 1rem;
+  }
+  .progress-tracker {
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-top: 1.5rem;
+  }
+  .progress-step {
+    width: 24px;
+    height: 4px;
+    background: #E0E0E0;
+    border-radius: 2px;
+  }
+  .progress-step.completed {
+    background: #4CAF50;
+  }
+  .progress-step.active {
+    background: #81C784;
+    width: 32px;
+  }
+
+  /* Payment Guide */
+  .payment-guide {
+    background: #F8F9FA;
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+  }
+  .section-title {
+    display: flex;
+    align-items: center;
+    font-size: 1.2rem;
+    margin: 0 0 1.5rem;
+    color: #333;
+  }
+  .icon-circle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    background: #4CAF50;
+    color: white;
+    border-radius: 50%;
+    font-size: 0.9rem;
+    margin-right: 0.75rem;
+  }
+  .guide-steps {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+  .step {
+    display: flex;
+    gap: 1rem;
+    align-items: flex-start;
+  }
+  .step-number {
+    flex-shrink: 0;
+    width: 24px;
+    height: 24px;
+    background: #E8F5E9;
+    color: #4CAF50;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.85rem;
+    font-weight: 600;
+  }
+  .step p {
+    margin: 0;
+    line-height: 1.5;
+    padding-top: 2px;
+  }
+  .step.highlight {
+    background: white;
+    border-radius: 8px;
+    padding: 1rem;
+    margin: 0.5rem -0.5rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  }
+  .step-details {
+    flex-grow: 1;
+  }
+  .detail-row {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 0.5rem;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid #F1F1F1;
+  }
+  .detail-row:last-child {
+    border-bottom: none;
+  }
+
+  /* Payment Form */
+  .payment-form-section {
+    margin-bottom: 2rem;
+  }
+  .payment-form {
+    background: white;
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  }
+  .form-group {
+    margin-bottom: 1.5rem;
+  }
+  .form-group label {
+    display: block;
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+    color: #444;
+  }
+  .hint {
+    font-weight: normal;
+    color: #888;
+    font-size: 0.85rem;
+    margin-left: 0.5rem;
+  }
+  .form-group input {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: all 0.2s;
+  }
+  .form-group input:focus {
+    border-color: #4CAF50;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.1);
+  }
+  .error-message {
+    color: #D32F2F;
+    font-size: 0.85rem;
+    margin-top: 0.5rem;
+  }
+
+  /* Form Actions */
+  .form-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-top: 2rem;
+  }
+  .submit-button {
+    background: #4CAF50;
+    color: white;
+    border: none;
+    padding: 1rem;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .submit-button:hover {
+    background: #3D8B40;
+  }
+  .cancel-link {
+    text-align: center;
+    color: #666;
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: color 0.2s;
+  }
+  .cancel-link:hover {
+    color: #333;
+    text-decoration: underline;
+  }
+
+  /* Help Footer */
+  .help-footer {
+    text-align: center;
+    color: #888;
+    font-size: 0.9rem;
+    margin-top: 2rem;
+    padding-top: 1rem;
+    border-top: 1px solid #eee;
+  }
+  .help-link {
+    color: #4CAF50;
+    text-decoration: none;
+    font-weight: 500;
+  }
+  .help-link:hover {
+    text-decoration: underline;
+  }
+
+  @media (max-width: 480px) {
+    .subscription-container {
+      padding: 1.5rem 1rem;
+    }
+    .header-title {
+      font-size: 1.5rem;
+    }
+    .payment-guide, .payment-form {
+      padding: 1.25rem;
+    }
+  }
+</style>
+{% endblock %}

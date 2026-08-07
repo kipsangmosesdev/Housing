@@ -1,0 +1,15 @@
+{% extends 'myApp/base.html' %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home page</title>
+</head>
+<body>
+    <a href="{% url 'register' %}">Home</a>
+    <a href="{% url 'about_page' %}">About</a>
+    <h3>Welcome to home page moses</h3>
+    <p>{{name}}</p>
+</body>
+</html>

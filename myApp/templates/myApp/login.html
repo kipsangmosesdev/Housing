@@ -1,0 +1,102 @@
+{% extends 'myApp/base.html' %}
+{% block content %}
+
+<!-- Bootstrap CSS -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<!-- Font Awesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<div class="login-container min-vh-100 d-flex align-items-center justify-content-center"
+     style="background: linear-gradient(135deg, #e1e2aa14, #7f7f7e47);">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-lg-6 col-md-8">
+        <div class="card border-0 shadow-lg rounded-4 overflow-hidden">
+
+          <!-- Header -->
+          <div class="card-header text-center py-4"
+               style="background: linear-gradient(135deg, #0F3C4C, #1E566B); color: #F8F9FA;">
+            <h2 class="fw-bold mb-1">
+              <i class="fas fa-user me-2 text-warning" style="color: #D9A441;"></i>Login
+            </h2>
+            <p class="mb-0 text-light opacity-75">
+              Enter your credentials to proceed
+            </p>
+          </div>
+
+          <!-- Body -->
+          <div class="card-body p-5" style="background-color: #F8F9FA;">
+            <form method="POST" id="loginForm" class="needs-validation" novalidate>
+              {% csrf_token %}
+
+              <!-- Username -->
+              <div class="mb-4">
+                <label for="username" class="form-label fw-semibold text-dark">
+                  <i class="fas fa-user-circle me-2" style="color: #1E566B;"></i>Username
+                </label>
+                <div class="input-group">
+                  <span class="input-group-text" style="background-color: #E9ECEF;">
+                    <i class="fas fa-user" style="color: #0F3C4C;"></i>
+                  </span>
+                  <input type="text" name="username" id="username"
+                         class="form-control" placeholder="Your username" required>
+                  <div class="invalid-feedback">Please enter your username</div>
+                </div>
+              </div>
+
+              <!-- Password -->
+              <div class="mb-4">
+                <label for="password" class="form-label fw-semibold text-dark">
+                  <i class="fas fa-key me-2" style="color: #1E566B;"></i>Password
+                </label>
+                <div class="input-group">
+                  <span class="input-group-text" style="background-color: #E9ECEF;">
+                    <i class="fas fa-lock" style="color: #0F3C4C;"></i>
+                  </span>
+                  <input type="password" name="password" id="password"
+                         class="form-control" placeholder="Your password" required>
+                  <button class="btn border-0" type="button" id="togglePassword"
+                          style="background-color: #E9ECEF; color: #1E566B;">
+                    <i class="fas fa-eye"></i>
+                  </button>
+                  <div class="invalid-feedback">Please enter your password</div>
+                </div>
+              </div>
+
+              <!-- Forgot password -->
+              <div class="d-flex justify-content-between align-items-center mb-4">
+                <a href="{% url 'accounts:password_reset' %}"
+                   class="fw-semibold text-decoration-none"
+                   style="color: #0F3C4C;">
+                  Forgot password?
+                </a>
+              </div>
+
+              <!-- Submit -->
+              <div class="d-grid mb-3">
+                <button type="submit" class="btn btn-lg fw-semibold shadow-sm" id="loginButton"
+                        style="background: linear-gradient(135deg, #1E566B, #0F3C4C); color: #F8F9FA; border: none;">
+                  <span id="loginText">Login</span>
+                  <span id="loginSpinner" class="spinner-border spinner-border-sm d-none ms-2"
+                        role="status" aria-hidden="true"></span>
+                </button>
+              </div>
+            </form>
+
+            <!-- Request access -->
+            <div class="text-center mt-4 pt-3 border-top">
+              <p class="mb-3 text-muted">Don’t have access yet?</p>
+              <a href="{% url 'landlord_tenant' %}" class="btn fw-semibold px-4"
+                 style="background: linear-gradient(135deg, #D9A441, #C89E35); color: #0F3C4C; border: none;">
+                <i class="fas fa-user me-2"></i>Request Access
+              </a>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock content %}

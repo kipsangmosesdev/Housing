@@ -1,0 +1,409 @@
+{% extends 'myApp/base.html' %}
+{% load static %}
+{% block content %}
+
+<style>
+
+  
+
+  /* Buttons */
+  .btn {
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+  .btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 3px 8px rgba(0,0,0,0.15);
+  }
+  .btn-primary {
+    background-color: var(--primary);
+    border-color: var(--primary);
+    color: #fff !important;
+  }
+  .btn-warning {
+    color: #000 !important;
+  }
+
+  /* Cards & Lists */
+  .card {
+    border: none;
+    box-shadow: 0 2px 8px rgba(13, 56, 66, 0.1);
+  }
+  .list-group-item {
+    border-color: rgba(13, 56, 66, 0.15);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    animation: slideIn 0.4s ease;
+  }
+  .list-group-item:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    background: #f9f9f9;
+  }
+
+  @keyframes slideIn {
+    from {opacity:0; transform:translateX(-20px);}
+    to {opacity:1; transform:translateX(0);}
+  }
+
+  /* Map */
+  #map {
+    height: 800px;
+    width: 100%;
+    border-radius: 0.375rem;
+  }
+  @media (max-width: 768px) {
+    #map { height: 600px; }
+  }
+
+  /* Marker base */
+  /* Marker image */
+.custom-marker-wrapper img {
+  width: 28px;   /* Adjust down from 100% */
+  height: 28px;  /* Keep it square */
+  display: block;
+  margin: 0 auto; /* Center inside wrapper */
+  animation: rotateMarkerY 4s linear infinite;
+  transform-style: preserve-3d;
+}
+
+  @keyframes rotateMarkerY {
+    0% { transform: rotateY(0deg); }
+    100% { transform: rotateY(360deg); }
+  }
+
+  /* Rent label */
+  .rent-label {
+  position: absolute;
+  bottom: 0px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 10px;        /* smaller to fit nicely */
+  font-weight: bold;
+  padding: 2px 5px;
+  border-radius: 8px;
+  border: 1px solid transparent;
+  box-shadow: 0 0 2px rgba(0, 0, 0, 0.2);
+  white-space: nowrap;   /* keeps "Ksh 12000" in one line */
+  line-height: 1;        /* keeps it compact */
+}
+
+  /* Featured */
+  .featured-property {
+    animation: fadeIn 0.8s ease forwards;
+  }
+  @keyframes fadeIn {
+    from {opacity: 0; transform: scale(0.9);}
+    to {opacity: 1; transform: scale(1);}
+  }
+
+  /* Cluster base */
+.marker-cluster {
+  background-clip: padding-box;
+  border-radius: 50%;
+  text-align: center;
+  color: #fff;
+  font-weight: bold;
+  font-size: 12px;
+  line-height: 40px;
+  width: 40px;
+  height: 40px;
+  box-shadow: 0 0 4px rgba(0,0,0,0.3);
+  border: 2px solid #fff;
+}
+
+/* Small clusters */
+.marker-cluster-small {
+  background: linear-gradient(135deg, #28a745, #218838); /* green */
+}
+
+/* Medium clusters */
+.marker-cluster-medium {
+  background: linear-gradient(135deg, #f0aa3a, #e69500); /* amber */
+}
+
+/* Large clusters */
+.marker-cluster-large {
+  background: linear-gradient(135deg, #dc3545, #b52a37); /* red */
+}
+
+.marker-with-rent {
+  position: relative;
+  display: inline-block;
+  text-align: center;
+}
+
+.marker-with-rent .rent-label {
+  position: absolute;
+  top: -18px; /* moves label above marker */
+  left: 50%;
+  transform: translateX(-50%);
+  background: #093959;
+  color: #fff;
+  padding: 2px 4px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: bold;
+  white-space: nowrap;
+  box-shadow: 0 0 3px rgba(0,0,0,0.3);
+}
+
+
+/* Rent label styling */
+.rent-marker-label {
+  background: #ffc400;         
+  color: #000000 !important;       
+  padding: 2px 5px;
+  border-radius: 4px;
+  font-size: 11px !important;
+  font-weight: bold;
+  white-space: nowrap;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+  transform: translateY(-22px); /* pushes label above the pin */
+}
+.user-location-label {
+  background: #043469;
+  color: #fff !important;
+  padding: 2px 5px;
+  border-radius: 4px;
+  font-size: 11px !important;
+  font-weight: bold;
+  white-space: nowrap;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+  animation: pulseLabel 2s infinite;
+}
+
+@keyframes pulseLabel {
+  0%   { transform: scale(1); opacity: 1; }
+  50%  { transform: scale(1.2); opacity: 0.8; }
+  100% { transform: scale(1); opacity: 1; }
+}
+  /* InfoWindow */
+  .property-popup img {
+    border-radius: 0.375rem;
+    object-fit: cover;
+    width: 100%;
+    height: auto;
+  }
+  .property-popup .badge {
+    font-size: 0.75rem;
+    margin-bottom: 0.25rem;
+  }
+  .property-popup .btn {
+    font-size: 0.75rem;
+    padding: 0.25rem 0.5rem;
+  }
+
+
+</style>
+
+<div class="container py-3 py-md-4">
+
+  <!-- Navigation -->
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    {% if user.is_authenticated and user.registeruser == property.landlord %}
+      <a href="{% url 'landlord_dashboard' %}" class="btn btn-outline-primary">
+        <i class="fas fa-arrow-left me-2"></i> Dashboard
+      </a>
+    {% else %}
+      <a href="{% url 'tenant_landing' %}" class="btn btn-outline-secondary">
+        <i class="fas fa-arrow-left me-2"></i> Back
+      </a>
+    {% endif %}
+    
+    <span class="badge bg-primary">
+      <i class="fas fa-map-marker-alt me-1"></i> {{ properties|length }} Properties
+    </span>
+  </div>
+  
+  <!-- Header -->
+  <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4">
+    <strong class="mb-3 mb-md-0">
+      <i class="fas fa-map-marked-alt text-warning me-2"></i>Available Properties
+    </strong>
+    
+    <div class="btn-group" role="group">
+      <button id="resetView" class="btn btn-sm btn-outline-secondary">
+        <i class="fas fa-sync-alt me-1"></i> Reset
+      </button>
+      <button id="locateMe" class="btn btn-sm btn-warning">
+        <i class="fas fa-location-arrow me-1"></i> Locate Me
+      </button>
+      
+    </div>
+  </div>
+
+  <!-- Map -->
+  <div class="card border-0 shadow-sm mb-4">
+    <div class="card-body p-0">
+      <div id="map"></div>
+    </div>
+  </div>
+
+</div>
+
+<!-- Google Maps API (with Places + Geometry + MarkerClusterer) -->
+<script src="https://maps.googleapis.com/maps/api/js?key={{ GOOGLE_MAPS_API_KEY }}"></script>
+
+<script src="https://unpkg.com/@googlemaps/markerclusterer/dist/index.min.js"></script>
+
+<script>
+  let map, userMarker, directionsRenderer, userPosition = null, markerCluster;
+  const markers = [];
+
+  // Global variable to track the currently open InfoWindow
+  let activeInfoWindow = null;
+
+  function initMap() {
+    // Initialize Map
+    map = new google.maps.Map(document.getElementById("map"), {
+      center: { lat: -1.2921, lng: 36.8219 },
+      zoom: 11,
+      mapTypeId: "roadmap",
+      mapTypeControl: true,
+      mapTypeControlOptions: {
+        style: google.maps.MapTypeControlStyle.DROPDOWN_MENU,
+        position: google.maps.ControlPosition.TOP_RIGHT,
+        mapTypeIds: ["roadmap", "satellite"]
+      },
+      zoomControl: true,
+      zoomControlOptions: { position: google.maps.ControlPosition.TOP_RIGHT }
+    });
+
+    // Add Property Markers from Django
+    {% for prop in properties %}
+      {% if prop.latitude and prop.longitude %}
+        addPropertyMarker(
+          { lat: {{ prop.latitude }}, lng: {{ prop.longitude }} },
+          "{{ prop.title|escapejs }}",
+          "{{ prop.rent }}",
+          {{ prop.is_available|yesno:"true,false" }},
+          "{% if prop.images.all %}{{ prop.images.first.image.url }}{% else %}{% static 'images/default.jpg' %}{% endif %}",
+          "{% url 'property_detail' prop.id %}",
+          "{{ prop.city }} | {{ prop.estate }}",
+          {{ prop.bedrooms }},
+          {{ prop.bathrooms }}
+        );
+      {% endif %}
+    {% endfor %}
+
+    // Cluster markers
+    markerCluster = new markerClusterer.MarkerClusterer({ map, markers });
+
+   // Locate Me Button
+document.getElementById("locateMe").addEventListener("click", () => {
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition((pos) => {
+      userPosition = { lat: pos.coords.latitude, lng: pos.coords.longitude };
+      if (userMarker) userMarker.setMap(null);
+
+      userMarker = new google.maps.Marker({
+        position: userPosition,
+        map: map,
+        icon: {
+          url: "{% static 'myApp/images/red-pin.png' %}",  // your custom user icon
+          scaledSize: new google.maps.Size(30, 35),
+          labelOrigin: new google.maps.Point(12, -10) // <-- adjust Y for label above marker
+        },
+        label: {
+          text: "You are here",
+          color: "#fff",
+          fontSize: "11px",
+          fontWeight: "bold",
+          className: "user-location-label"
+        },
+        title: "You are here"
+      });
+
+      map.setCenter(userPosition);
+      map.setZoom(13);
+    });
+  } else {
+    alert("Geolocation is not supported by your browser.");
+  }
+});
+
+    // Reset View
+    document.getElementById("resetView").addEventListener("click", () => {
+      map.setCenter({ lat: -1.2921, lng: 36.8219 });
+      map.setZoom(11);
+      clearDirections();
+    });
+  }
+
+// Add custom property marker
+function addPropertyMarker(latlng, title, rent, isAvailable, imgUrl, detailsUrl, location, bedrooms, bathrooms) {
+  const availability = isAvailable ? "Vacant" : "Occupied";
+  const availabilityClass = isAvailable ? "bg-success" : "bg-danger";
+
+  // Choose marker icon based on availability
+  const markerIcon = isAvailable 
+    ? "{% static 'myApp/images/marker-blue.png' %}"   // vacant
+    : "{% static 'myApp/images/marker-gold.png' %}"; // occupied
+
+  const marker = new google.maps.Marker({
+    position: latlng,
+    map: map,
+    icon: {
+      url: markerIcon,
+      scaledSize: new google.maps.Size(25, 30)
+    },
+    label: {
+      text: `Ksh ${rent}`,
+      className: "rent-marker-label"
+    },
+    title: title
+  });
+
+  const content = `
+    <div class="property-popup" style="max-width:250px">
+      <span class="badge bg-success"><i class="fas fa-home me-1"></i>${title}</span><br>
+      <img src="${imgUrl}" alt="${title}" class="img-thumbnail mb-2" style="max-height:100px;">
+      <div class="d-flex align-items-center my-2">
+        <span class="badge bg-primary me-2"><i class="fas fa-money-bill-wave me-1"></i> Ksh ${rent}/m</span>
+        <p style="font-weight: 400;color: darkblue !important;" class="text-muted"><i class="fas fa-bed me-1"></i>${bedrooms} | <i class="fas fa-bath me-1"></i>${bathrooms}</p>
+      </div>
+      <span class="badge ${availabilityClass}"><i class="fas fa-bed me-1"></i>${availability}</span>
+      <p class="mb-2 small"><i class="fas fa-map-marker-alt text-danger me-1"></i>${location}</p>
+      <div class="d-flex gap-2">
+        <a href="${detailsUrl}" target="_blank" class="btn btn-sm btn-secondary flex-grow-1"><i class="fas fa-eye me-1"></i> Details</a>
+      </div>
+    </div>
+  `;
+
+  const infowindow = new google.maps.InfoWindow({ content });
+  marker.addListener("click", () => {
+    // Close the previously opened InfoWindow
+    if (activeInfoWindow) {
+      activeInfoWindow.close();
+    }
+
+    // Open the new one and set it as active
+    infowindow.open(map, marker);
+    activeInfoWindow = infowindow;
+  });
+
+  markers.push(marker);
+}
+
+
+  // Show directions
+  function showDirections(destLat, destLng, title) {
+    if (!userPosition) {
+      alert("Please click 'Locate Me' first.");
+      return;
+    }
+
+    const request = {
+      origin: userPosition,
+      destination: { lat: destLat, lng: destLng },
+      travelMode: google.maps.TravelMode.DRIVING
+    };
+
+  }
+
+  // Run map init
+  document.addEventListener("DOMContentLoaded", initMap);
+</script>
+
+</div>
+
+{% endblock content %}

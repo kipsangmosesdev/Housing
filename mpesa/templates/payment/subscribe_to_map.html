@@ -1,0 +1,112 @@
+{% extends 'myApp/base.html' %}
+
+{% block content %}
+<div class="container my-5">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      
+      <!-- Subscription Card -->
+      <div class="card shadow-lg border-0 rounded-4 overflow-hidden animate-fade-in">
+        
+        <!-- Header -->
+        <div class="card-header text-center text-white py-4" 
+             style="background: linear-gradient(135deg, #0F3C4C, #1E566B);">
+          <h4 class="fw-bold mb-0">
+            <i class="fas fa-truck-moving"></i> Mover Subscription
+          </h4>
+        </div>
+        
+        <!-- Body -->
+        <div class="card-body p-4" style="background-color: #F8F9FA;">
+          <p class="text-center text-secondary mb-4">
+            <i class="bi bi-geo-alt-fill" style="color: #1E566B;"></i>
+            Subscribe to stay <strong>visible on the map</strong> and reach more clients effortlessly.  
+            <br>Secure your spot today via <strong style="color: #D9A441;">M-Pesa</strong>.
+          </p>
+
+          <!-- get vehicle type plan -->
+          <strong style="color: #0F3C4C;"><i class="fas fa-crown" style="color: #D9A441;"></i> Your Plan:</strong> 
+          {{ transporter.transport_type }} Subscription - 
+          <strong style="color: #D9A441;">Ksh {{ prices }}</strong>
+          <hr class="mb-4" style="border-color: rgba(0,0,0,0.1);">
+
+          <form method="post" class="needs-validation" novalidate>
+            {% csrf_token %}
+            <!-- Form Fields -->
+            <div class="mb-3">
+              {{ form.as_p }}
+            </div>
+
+            <!-- Pay Button -->
+            <div class="d-grid">
+              <button type="submit" class="btn btn-lg fw-semibold shadow-sm pay-btn">
+                <i class="bi bi-wallet2 me-2"></i> Proceed to Pay
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <!-- Footer -->
+        <div class="card-footer text-center small py-3 border-top" style="background-color: #FFFFFF;">
+          <i class="bi bi-info-circle me-1" style="color: #1E566B;"></i>
+          <span class="text-muted">
+            Your subscription keeps you active and discoverable by clients on 
+            <strong style="color: #0F3C4C;">XbomaSwift</strong>.
+          </span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- Styles -->
+<style>
+  .animate-fade-in {
+    animation: fadeIn 0.7s ease-in-out;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .pay-btn {
+    background: linear-gradient(135deg, #D9A441, #EABF69);
+    color: #0F3C4C;
+    border: none;
+    border-radius: 10px;
+    transition: all 0.3s ease-in-out;
+  }
+
+  .pay-btn:hover {
+    background: linear-gradient(135deg, #EABF69, #F4D88D);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+    color: #0F3C4C;
+  }
+
+  h4{
+    font-weight: 700;
+    color: rgb(214, 185, 111);
+  }
+
+  .card {
+    border-radius: 1.5rem !important;
+  }
+
+  .card-header h4 {
+    letter-spacing: 0.5px;
+  }
+
+  /* Responsive adjustments */
+  @media (max-width: 576px) {
+    .card-header h4 {
+      font-size: 1.1rem;
+    }
+    .pay-btn {
+      font-size: 0.9rem;
+    }
+  }
+</style>
+{% endblock %}

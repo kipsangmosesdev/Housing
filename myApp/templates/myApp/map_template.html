@@ -1,0 +1,255 @@
+{% load static %}
+<!-- templates/map_template.html -->
+<div id="map" style="height: 500px; width: 100%;"></div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  // Initialize Map Centered at Nairobi
+  var map = L.map('map', {
+    zoomControl: false,
+    preferCanvas: true
+  }).setView([-1.2921, 36.8219], 11);
+  
+  // Add base layers
+  var osmLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 19,
+    attribution: '© OpenStreetMap contributors'
+  });
+  
+  var satelliteLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+    maxZoom: 19,
+    attribution: 'Tiles © Esri — Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
+  });
+  
+  var terrainLayer = L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
+    maxZoom: 17,
+    attribution: 'Map data: © OpenStreetMap contributors, SRTM | Map style: © OpenTopoMap (CC-BY-SA)'
+  });
+  
+  osmLayer.addTo(map);
+  
+  // Add layer control
+  var baseLayers = {
+    "Street Map": osmLayer,
+    "Satellite View": satelliteLayer,
+    "Terrain Map": terrainLayer
+  };
+  
+  L.control.layers(baseLayers, null, {
+    position: 'topright',
+    collapsed: false
+  }).addTo(map);
+  
+  L.control.zoom({
+    position: 'topright'
+  }).addTo(map);
+  
+  // Initialize marker cluster group
+  var markers = L.markerClusterGroup({
+    maxClusterRadius: 60,
+    spiderfyOnMaxZoom: true,
+    showCoverageOnHover: false,
+    zoomToBoundsOnClick: true
+  });
+  
+  // Variables for routing
+  var routingControl = null;
+  var userPositionMarker = null;
+  var userPosition = null;
+  var currentTransportMode = 'drive';
+  
+  // Custom icons
+  var propertyIcon = L.icon({
+    iconUrl: 'https://cdn-icons-png.flaticon.com/512/447/447031.png',
+    iconSize: [32, 32],
+    iconAnchor: [16, 32],
+    popupAnchor: [0, -32],
+    className: 'property-marker-icon'
+  });
+  
+  // Function to get routing profile
+  function getRoutingProfile(mode) {
+    switch(mode) {
+      case 'walk': return L.Routing.walk;
+      case 'bike': return L.Routing.bike;
+      case 'drive': default: return L.Routing.car;
+    }
+  }
+  
+  // Function to get speed factor
+  function getSpeedFactor(mode) {
+    switch(mode) {
+      case 'walk': return 5;
+      case 'bike': return 30;
+      case 'drive': default: return 50;
+    }
+  }
+  
+  // Function to set transport mode
+  window.setTransportMode = function(mode) {
+    currentTransportMode = mode;
+  };
+  
+  // Function to show directions
+  window.showDirections = function(destinationCoords, propertyTitle) {
+    if (!userPosition) {
+      alert("Please use the 'Locate Me' button first to set your current location.");
+      return;
+    }
+    
+    clearDirections();
+    document.getElementById('clearDirections').style.display = 'block';
+    
+    var router = getRoutingProfile(currentTransportMode);
+    var speedFactor = getSpeedFactor(currentTransportMode);
+    
+    routingControl = L.Routing.control({
+      waypoints: [
+        L.latLng(userPosition[0], userPosition[1]),
+        L.latLng(destinationCoords[0], destinationCoords[1])
+      ],
+      routeWhileDragging: false,
+      show: true,
+      collapsible: true,
+      addWaypoints: false,
+      draggableWaypoints: false,
+      fitSelectedRoutes: true,
+      showAlternatives: false,
+      router: router,
+      createMarker: function() { return null; },
+      lineOptions: {
+        styles: [{color: '#000000', opacity: 0.7, weight: 4}]
+      },
+      formatter: new L.Routing.Formatter({
+        language: 'en',
+        unit: 'metric'
+      })
+    }).addTo(map);
+    
+    routingControl.on('routesfound', function(e) {
+      var routes = e.routes;
+      var summary = routes[0].summary;
+      var distanceKm = summary.totalDistance / 1000;
+      var estimatedTime = Math.round((distanceKm / speedFactor) * 60);
+      
+      var directionsPanel = document.createElement('div');
+      directionsPanel.className = 'directions-instructions';
+      
+      var modeIcon = '';
+      var modeText = '';
+      switch(currentTransportMode) {
+        case 'walk':
+          modeIcon = '<i class="fas fa-walking me-2"></i>';
+          modeText = 'Walking';
+          break;
+        case 'bike':
+          modeIcon = '<i class="fas fa-motorcycle me-2"></i>';
+          modeText = 'Motorbike';
+          break;
+        case 'drive':
+        default:
+          modeIcon = '<i class="fas fa-car me-2"></i>';
+          modeText = 'Driving';
+      }
+      
+      var summaryHTML = `
+        <h5>${modeIcon} ${modeText} Directions to ${propertyTitle}</h5>
+        <p><strong>Total distance:</strong> ${distanceKm.toFixed(1)} km</p>
+        <p><strong>Estimated time:</strong> ${estimatedTime} minutes</p>
+        <hr>
+        <ol>
+      `;
+      
+      routes[0].instructions.forEach(function(instruction) {
+        summaryHTML += `<li>${instruction.text}</li>`;
+      });
+      
+      summaryHTML += `</ol>`;
+      directionsPanel.innerHTML = summaryHTML;
+      
+      var container = document.querySelector('.leaflet-routing-container');
+      if (container) {
+        container.appendChild(directionsPanel);
+      }
+    });
+  };
+  
+  // Function to clear directions
+  function clearDirections() {
+    if (routingControl) {
+      map.removeControl(routingControl);
+      routingControl = null;
+    }
+    document.getElementById('clearDirections').style.display = 'none';
+    
+    var existingPanel = document.querySelector('.directions-instructions');
+    if (existingPanel) {
+      existingPanel.remove();
+    }
+  }
+  
+  // Fit bounds to show all markers if there are properties
+  {% if properties %}
+    // Add markers from Django context
+    {% for prop in properties %}
+      {% if prop.latitude and prop.longitude %}
+        var marker = L.marker(
+          [{{ prop.latitude }}, {{ prop.longitude }}],
+          {icon: propertyIcon}
+        );
+        
+        var popupContent = `
+          <div class="property-popup">
+            <strong>{{ prop.title|escapejs }}</strong>
+            {% if prop.images.all %}
+              <img src="{{ prop.images.first.image.url }}" alt="{{ property.title }}" 
+                  class="img-thumbnail mb-2" style="max-height: 100px;">
+            {% else %}
+              <img src="{% static 'images/default.jpg' %}" alt="Default image" 
+                  class="img-thumbnail mb-2" style="max-height: 100px;">
+            {% endif %}
+            <div class="d-flex align-items-center my-4">
+              <span class="badge bg-primary me-4">KES {{ prop.rent }}/month</span>
+              <small class="text-muted">
+                <i class="fas fa-bed me-1"></i>{{ prop.bedrooms }} | 
+                <i class="fas fa-bath me-1"></i>{{ prop.bathrooms }}
+              </small>
+            </div>
+            <p class="mb-2 small">
+              <i class="fas fa-map-marker-alt text-danger me-1"></i>
+              {{ prop.city }} | {{ prop.estate }}
+            </p>
+            <div class="d-flex gap-2">
+              <a href="{% url 'property_detail' prop.id %}" 
+                 class="btn btn-sm btn-warning flex-grow-1" target="_blank" rel="noopener noreferrer">
+                View Details
+              </a>
+              <div class="btn-group">
+                <button onclick="showDirections([{{ prop.latitude }}, {{ prop.longitude }}], '{{ prop.title|escapejs }}')" 
+                        class="btn btn-sm btn-primary">
+                  <i class="fas fa-route"></i>
+                </button>
+                <button type="button" class="btn btn-sm btn-primary dropdown-toggle dropdown-toggle-split" 
+                        data-bs-toggle="dropdown" aria-expanded="false">
+                  <span class="visually-hidden">Toggle Dropdown</span>
+                </button>
+                <ul class="dropdown-menu dropdown-menu-end">
+                  <li><a class="dropdown-item" href="#" onclick="event.preventDefault(); setTransportMode('drive'); showDirections([{{ prop.latitude }}, {{ prop.longitude }}], '{{ prop.title|escapejs }}')"><i class="fas fa-car me-2"></i>Drive</a></li>
+                  <li><a class="dropdown-item" href="#" onclick="event.preventDefault(); setTransportMode('walk'); showDirections([{{ prop.latitude }}, {{ prop.longitude }}], '{{ prop.title|escapejs }}')"><i class="fas fa-walking me-2"></i>Walk</a></li>
+                  <li><a class="dropdown-item" href="#" onclick="event.preventDefault(); setTransportMode('bike'); showDirections([{{ prop.latitude }}, {{ prop.longitude }}], '{{ prop.title|escapejs }}')"><i class="fas fa-motorcycle me-2"></i>Motorbike</a></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        `;
+        
+        marker.bindPopup(popupContent);
+        markers.addLayer(marker);
+      {% endif %}
+    {% endfor %}
+    
+    map.addLayer(markers);
+    map.fitBounds(markers.getBounds(), { padding: [50, 50] });
+  {% endif %}
+});
+</script>

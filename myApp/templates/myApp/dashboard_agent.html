@@ -1,0 +1,846 @@
+{% extends 'myApp/base.html' %}
+{% block content %}
+{% load static %}
+{% load tz %}
+
+<style>
+  :root {
+    --primary: #214063;
+    --primary-dark: #082939;
+    --primary-light: #2a6486;
+    --accent: #d4a574;
+    --accent-dark: #b88a5e;
+    --neutral-dark: #3c3c3c;
+    --neutral-medium: #6c757d;
+    --neutral-light: #f8f9fa;
+    --success: #28a745;
+    --warning: #ffc107;
+    --danger: #dc3545;
+    --shadow: rgba(0, 0, 0, 0.08);
+    --shadow-hover: rgba(0, 0, 0, 0.12);
+  }
+
+  .dashboard-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 20px;
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    min-height: 100vh;
+  }
+
+  /* Enhanced Status Cards */
+  .status-card {
+    /* background gradient */
+    background: linear-gradient(135deg, rgba(163, 162, 157, 0.145) 0%, rgba(143, 141, 134, 0.813) 100%);
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: 0 8px 32px var(--shadow);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    height: 100%;
+  }
+
+  .status-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 120px;
+    height: 120px;
+    background: linear-gradient(135deg, rgba(143, 100, 72, 0.261) 0%, rgba(204, 206, 209, 0.147) 100%);
+    border-radius: 0 0 0 100%;
+  }
+
+  .status-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 40px var(--shadow-hover);
+  }
+
+  /* Enhanced Status Badges */
+  .status-badge {
+    padding: 0.7rem 1.4rem;
+    border-radius: 50px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    display: inline-flex;
+    align-items: center;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+    margin-bottom: 1rem;
+  }
+
+  .status-badge:hover {
+    transform: scale(1.05);
+  }
+
+  .status-badge.active {
+    background: linear-gradient(135deg, var(--success) 0%, #20c997 100%);
+    color: white;
+  }
+
+  .status-badge.trial {
+    background: linear-gradient(135deg, var(--warning) 0%, #fd7e14 100%);
+    color: white;
+  }
+
+  .status-badge.inactive {
+    background: linear-gradient(135deg, var(--danger) 0%, #e83e8c 100%);
+    color: white;
+  }
+
+  /* Plan Information */
+  .plan-info {
+    background: linear-gradient(135deg, rgba(42, 110, 63, 0.05) 0%, rgba(212, 165, 116, 0.05) 100%);
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-top: 1rem;
+    border: 1px solid rgba(42, 110, 63, 0.1);
+  }
+
+  /* Premium Navigation */
+  .premium-nav-container {
+    background: white;
+    border-radius: 16px;
+    padding: 1.5rem;
+    margin: 2rem 0;
+    box-shadow: 0 8px 32px var(--shadow);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .premium-nav-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: linear-gradient(90deg, var(--primary) 0%, var(--accent) 100%);
+  }
+
+  .premium-nav-toggle {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+    color: white;
+    border: none;
+    padding: 1rem 1.5rem;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+    width: 100%;
+    justify-content: center;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(42, 110, 63, 0.3);
+  }
+
+  .premium-nav-toggle:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(42, 110, 63, 0.4);
+  }
+
+  .premium-nav .nav {
+    background: transparent;
+    border-radius: 0;
+    padding: 0;
+    box-shadow: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+
+  .premium-nav .nav-link {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 1rem 1.5rem !important;
+    border-radius: 12px;
+    color: var(--neutral-dark) !important;
+    transition: all 0.3s ease;
+    font-weight: 600;
+    border: 2px solid transparent;
+    background: rgba(42, 110, 63, 0.05);
+  }
+
+  .premium-nav .nav-link.active,
+  .premium-nav .nav-link:hover {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+    color: white !important;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(42, 110, 63, 0.3);
+    border-color: var(--primary);
+  }
+
+  /* Enhanced Stats Cards */
+  .stat-card {
+    background: white;
+    border-radius: 16px;
+    padding: 2rem;
+    text-align: center;
+    box-shadow: 0 8px 32px var(--shadow);
+    height: 100%;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+   
+  }
+
+  .stat-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: linear-gradient(90deg, var(--primary) 0%, var(--accent) 100%);
+  }
+
+  .stat-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 16px 48px var(--shadow-hover);
+  }
+
+  .stat-card i {
+    font-size: 2.5rem;
+    background-clip: text;
+    width: 80px;
+    height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    margin: 0 auto 1.5rem;
+    background: rgba(42, 110, 63, 0.1);
+  }
+
+  .stat-card p {
+    margin-bottom: 1rem;
+    color: var(--neutral-medium);
+    font-weight: 600;
+    font-size: 1rem;
+  }
+
+  .stat-card h4 {
+    color: var(--primary);
+    font-weight: 800;
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  }
+
+  /* Comments & Ratings Card */
+  .comments_rating-card {
+    background: white;
+    border-radius: 16px;
+    padding: 2rem;
+    box-shadow: 0 8px 32px var(--shadow);
+    margin: 2rem 0;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .comments_rating-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: linear-gradient(90deg, var(--primary) 0%, var(--accent) 100%);
+  }
+
+  .comments_rating-card section {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+  }
+
+  .comments_rating-card article {
+    text-align: center;
+    padding: 1.5rem;
+    background: linear-gradient(135deg, rgba(42, 110, 63, 0.05) 0%, rgba(212, 165, 116, 0.05) 100%);
+    border-radius: 12px;
+    transition: all 0.3s ease;
+  }
+
+  .comments_rating-card article:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+  }
+
+  .comments_rating-card h5 {
+    color: var(--primary);
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    font-weight: 700;
+  }
+
+  .comments_rating-card p {
+    font-size: 3rem;
+    font-weight: 800;
+    color: var(--primary);
+    margin-bottom: 0;
+    background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* Enhanced Chart Containers */
+  .chart-container {
+    background: white;
+    border-radius: 16px;
+    padding: 2rem;
+    box-shadow: 0 8px 32px var(--shadow);
+    height: 100%;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
+  }
+
+  .chart-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: linear-gradient(90deg, var(--primary) 0%, var(--accent) 100%);
+  }
+
+  .chart-container:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 40px var(--shadow-hover);
+  }
+
+  /* Activity Card */
+  .activity-card {
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 8px 32px var(--shadow);
+    overflow: hidden;
+    margin: 2rem 0;
+    transition: all 0.3s ease;
+  }
+
+  .activity-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 40px var(--shadow-hover);
+  }
+
+  .activity-header {
+    padding: 1.5rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    background: linear-gradient(135deg, rgba(42, 110, 63, 0.05) 0%, rgba(212, 165, 116, 0.05) 100%);
+    transition: all 0.3s ease;
+  }
+
+  .activity-header:hover {
+    background: linear-gradient(135deg, rgba(42, 110, 63, 0.1) 0%, rgba(212, 165, 116, 0.1) 100%);
+  }
+
+  .activity-header h5 {
+    margin-bottom: 0;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    color: var(--primary);
+    font-weight: 700;
+  }
+
+  .activity-toggle {
+    transition: transform 0.3s ease;
+    color: var(--primary);
+  }
+
+  .activity-toggle.rotated {
+    transform: rotate(180deg);
+  }
+
+  .activity-content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.5s ease;
+  }
+
+  .activity-content.show {
+    max-height: 500px;
+  }
+
+  .activity-item {
+    padding: 1.25rem 2rem;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: all 0.3s ease;
+  }
+
+  .activity-item:hover {
+    background: rgba(42, 110, 63, 0.02);
+  }
+
+  .activity-item:last-child {
+    border-bottom: none;
+  }
+
+  /* Badges */
+  .badge {
+    padding: 0.6rem 1rem;
+    border-radius: 50px;
+    font-weight: 600;
+    font-size: 0.85rem;
+  }
+
+  .badge.bg-primary {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%) !important;
+  }
+
+  .badge.bg-secondary {
+    background: linear-gradient(135deg, var(--neutral-medium) 0%, #868e96 100%) !important;
+  }
+
+  /* Buttons */
+  .btn {
+    border-radius: 10px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+  }
+
+  .btn-outline-success {
+    border-color: var(--success);
+    color: var(--success);
+  }
+
+  .btn-outline-success:hover {
+    background: var(--success);
+    border-color: var(--success);
+    transform: translateY(-2px);
+  }
+
+  /* Section Headers */
+  h4 {
+    color: var(--primary);
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .dashboard-container {
+      padding: 15px;
+    }
+
+    .premium-nav .nav {
+      flex-direction: column;
+      display: none;
+    }
+
+    .premium-nav .nav.show {
+      display: flex;
+    }
+
+    .stat-card {
+      margin-bottom: 1rem;
+    }
+
+    .comments_rating-card section {
+      grid-template-columns: 1fr;
+    }
+
+    .activity-item {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.5rem;
+    }
+
+    .chart-container {
+      margin-bottom: 1rem;
+    }
+  }
+
+  /* Animation */
+  .fade-in {
+    animation: fadeIn 0.6s ease-in-out;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+</style>
+
+<div class="dashboard-container fade-in">
+  <!-- Status Cards -->
+  <div class="row g-4 mb-4">
+    <div class="col-md-7">
+      <div class="status-card {% if landlord.is_paid %}paid{% else %}unpaid{% endif %}">
+        <div class="d-flex justify-content-between align-items-center">
+          <div class="flex-grow-1">
+            <!-- Subscription Status -->
+            {% if landlord.is_paid %}
+              <span class="status-badge active">
+                <i class="fas fa-credit-card me-2"></i><strong>Subscription Status:</strong> Active
+              </span>
+            {% elif landlord.is_free_trial %}
+              <span class="status-badge trial">
+                <i class="fas fa-credit-card me-2"></i><strong>Subscription Status:</strong> Free Trial
+              </span>
+            {% else %}
+              <span class="status-badge inactive">
+                <i class="fas fa-credit-card me-2"></i><strong>Subscription Status:</strong> Inactive
+              </span>
+              <div class="mt-2 text-muted">
+                Your subscription is inactive. Please renew to continue enjoying our services.
+              </div>
+            {% endif %}
+
+            <!-- Plan Information -->
+            <div class="plan-info">
+              <div class="d-flex justify-content-between align-items-center flex-wrap">
+                <div>
+                  <p class="text-success mb-1 fw-bold fs-5">
+                    <i class="fas fa-crown me-2"></i>Plan: {{ landlord.get_landlord_type_display }}
+                  </p>
+                  <strong class="text-muted fs-6">
+                    <i class="fas fa-money-bill-wave me-2"></i>Subscription Fee: Ksh.{{ amount }}
+                  </strong>
+                </div>
+              </div>
+            </div>
+          </div>
+          {% if expiry_date %}
+          <div class="text-end ms-3">
+            <small class="text-muted d-block">Expires on</small>
+            <p class="mb-0 fw-bold text-danger">{{ expiry_date|date:"F j, Y, g:i a" }}</p>
+          </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+    <div class="col-md-5">
+      <div class="status-card">
+        <div class="d-flex justify-content-between align-items-center h-100">
+          <div>
+            <h5 class="mb-2"><i class="fas fa-chart-line me-2"></i> Performance</h5>
+            <p class="mb-2">
+              <span class="badge bg-primary"><i class="fas fa-eye me-1"></i> {{ total_views }} Total Views</span>
+            </p>
+          </div>
+          <div class="text-end">
+            <strong class="text-muted d-block mb-2">Last 30 days</strong>
+            <span class="badge bg-secondary"><i class="fas fa-eye me-1"></i> {{ recent_views }} Views</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Enhanced Navigation -->
+  <div class="premium-nav-container">
+    <button class="premium-nav-toggle d-lg-none" aria-label="Toggle navigation">
+      <i class="fas fa-bars"></i>
+      <span>Menu</span>
+    </button>
+    
+    <nav class="premium-nav">
+      <ul class="nav nav-pills">
+        <li class="nav-item">
+          <a class="nav-link active" href="{% url 'landlord_dashboard' %}">
+            <i class="fas fa-tachometer-alt"></i>
+            <span class="nav-text">Dashboard</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'new_property' %}">
+            <i class="fas fa-plus-circle"></i>
+            <span class="nav-text">Post Property</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'my_properties' %}">
+            <i class="fas fa-building"></i>
+            <span class="nav-text">My Properties</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'property_map' %}">
+            <i class="fas fa-map-marked-alt"></i>
+            <span class="nav-text">Map View</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'landlord_profile' %}">
+            <i class="fas fa-user-cog"></i>
+            <span class="nav-text">Profile</span>
+          </a>
+        </li>
+      </ul>
+    </nav>
+  </div>
+
+  <!-- Enhanced Stats Cards -->
+  <h4><i class="fas fa-chart-pie me-2"></i> Property Analytics</h4>
+  <div class="row g-4 mb-5">
+    <div class="col-sm-6 col-md-4 col-lg-3">
+      <div class="stat-card">
+        <i class="fas fa-cubes"></i>
+        <p>Total Properties</p>
+        <h4>{{ total_properties }}</h4>
+      </div>
+    </div>
+    <div class="col-sm-6 col-md-4 col-lg-3">
+      <div class="stat-card">
+        <i class="fas fa-check-circle"></i>
+        <p>Available</p>
+        <h4>{{ available_properties }}</h4>
+      </div>
+    </div>
+    <div class="col-sm-6 col-md-4 col-lg-3">
+      <div class="stat-card">
+        <i class="fas fa-bed"></i>
+        <p>Occupied</p>
+        <h4>{{ occupied_properties }}</h4>
+      </div>
+    </div>
+    <div class="col-sm-6 col-md-4 col-lg-3">
+      <div class="stat-card">
+        <i class="fas fa-file-invoice"></i>
+        <p>Invoices</p>
+        <h4>{{ total_invoices }}</h4>
+        <a href="{% url 'invoice_list' %}">
+          <button class="btn btn-outline-success btn-sm">View All</button>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Enhanced Comments and Ratings Card -->
+  <div class="comments_rating-card">
+    <section>
+      <article>
+        <h5><i class="fas fa-comments"></i> Reviews</h5>
+        <p>{{ total_comments }}</p>
+      </article>
+      <article>
+        <h5><i class="fas fa-star"></i> Average Rating</h5>
+        <p>{{ average_rating }}/5</p>
+      </article>
+    </section>
+  </div>
+
+  <!-- Enhanced Charts Section -->
+  <div class="row g-4 mb-4">
+    <div class="col-lg-4">
+      <div class="chart-container">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+          <h5 class="mb-0"><i class="fas fa-chart-pie me-2"></i> Property Distribution</h5>
+        </div>
+        <div style="height: 300px;">
+          <canvas id="propertyChart"></canvas>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-8">
+      <div class="chart-container">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+          <h5 class="mb-0"><i class="fas fa-chart-line me-2"></i> Performance Trend</h5>
+        </div>
+        <div style="height: 300px;">
+          <canvas id="propertyViewChart"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Enhanced Recent Activity -->
+  <div class="activity-card">
+    <div class="activity-header" id="activityHeader">
+      <h5><i class="fas fa-history me-2"></i> Recent Activity</h5>
+      <div>
+        <span class="badge bg-primary rounded-pill">{{ recent_property_views|length }}</span>
+        <i class="fas fa-chevron-down activity-toggle ms-2"></i>
+      </div>
+    </div>
+    <div class="activity-content" id="activityContent">
+      {% if recent_property_views %}
+        {% for view in recent_property_views %}
+        <div class="activity-item">
+          <div>
+            <h6 class="mb-1 fw-bold">{{ view.property.title }}</h6>
+            <p class="mb-0 text-muted small">
+              <i class="fas fa-user me-1"></i>{{ view.tenant.user.first_name }} {{ view.tenant.user.last_name }}
+            </p>
+          </div>
+          <p class="mb-0 text-muted small">
+            <i class="fas fa-clock me-1"></i> {{ view.viewed_on|date:"M d, Y H:i" }}
+          </p>
+        </div>
+        {% endfor %}
+      {% else %}
+        <div class="activity-item text-center py-5">
+          <i class="fas fa-eye-slash fa-3x text-muted mb-3"></i>
+          <p class="text-muted mb-0">No recent activity found</p>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+  // Property Distribution Chart
+  const ctx = document.getElementById('propertyChart').getContext('2d');
+  new Chart(ctx, {
+    type: 'doughnut',
+    data: {
+      labels: ['Available', 'Occupied'],
+      datasets: [{
+        data: [{{ available_properties }}, {{ occupied_properties }}],
+        backgroundColor: ['#3a8c54', '#d4a574'],
+        borderWidth: 0,
+        hoverOffset: 15
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          position: 'bottom',
+          labels: {
+            padding: 25,
+            usePointStyle: true,
+            font: {
+              family: 'Segoe UI, system-ui, sans-serif',
+              size: 13,
+              weight: '600'
+            }
+          }
+        },
+        tooltip: {
+          bodyFont: {
+            family: 'Segoe UI, system-ui, sans-serif'
+          },
+          titleFont: {
+            family: 'Segoe UI, system-ui, sans-serif'
+          }
+        }
+      },
+      cutout: '75%'
+    }
+  });
+
+  // Property Views Chart - Enhanced Line Graph
+  const ctxView = document.getElementById('propertyViewChart').getContext('2d');
+  new Chart(ctxView, {
+    type: 'line',
+    data: {
+          labels: {{ chart_labels|safe }},
+          datasets: [{
+            label: 'Property Views',
+            data: {{ chart_data|safe }},
+            backgroundColor: 'rgba(33, 64, 99, 0.1)',   // primary color (translucent)
+            borderColor: '#214063',                     // primary color
+            borderWidth: 3,
+            pointBackgroundColor: '#d4a574',            // accent (gold-like)
+            pointBorderColor: '#214063',                // primary
+            pointBorderWidth: 2,
+            pointRadius: 5,
+            pointHoverRadius: 7,
+            tension: 0.3,
+            fill: true
+          }]
+        },
+
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { 
+          display: true,
+          position: 'top',
+          labels: {
+            font: {
+              family: 'Segoe UI, system-ui, sans-serif',
+              weight: '600'
+            }
+          }
+        },
+        tooltip: {
+          callbacks: {
+            label: context => `${context.parsed.y} views`
+          },
+          bodyFont: {
+            family: 'Segoe UI, system-ui, sans-serif'
+          },
+          titleFont: {
+            family: 'Segoe UI, system-ui, sans-serif'
+          }
+        }
+      },
+      scales: {
+        x: {
+          grid: { 
+            display: true,
+            color: 'rgba(0, 0, 0, 0.05)'
+          },
+          ticks: {
+            font: {
+              family: 'Segoe UI, system-ui, sans-serif'
+            }
+          }
+        },
+        y: {
+          beginAtZero: true,
+          grid: { 
+            color: 'rgba(0, 0, 0, 0.05)'
+          },
+          ticks: { 
+            precision: 0,
+            font: {
+              family: 'Segoe UI, system-ui, sans-serif'
+            }
+          }
+        }
+      }
+    }
+  });
+
+  // Collapsible Activity Section
+  document.getElementById('activityHeader').addEventListener('click', function() {
+    const content = document.getElementById('activityContent');
+    const toggleIcon = this.querySelector('.activity-toggle');
+    
+    content.classList.toggle('show');
+    toggleIcon.classList.toggle('rotated');
+  });
+
+  // Mobile menu toggle functionality
+  document.addEventListener('DOMContentLoaded', function() {
+    const toggleBtn = document.querySelector('.premium-nav-toggle');
+    const navMenu = document.querySelector('.premium-nav .nav');
+    
+    if (toggleBtn && navMenu) {
+      toggleBtn.addEventListener('click', function() {
+        navMenu.classList.toggle('show');
+        this.setAttribute('aria-expanded', navMenu.classList.contains('show'));
+      });
+    }
+  });
+</script>
+{% endblock content %}

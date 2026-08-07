@@ -1,0 +1,80 @@
+
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-lg-6">
+      <div class="card border-0 shadow-sm text-center" style="border-top: 4px solid #0a754f;">
+        <div class="card-body p-5" style="background-color: #f9f5e9;">
+          <!-- Success Icon -->
+          <div class="mb-4">
+            <div class="icon-circle mx-auto" style="background-color: #0a754f; color: #ffde8a;">
+              <i class="fas fa-check-circle fa-3x"></i>
+            </div>
+          </div>
+          
+          <!-- Payment Confirmation -->
+          <h4 class="fw-bold mb-4" style="color: #0a754f;">Payment Initiated!</h4>
+          
+          <div class="payment-details text-start mx-auto" style="max-width: 300px;">
+            <div class="d-flex justify-content-between mb-2">
+              <span style="color: #5a5a5a;">Phone:</span>
+              <strong style="color: #0a754f;">{{ phone }}</strong>
+            </div>
+            <div class="d-flex justify-content-between mb-2">
+              <span style="color: #5a5a5a;">Amount:</span>
+              <strong style="color: #0a754f;">Ksh {{ amount }}</strong>
+            </div>
+            <div class="d-flex justify-content-between mb-4">
+              <span style="color: #5a5a5a;">Coins:</span>
+              <strong style="color: #0a754f;">{{ tokens }}</strong>
+            </div>
+          </div>
+          
+          <!-- Status Message -->
+          <div class="alert alert-info mt-3" style="background-color: #ffde8a; border-color: #0a754f; color: #0a754f;">
+            <i class="fas fa-info-circle me-2"></i>
+            {{ response.CustomerMessage }}
+          </div>
+          
+          <!-- Redirect Notice -->
+          <p class="text-muted mt-4">
+            <small>You will be redirected to your dashboard in 5 seconds...</small>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .icon-circle {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .payment-details {
+    background-color: white;
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  }
+  
+  .alert {
+    border-radius: 0.5rem;
+  }
+  
+  @media (max-width: 576px) {
+    .card-body {
+      padding: 2rem !important;
+    }
+  }
+</style>
+
+<script>
+  setTimeout(() => {
+    window.location.href = "{% url 'tenant_dashboard' %}";
+  }, 5000);
+</script>

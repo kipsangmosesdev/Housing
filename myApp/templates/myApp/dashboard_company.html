@@ -1,0 +1,707 @@
+{% extends 'myApp/base.html' %}
+{% block content %}
+{% load static %}
+{% load tz %}
+
+<style>
+  :root {
+    --primary: #214063;
+    --primary-dark: #082939;
+    --primary-light: #2a6486;
+    --accent: #d4a574;
+    --accent-dark: #b88a5e;
+    --neutral-dark: #2d3748;
+    --neutral-medium: #718096;
+    --neutral-light: #f7fafc;
+    --success: #38a169;
+    --warning: #d69e2e;
+    --danger: #e53e3e;
+    --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  }
+
+  .dashboard-container {
+    background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%);
+    min-height: 100vh;
+    padding: 2rem 0;
+  }
+
+  /* Enhanced Subscription Status */
+  .subscription-status-container {
+    background: white;
+    border-radius: 16px;
+    padding: 2rem;
+    box-shadow: var(--shadow-lg);
+    margin-bottom: 2rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .subscription-status-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 120px;
+    height: 120px;
+    background: linear-gradient(135deg, rgba(165, 165, 162, 0.314) 0%, rgba(212, 166, 116, 0.222) 100%);
+    border-radius: 0 0 0 100%;
+  }
+
+  .status-badge {
+    padding: 0.75rem 1.5rem;
+    border-radius: 50px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    display: inline-flex;
+    align-items: center;
+    box-shadow: var(--shadow);
+    transition: all 0.3s ease;
+    margin-bottom: 1rem;
+  }
+
+  .status-badge:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+  }
+
+  .status-badge.active {
+    background: linear-gradient(135deg, var(--success) 0%, #48bb78 100%);
+    color: white;
+  }
+
+  .status-badge.trial {
+    background: linear-gradient(135deg, var(--warning) 0%, #ed8936 100%);
+    color: white;
+  }
+
+  .status-badge.inactive {
+    background: linear-gradient(135deg, var(--danger) 0%, #fc8181 100%);
+    color: white;
+  }
+
+  .plan-card {
+    background: linear-gradient(135deg, rgba(42, 110, 63, 0.05) 0%, rgba(212, 165, 116, 0.05) 100%);
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-top: 1rem;
+    border: 1px solid rgba(42, 110, 63, 0.1);
+  }
+
+  .expiry-info {
+    background: rgba(229, 62, 62, 0.05);
+    border-radius: 10px;
+    padding: 1rem 1.5rem;
+  }
+
+  .expiry-date {
+    color: var(--danger);
+    font-weight: 700;
+    font-size: 1.1rem;
+  }
+
+  /* Enhanced Navigation */
+  .dashboard-nav {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%) !important;
+    border-radius: 16px;
+    box-shadow: var(--shadow-lg);
+    margin-bottom: 2rem;
+    padding: 0.75rem 1rem;
+    border: none;
+  }
+
+  .navbar-brand {
+    font-size: 1.4rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .nav-link {
+    color: rgba(255, 255, 255, 0.9) !important;
+    font-weight: 500;
+    padding: 0.75rem 1.25rem !important;
+    border-radius: 10px;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .nav-link:hover {
+    background: rgba(255, 255, 255, 0.15);
+    color: white !important;
+    transform: translateY(-2px);
+  }
+
+  .navbar-toggler {
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    padding: 0.5rem 0.75rem;
+  }
+
+  .navbar-toggler-icon {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28255, 255, 255, 0.8%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+  }
+
+  /* Enhanced Stats Cards */
+  .stats-section h4 {
+    color: var(--neutral-dark);
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .stat-card {
+    background: rgba(176, 175, 163, 0.335);
+    border-radius: 16px;
+    padding: 2rem;
+    text-align: center !important;
+    box-shadow: var(--shadow);
+    height: 100%;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    
+  }
+
+  .stat-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: linear-gradient(90deg, var(--primary) 0%, var(--accent) 100%);
+  }
+
+  .stat-card:hover {
+    transform: translateY(-8px);
+    box-shadow: var(--shadow-lg);
+  }
+
+.stat-card i {
+    font-size: 2.5rem;
+    background-clip: text;
+    width: 80px;
+    height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    margin: 0 auto 1.5rem;
+    background: rgba(176, 135, 93, 0.357);
+  }
+
+  .stat-card p {
+    margin-bottom: 1rem;
+    color: var(--neutral-medium);
+    font-weight: 600;
+    font-size: 1rem;
+  }
+
+  .stat-card h4 {
+    color: var(--primary);
+    font-weight: 600;
+    font-size: 2.0rem;
+    margin-bottom: 1rem;
+    text-shadow: 0 2px 4px rgba(192, 188, 136, 0.398);
+  }
+
+  /* Enhanced Chart Containers */
+  .chart-container {
+    background: white;
+    border-radius: 16px;
+    padding: 2rem;
+    box-shadow: var(--shadow);
+    height: 100%;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
+  }
+
+  .chart-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: linear-gradient(90deg, var(--primary) 0%, var(--accent) 100%);
+  }
+
+  .chart-container:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-lg);
+  }
+
+  .chart-container h5 {
+    color: var(--neutral-dark);
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+  }
+
+  /* Enhanced Activity Section */
+  .activity-container {
+    background: white;
+    border-radius: 16px;
+    padding: 2rem;
+    box-shadow: var(--shadow);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .activity-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: linear-gradient(90deg, var(--primary) 0%, var(--accent) 100%);
+  }
+
+  .activity-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+  }
+
+  .activity-header h5 {
+    color: var(--neutral-dark);
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin: 0;
+  }
+
+  .table {
+    margin-bottom: 0;
+  }
+
+  .table th {
+    background: rgba(42, 110, 63, 0.05);
+    color: var(--primary);
+    font-weight: 700;
+    border-bottom: 2px solid rgba(42, 110, 63, 0.1);
+    padding: 1rem 1.25rem;
+  }
+
+  .table td {
+    padding: 1rem 1.25rem;
+    vertical-align: middle;
+    border-color: rgba(0, 0, 0, 0.05);
+  }
+
+  .table-hover tbody tr:hover {
+    background: rgba(42, 110, 63, 0.02);
+  }
+
+  /* Buttons */
+  .btn {
+    border-radius: 10px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    padding: 0.5rem 1.25rem;
+  }
+
+  .btn-outline-success {
+    border-color: var(--success);
+    color: var(--success);
+  }
+
+  .btn-outline-success:hover {
+    background: var(--success);
+    border-color: var(--success);
+    transform: translateY(-2px);
+  }
+
+  .btn-outline-primary {
+    border-color: var(--primary);
+    color: var(--primary);
+  }
+
+  .btn-outline-primary:hover {
+    background: var(--primary);
+    border-color: var(--primary);
+    transform: translateY(-2px);
+  }
+
+  .btn-outline-secondary {
+    border-color: var(--neutral-medium);
+    color: var(--neutral-medium);
+  }
+
+  .btn-outline-secondary:hover {
+    background: var(--neutral-medium);
+    border-color: var(--neutral-medium);
+    transform: translateY(-2px);
+  }
+
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .dashboard-container {
+      padding: 1rem 0;
+    }
+
+    .subscription-status-container,
+    .chart-container,
+    .activity-container {
+      padding: 1.5rem;
+    }
+
+    .stat-card {
+      margin-bottom: 1rem;
+      padding: 1.5rem;
+    }
+
+    .navbar-nav {
+      text-align: center;
+      padding: 1rem 0;
+    }
+
+    .nav-link {
+      justify-content: center;
+    }
+  }
+
+  /* Animation */
+  .fade-in {
+    animation: fadeIn 0.6s ease-in-out;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Custom HR */
+  hr {
+    border: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent 0%, var(--primary) 50%, transparent 100%);
+    margin: 2rem 0;
+    opacity: 0.3;
+  }
+</style>
+
+<div class="dashboard-container">
+  <div class="container py-4 fade-in">
+    <!-- Enhanced Payment Status -->
+    <div class="subscription-status-container">
+      <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between">
+        <div class="status-info mb-3 mb-md-0 flex-grow-1">
+          <!-- Check Free Trial Status and if landlord is paid -->
+          {% if landlord.is_paid %}
+            <span class="status-badge active">
+              <i class="fas fa-credit-card me-2"></i><strong> Subscription Status:</strong> Active
+            </span>
+          {% elif landlord.is_free_trial %}
+            <span class="status-badge trial">
+              <i class="fas fa-credit-card me-2"></i><strong> Subscription Status:</strong> Free Trial
+            </span>
+          {% else %}
+            <span class="status-badge inactive">
+              <i class="fas fa-credit-card me-2"></i><strong> Subscription Status:</strong> Inactive
+            </span>
+            <div class="mt-2 text-muted">
+              Your subscription is inactive. Please renew to continue enjoying our services.
+            </div>
+          {% endif %}
+
+          <!-- Plan Information -->
+          <div class="plan-card">
+            <div class="d-flex justify-content-between align-items-center flex-wrap">
+              <div>
+                <p class="text-success mb-1 fw-bold fs-5">
+                  <i class="fas fa-crown me-2"></i>Plan: {{ landlord.get_landlord_type_display }}
+                </p>
+                <strong class="text-muted fs-6">
+                  <i class="fas fa-money-bill-wave me-2"></i>Subscription Fee: Ksh.{{ amount }}
+                </strong>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        {% if expiry_date %}
+          <div class="expiry-info text-md-end ms-md-3">
+            <small class="text-muted d-block">Expires on</small>
+            <p class="expiry-date mb-0">{{ expiry_date|date:"F j, Y, g:i a" }}</p>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+
+    <hr>
+
+    <!-- Enhanced Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark dashboard-nav">
+      <div class="container-fluid">
+        <a class="navbar-brand fw-bold" href="{% url 'landlord_dashboard' %}">
+          <i class="fas fa-tachometer-alt"></i> Landlord Dashboard
+        </a>
+
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#dashboardNav"
+          aria-controls="dashboardNav" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse justify-content-center" id="dashboardNav">
+          <ul class="navbar-nav mb-2 mb-lg-0 d-flex align-items-center gap-2">
+            <li class="nav-item">
+              <a class="nav-link fw-semibold" href="{% url 'new_property' %}">
+                <i class="fas fa-plus-circle me-2"></i> Post Property
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link fw-semibold" href="{% url 'my_properties' %}">
+                <i class="fas fa-home me-2"></i> My Properties
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link fw-semibold" href="{% url 'invoice_list' %}">
+                <i class="fas fa-file-invoice me-2"></i> Receipts
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link fw-semibold" href="{% url 'landlord_profile' %}">
+                <i class="fas fa-user-cog me-2"></i> Profile
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Enhanced Stats Cards -->
+    <div class="stats-section">
+      <h4><i class="fas fa-chart-line me-2"></i> Property Overview</h4>
+      <div class="row g-4 mb-5">
+        <div class="col-md-6 col-lg-3">
+          <div class="stat-card">
+            <i class="fas fa-cubes"></i>
+            <p>Total Properties</p>
+            <h4>{{ total_properties }}</h4>
+          </div>
+        </div>
+        <div class="col-md-6 col-lg-3">
+          <div class="stat-card">
+            <i class="fas fa-check-circle"></i>
+            <p>Available</p>
+            <h4>{{ available_properties }}</h4>
+          </div>
+        </div>
+        <div class="col-md-6 col-lg-3">
+          <div class="stat-card">
+            <i class="fas fa-bed"></i>
+            <p>Occupied</p>
+            <h4>{{ occupied_properties }}</h4>
+          </div>
+        </div>
+       <div class="col-md-6 col-lg-3">
+          <div class="stat-card">
+            <i class="fas fa-eye"></i>
+            <p>Views</p>
+            <h4>{{ total_views }}</h4>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Enhanced Charts Section -->
+    <div class="row g-4 mb-4">
+      <div class="col-lg-6">
+        <div class="chart-container">
+          <h5><i class="fas fa-chart-pie me-2"></i> Property Distribution</h5>
+          <div style="height: 300px;">
+            <canvas id="propertyChart"></canvas>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-6">
+        <div class="chart-container">
+          <h5><i class="fas fa-chart-line me-2"></i> Performance Trend</h5>
+          <div style="height: 300px;">
+            <canvas id="propertyViewChart"></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Enhanced Recent Activity -->
+    <div class="activity-container">
+      <div class="activity-header">
+        <h5><i class="fas fa-history me-2"></i> Recent Activity</h5>
+        <button class="btn btn-outline-secondary btn-sm" data-bs-toggle="collapse" data-bs-target="#activityCollapse">
+          <i class="fas fa-chevron-down"></i> Toggle
+        </button>
+      </div>
+      <div class="collapse show" id="activityCollapse">
+        {% if recent_property_views %}
+          <div class="table-responsive">
+            <table class="table table-hover">
+              <thead>
+                <tr>
+                  <th>Property</th>
+                  <th>Viewed By</th>
+                  <th>Date & Time</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for view in recent_property_views %}
+                <tr>
+                  <td class="fw-semibold">{{ view.property.title }}</td>
+                  <td>{{ view.tenant.user.first_name }} {{ view.tenant.user.last_name }}</td>
+                  <td>{{ view.viewed_on|date:"M d, Y H:i" }}</td>
+                  <td>
+                    <a href="{% url 'property_detail' view.property.id %}" class="btn btn-outline-primary btn-sm">
+                      <i class="fas fa-eye me-1"></i> View
+                    </a>
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        {% else %}
+          <div class="text-center py-5">
+            <i class="fas fa-eye-slash fa-4x text-muted mb-3"></i>
+            <p class="text-muted fs-5">No recent property views found</p>
+            <p class="text-muted">Property views will appear here when tenants view your listings</p>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+  // Property Distribution Chart
+  const ctx = document.getElementById('propertyChart').getContext('2d');
+  new Chart(ctx, {
+    type: 'doughnut',
+    data: {
+      labels: ['Available', 'Occupied'],
+      datasets: [{
+        data: [{{ available_properties }}, {{ occupied_properties }}],
+        backgroundColor: ['#3a8c54', '#d4a574'],
+        borderWidth: 0,
+        hoverOffset: 15
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          position: 'bottom',
+          labels: {
+            padding: 25,
+            usePointStyle: true,
+            font: {
+              family: 'Segoe UI, system-ui, sans-serif',
+              size: 13,
+              weight: '600'
+            }
+          }
+        },
+        tooltip: {
+          bodyFont: {
+            family: 'Segoe UI, system-ui, sans-serif'
+          },
+          titleFont: {
+            family: 'Segoe UI, system-ui, sans-serif'
+          }
+        }
+      },
+      cutout: '70%'
+    }
+  });
+
+  // Property Views Chart - Enhanced Line Graph
+  const ctxView = document.getElementById('propertyViewChart').getContext('2d');
+  new Chart(ctxView, {
+    type: 'line',
+    data: {
+      labels: {{ chart_labels|safe }},
+      datasets: [{
+        label: 'Property Views',
+        data: {{ chart_data|safe }},
+        backgroundColor: 'rgba(42, 110, 63, 0.1)',
+        borderColor: 'rgba(42, 110, 63, 1)',
+        borderWidth: 3,
+        pointBackgroundColor: 'white',
+        pointBorderColor: 'rgba(42, 110, 63, 1)',
+        pointBorderWidth: 2,
+        pointRadius: 5,
+        pointHoverRadius: 7,
+        tension: 0.3,
+        fill: true
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { 
+          display: true,
+          position: 'top',
+          labels: {
+            font: {
+              family: 'Segoe UI, system-ui, sans-serif',
+              weight: '600'
+            }
+          }
+        },
+        tooltip: {
+          callbacks: {
+            label: context => `${context.parsed.y} views`
+          },
+          bodyFont: {
+            family: 'Segoe UI, system-ui, sans-serif'
+          },
+          titleFont: {
+            family: 'Segoe UI, system-ui, sans-serif'
+          }
+        }
+      },
+      scales: {
+        x: {
+          grid: { 
+            display: true,
+            color: 'rgba(0, 0, 0, 0.05)'
+          },
+          ticks: {
+            font: {
+              family: 'Segoe UI, system-ui, sans-serif'
+            }
+          }
+        },
+        y: {
+          beginAtZero: true,
+          grid: { 
+            color: 'rgba(0, 0, 0, 0.05)'
+          },
+          ticks: { 
+            precision: 0,
+            font: {
+              family: 'Segoe UI, system-ui, sans-serif'
+            }
+          }
+        }
+      }
+    }
+  });
+</script>
+{% endblock content %}

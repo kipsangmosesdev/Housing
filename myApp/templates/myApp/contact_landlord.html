@@ -1,0 +1,144 @@
+{% extends 'myApp/base.html' %}
+{% block content %}
+
+<style>
+  :root {
+    --primary: #0a754f; /* Dark green */
+    --primary-light: #ffde8a; /* Light yellow */
+    --secondary: #065f40; /* Darker green */
+    --success: #25D366; /* WhatsApp green */
+  }
+  
+  .card {
+    border: none;
+    border-radius: 10px;
+    overflow: hidden;
+    border-top: 4px solid var(--primary);
+  }
+  
+  .card-title {
+    color: var(--primary);
+    font-weight: 600;
+  }
+  
+  .text-primary {
+    color: var(--primary) !important;
+  }
+  
+  .list-group-item {
+    border-color: rgba(10, 117, 79, 0.2);
+    padding: 0.75rem 1.25rem;
+    background-color: #f9f5e9;
+  }
+  
+  .btn-primary {
+    background-color: var(--primary);
+    border-color: var(--primary);
+    color: white;
+  }
+  
+  .btn-primary:hover {
+    background-color: var(--secondary);
+    border-color: var(--secondary);
+  }
+  
+  .btn-success {
+    background-color: var(--success);
+    border-color: var(--success);
+  }
+  
+  .btn-outline-secondary {
+    border-color: var(--primary);
+    color: var(--primary);
+  }
+  
+  .btn-outline-secondary:hover {
+    background-color: var(--primary-light);
+    color: var(--primary);
+  }
+  
+  .shadow-sm {
+    box-shadow: 0 2px 8px rgba(10, 117, 79, 0.15) !important;
+  }
+
+  a {
+    color: var(--primary);
+  }
+
+  a:hover {
+    color: var(--secondary);
+  }
+</style>
+
+<div class="container mt-3 mt-md-5">
+  <div class="row justify-content-center">
+    <div class="col-lg-8 col-md-10">
+      <div class="card shadow-sm">
+        <div class="card-body p-4" style="background-color: #f9f5e9;">
+
+          <h4 class="card-title mb-4 text-center text-md-start">
+            Contact Information for <span class="text-primary">{{ property.title }}</span>
+          </h4>
+
+          <div class="row">
+            <div class="col-md-6 mb-3 mb-md-0">
+              <div class="list-group">
+                <div class="list-group-item">
+                  <strong>Landlord Type:</strong> {{ landlord.get_landlord_type_display }}
+                </div>
+                <div class="list-group-item">
+                  <strong>Name:</strong> {{ landlord.first_name }} {{ landlord.last_name }}
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="list-group">
+                <div class="list-group-item">
+                  <strong>Phone:</strong> 
+                  <a href="tel:{{ landlord.phone_number }}" class="text-decoration-none">
+                    {{ landlord.phone_number }}
+                  </a>
+                </div>
+                <div class="list-group-item">
+                  <strong>Email:</strong> 
+                  <a href="mailto:{{ landlord.user.email }}" class="text-decoration-none">
+                    {{ landlord.user.email }}
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Action Buttons -->
+          <div class="row mt-4">
+            <div class="col-md-6 mb-3 mb-md-0">
+              <!-- WhatsApp Button -->
+              {% with landlord.phone_number|slice:"1:" as cleaned %}
+              <a href="https://wa.me/254{{ cleaned }}?text=Hello%2C%20I'm%20interested%20in%20your%20property%20listing%3A%20{{ property.title|urlencode }}"
+                 class="btn btn-success w-100" target="_blank">
+                 <i class="fab fa-whatsapp"></i> Chat on WhatsApp
+              </a>
+              {% endwith %}
+            </div>
+            <div class="col-md-6">
+              <!-- Call Button -->
+              <a href="tel:{{ landlord.phone_number }}" class="btn btn-primary w-100">
+                <i class="fas fa-phone"></i> Call Now
+              </a>
+            </div>
+          </div>
+
+          <!-- Back Button -->
+          <div class="d-grid mt-3">
+            <a href="{% url 'property_detail' property.pk %}" class="btn btn-outline-secondary">
+              <i class="fas fa-arrow-left"></i> Back to Property
+            </a>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

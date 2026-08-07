@@ -1,0 +1,291 @@
+{% extends "myApp/base.html" %}
+{% load humanize %}
+
+{% block content %}
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-lg-11">
+
+      <!-- Earnings Summary -->
+      <div class="card shadow-lg border-0 rounded-4 overflow-hidden mb-4">
+        <div class="card-header text-white py-4"
+             style="background: linear-gradient(135deg, #0a3e63, #1e65a5);">
+          <div class="d-flex justify-content-between align-items-center flex-wrap">
+            <div class="d-flex align-items-center mb-2 mb-md-0">
+              
+              <div>
+                <h4 class="mb-0">My Earnings</h4>
+                <p class="mb-0 opacity-75">Track your transportation earnings</p>
+              </div>
+            </div>
+            <span class="fw-bold fs-4">
+              Total: <span class="badge bg-light text-dark px-3 py-2 fs-5">
+                KES {{ total_earned|floatformat:2|intcomma }}
+              </span>
+            </span>
+          </div>
+        </div>
+      </div>
+      <!-- Chart with Filter -->
+      <div class="card shadow-lg border-0 rounded-4 mb-4">
+        <div class="card-body">
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <h5 class="mb-0 text-dark">
+              <i class="fas fa-chart-line text-primary me-2"></i> Earnings Trend
+            </h5>
+
+            <!-- Year Filter -->
+            <div class="d-flex align-items-center">
+              <span class="me-2 text-muted">Filter by:</span>
+              <select id="yearFilter" class="form-select form-select-sm w-auto">
+                {% for year in data_by_year.keys %}
+                  <option value="{{ year }}">{{ year }}</option>
+                {% endfor %}
+              </select>
+            </div>
+          </div>
+          <canvas id="earningsChart" height="120"></canvas>
+        </div>
+      </div>
+
+      <!-- Earnings Table -->
+      <div class="card shadow-lg border-0 rounded-4">
+        <div class="card-header bg-white border-0 py-3">
+          <div class="d-flex justify-content-between align-items-center">
+            <h5 class="mb-0 text-dark">
+              <i class="fas fa-list text-primary me-2"></i> Earnings History
+            </h5>
+            <span class="badge bg-primary rounded-pill">{{ earnings.count }} records</span>
+          </div>
+        </div>
+        
+        <div class="card-body p-0">
+          {% if earnings %}
+          <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+              <thead class="table-light">
+                <tr>
+                  <th class="ps-4">#</th>
+                  <th>Route</th>
+                  <th>Amount</th>
+                  <th>Receipt</th>
+                  <th>Status</th>
+                  <th>Date</th>
+                  
+                </tr>
+              </thead>
+              <tbody>
+                {% for e in earnings %}
+                <tr class="border-bottom">
+                  <td class="ps-4 fw-bold text-muted">{{ forloop.counter }}</td>
+                  <td>
+                    <div>
+                      <div class="fw-semibold text-dark">{{ e.location_start }}</div>
+                      <div class="text-muted small">
+                        <i class="fas fa-arrow-right text-primary mx-1"></i>
+                        {{ e.destination }}
+                      </div>
+                    </div>
+                  </td>
+                  <td class="fw-bold text-success">
+                    KES {{ e.earned_amount|floatformat:2|intcomma }}
+                  </td>
+                  <td>
+                    <span class="badge bg-light text-dark font-monospace">
+                      {{ e.receipt|truncatechars:10 }}
+                    </span>
+                  </td>
+                  <td>
+                    {% if e.is_paid %}
+                      <span class="badge bg-success rounded-pill px-3 py-2">
+                        <i class="fas fa-check-circle me-1"></i> Paid
+                      </span>
+                    {% else %}
+                      <span class="badge bg-warning rounded-pill px-3 py-2">
+                        <i class="fas fa-clock me-1"></i> Pending
+                      </span>
+                    {% endif %}
+                  </td>
+                  <td class="text-muted small">
+                    {{ e.created_at|date:"M d, Y" }}<br>
+                    <small>{{ e.created_at|date:"H:i" }}</small>
+                  </td>
+                  
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+          {% else %}
+          <!-- Empty State -->
+          <div class="text-center py-5">
+            <div class="mb-4">
+              <i class="fas fa-wallet fa-4x text-muted opacity-25"></i>
+            </div>
+            <h5 class="text-muted mb-3">No Earnings Recorded Yet</h5>
+            <p class="text-muted mb-4">Your earnings history will appear here once you start completing trips.</p>
+            <a href="{% url 'add_transporter_earnings' %}" class="btn btn-primary">
+              <i class="fas fa-plus me-2"></i>Add First Earnings
+            </a>
+          </div>
+          {% endif %}
+        </div>
+        
+        <!-- Pagination -->
+        {% if earnings.has_other_pages %}
+        <div class="card-footer bg-white border-0">
+          <nav aria-label="Earnings pagination">
+            <ul class="pagination justify-content-center mb-0">
+              {% if earnings.has_previous %}
+              <li class="page-item">
+                <a class="page-link" href="?page={{ earnings.previous_page_number }}" aria-label="Previous">
+                  <span aria-hidden="true">&laquo;</span>
+                </a>
+              </li>
+              {% endif %}
+
+              {% for i in earnings.paginator.page_range %}
+              <li class="page-item {% if earnings.number == i %}active{% endif %}">
+                <a class="page-link" href="?page={{ i }}">{{ i }}</a>
+              </li>
+              {% endfor %}
+
+              {% if earnings.has_next %}
+              <li class="page-item">
+                <a class="page-link" href="?page={{ earnings.next_page_number }}" aria-label="Next">
+                  <span aria-hidden="true">&raquo;</span>
+                </a>
+              </li>
+              {% endif %}
+            </ul>
+          </nav>
+        </div>
+        {% endif %}
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  const dataByYear = JSON.parse('{{ data_by_year|escapejs }}');
+
+  const ctx = document.getElementById('earningsChart').getContext('2d');
+
+  // Initialize chart with the first available year
+  const initialYear = Object.keys(dataByYear)[0];
+  let earningsChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: dataByYear[initialYear].labels,
+      datasets: [{
+        label: 'Earnings in ' + initialYear,
+        data: dataByYear[initialYear].totals,
+        borderColor: '#0d6efd',
+        backgroundColor: 'rgba(13, 110, 253, 0.1)',
+        fill: true,
+        tension: 0.4,
+        borderWidth: 3,
+        pointBackgroundColor: '#0d6efd',
+        pointBorderColor: '#fff',
+        pointBorderWidth: 2,
+        pointRadius: 5,
+        pointHoverRadius: 7
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { 
+          position: 'bottom',
+          labels: {
+            usePointStyle: true,
+            padding: 20
+          }
+        },
+        tooltip: {
+          backgroundColor: 'rgba(0, 0, 0, 0.8)',
+          titleFont: { size: 14 },
+          bodyFont: { size: 14 },
+          callbacks: {
+            label: function(context) {
+              return 'KES ' + context.parsed.y.toLocaleString(undefined, {minimumFractionDigits: 2});
+            }
+          }
+        }
+      },
+      scales: {
+        y: {
+          beginAtZero: true,
+          grid: { color: 'rgba(0, 0, 0, 0.05)' },
+          ticks: {
+            callback: function(value) {
+              return 'KES ' + value.toLocaleString();
+            }
+          }
+        },
+        x: {
+          grid: { color: 'rgba(0, 0, 0, 0.05)' }
+        }
+      },
+      interaction: {
+        intersect: false,
+        mode: 'index'
+      }
+    }
+  });
+
+  // Handle filter change
+  document.getElementById('yearFilter').addEventListener('change', function() {
+    const selectedYear = this.value;
+    const yearData = dataByYear[selectedYear];
+
+    earningsChart.data.labels = yearData.labels;
+    earningsChart.data.datasets[0].label = 'Earnings in ' + selectedYear;
+    earningsChart.data.datasets[0].data = yearData.totals;
+    earningsChart.update();
+  });
+</script>
+
+<style>
+  .card {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  
+  .card:hover {
+    transform: translateY(-2px);
+  }
+  
+  .table-hover tbody tr:hover {
+    background-color: rgba(13, 110, 253, 0.02);
+  }
+  
+  .badge {
+    font-size: 0.8rem;
+  }
+  
+  .dropdown-toggle::after {
+    display: none;
+  }
+  
+  .bg-opacity-10 {
+    background-color: rgba(var(--bs-primary-rgb), 0.1) !important;
+  }
+  
+  @media (max-width: 768px) {
+    .table-responsive {
+      font-size: 0.9rem;
+    }
+    
+    .card-body {
+      padding: 1rem !important;
+    }
+    
+    .fs-4 {
+      font-size: 1.5rem !important;
+    }
+  }
+</style>
+{% endblock %}

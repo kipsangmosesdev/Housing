@@ -1,0 +1,560 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>XbomaSwift</title>
+  <meta name="description" content="XbomaSwift - Your trusted platform for finding and managing rental properties across Kenya. Explore listings, connect with landlords, and simplify your housing search." />
+  <meta name="author" content="XbomaSwift" />
+  <!-- SEO Optimization -->
+  <meta name="keywords" content="rentals, properties, real estate, Kenya, housing" />
+
+  <!-- Theme color -->
+  <meta name="theme-color" content="#0e2a45" />
+  <!-- favicon -->
+<link rel="icon" type="image/png" href="{% static 'myApp/images/marker-gold.png' %}" />
+<!-- Bootstrap -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+
+<!-- Font Awesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Karla:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+
+<!--  Custom CSS -->
+<link rel="stylesheet" href="{% static 'myapp/css/styles.css' %}">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/leaflet.locatecontrol/dist/L.Control.Locate.min.js" defer></script>
+
+
+<script src="{% static 'myApp/js/base.js' %}"></script>
+<script src="{% static 'myApp/js/property_card.js' %}"></script>
+<script src="{% static 'myApp/js/login.js' %}"></script>
+<script src="{% static 'myApp/js/property_map.js' %}"></script>
+
+
+<script nonce="{{ request.csp_nonce }}" src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <!-- Toast house location notifications -->
+
+{% if user.is_authenticated and user.tenant %}
+<script>
+// Remove trailing slash from the URL
+const propertyDetailBaseUrl = "{% url 'property_detail' 0 %}".replace(/0\/?$/, "").replace(/\/$/, "");
+document.addEventListener("DOMContentLoaded", function () {
+  // Add a small delay to ensure page is fully loaded
+  setTimeout(function() {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(success, error, {
+        enableHighAccuracy: true,  // Request high accuracy
+        timeout: 10000,           // 10 second timeout
+        maximumAge: 60000         // Don't use cached location older than 1 minute
+      });
+    } else {
+      console.warn("Geolocation is not supported by this browser.");
+    }
+  }, 500);
+
+  function success(position) {
+    const lat = position.coords.latitude;
+    const lon = position.coords.longitude;
+    const accuracy = position.coords.accuracy; // Get accuracy in meters
+
+    console.log(`User location: ${lat}, ${lon} (Accuracy: ${accuracy}m)`);
+
+    fetch("{% url 'nearby_properties_api' %}", {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRFToken': '{{ csrf_token }}'
+      },
+      body: JSON.stringify({ 
+        latitude: lat, 
+        longitude: lon 
+      })
+    })
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      return response.json();
+    })
+    .then(data => {
+      console.log(`Found ${data.count} nearby properties`);
+      
+      if (data.count > 0) {
+        const container = document.getElementById("nearby-content");
+        const properties = data.properties;
+
+        let html = `<p class="fw-semibold">${data.count} rentals found near you:</p>`;
+        
+        // Add location accuracy info if available
+        if (accuracy && accuracy > 100) {
+          html += `<small class="text-warning">Note: Location accuracy is approximately ${Math.round(accuracy)} meters</small>`;
+        }
+        
+        html += `<ol class="ps-3 mt-2">`;
+
+        properties.forEach(prop => {
+          const url = `${propertyDetailBaseUrl}/${prop.id}`;
+          // Format distance with better precision
+          const distanceText = prop.distance < 0.1 
+            ? `${(prop.distance * 1000).toFixed(0)} meters away` 
+            : `${prop.distance.toFixed(2)} km away`;
+            
+          html += `
+            <li class="nearby-property mb-3">
+              <i style="color:orange;" class="fas fa-building me-2"></i> 
+              <a href="${url}" class="text-decoration-none text-blue fw-bold">${prop.title}</a><br>
+              <span class="badge bg-secondary text-light">
+                ${prop.property_type} | 
+                <i class="fas fa-bed"></i> ${prop.bedrooms} | 
+                <i class="fas fa-bath"></i> ${prop.bathrooms}
+              </span><br>
+              <small class="text-muted">Ksh.${prop.rent.toLocaleString()}/month</small><br>
+              <small class="distance_km text-success fw-bold">~ ${distanceText}</small>
+            </li> <hr>`;
+        });
+
+        html += '</ol>';
+        container.innerHTML = html;
+
+        const offcanvasElement = document.getElementById('nearbyOffcanvas');
+        const offcanvas = new bootstrap.Offcanvas(offcanvasElement);
+        offcanvas.show();
+      } else {
+        const container = document.getElementById("nearby-content");
+        container.innerHTML = `<p class="text-muted">No properties found within 2.5 km of your location.</p>`;
+      }
+    })
+    .catch(error => {
+      console.error('Error fetching nearby properties:', error);
+      const container = document.getElementById("nearby-content");
+      container.innerHTML = `<p class="text-danger">Error loading nearby properties. Please try again.</p>`;
+    });
+  }
+
+  function error(err) {
+    console.warn("Location error (" + err.code + "): " + err.message);
+    const container = document.getElementById("nearby-content");
+    
+    let errorMessage = "Unable to get your location. ";
+    switch(err.code) {
+      case err.PERMISSION_DENIED:
+        errorMessage += "Please enable location permissions to see nearby properties.";
+        break;
+      case err.POSITION_UNAVAILABLE:
+        errorMessage += "Location information is unavailable.";
+        break;
+      case err.TIMEOUT:
+        errorMessage += "Location request timed out.";
+        break;
+      default:
+        errorMessage += "An unknown error occurred.";
+        break;
+    }
+    
+    container.innerHTML = `<p class="text-warning">${errorMessage}</p>`;
+  }
+});
+</script>
+{% endif %}
+
+<style>
+/* --- Variables & Global Styles --- */
+:root {
+    --primary-color: #0e2a45;
+    --secondary-color: #0a5fa1;
+    --accent-color: #c8a173;
+    --success-color: #10b981;
+    --warning-color: #f59e0b;
+    --danger-color: #ef4444;
+    --light-color: #f8fafc;
+    --dark-color: #1e293b;
+    --gray-light: #e2e8f0;
+    --gray-medium: #94a3b8;
+    --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --shadow-sm: 0 2px 4px rgba(0,0,0,0.05);
+    --shadow-md: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: var(--light-color);
+    color: var(--dark-color);
+    padding-top: 70px;
+    line-height: 1.6;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Karla', sans-serif;
+    font-weight: 700;
+}
+
+/* --- Hero Section & Landing UI --- */
+.hero-section {
+    min-height: 75vh;
+    display: flex;
+    align-items: center;
+    background: url('https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=1920&q=80');
+    background-size: cover;
+    background-position: center;
+    border-radius: 0 0 40px 40px;
+    position: relative;
+}
+
+.hero-overlay {
+    background: linear-gradient(135deg, rgba(14, 42, 69, 0.9) 0%, rgba(10, 95, 161, 0.7) 100%);
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+}
+
+.hover-lift {
+    transition: var(--transition);
+}
+
+.hover-lift:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+}
+
+/* --- Property Card (Optimized for 4 Columns) --- */
+.property-card {
+    border: none;
+    border-radius: 16px;
+    overflow: hidden;
+    background: #ffffff;
+    transition: var(--transition);
+    box-shadow: var(--shadow-sm);
+    height: 100%;
+}
+
+.property-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 24px rgba(0,0,0,0.12);
+}
+
+.property-image-container {
+    position: relative;
+    height: 180px; /* Reduced for 4-column symmetry */
+    overflow: hidden;
+}
+
+.property-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.6s ease;
+}
+
+.property-card:hover .property-image {
+    transform: scale(1.1);
+}
+
+.price-badge {
+    background-color: var(--primary-color);
+    color: var(--accent-color);
+    padding: 3px 10px;
+    border-radius: 6px;
+    font-weight: 700;
+    font-size: 0.85rem; /* Slightly smaller for 4-col */
+}
+
+/* --- Navbar Styling --- */
+.navbar {
+    background-color: var(--primary-color) !important;
+    backdrop-filter: blur(10px);
+    box-shadow: var(--shadow-md);
+    padding: 0.8rem 0;
+}
+
+.navbar-brand { font-weight: 700; letter-spacing: -0.5px; }
+
+.nav-link {
+    font-weight: 500;
+    color: rgba(255,255,255,0.9) !important;
+    transition: var(--transition);
+    padding: 0.5rem 1rem !important;
+}
+
+.login-link {
+    background: var(--secondary-color);
+    border-radius: 8px;
+    margin-left: 10px;
+}
+
+/* --- Utilities & Components --- */
+.btn-success { background-color: var(--success-color); border: none; }
+.btn-primary { background-color: var(--secondary-color); border: none; }
+
+.feature-badge {
+    background: var(--light-color);
+    padding: 4px 8px;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    border: 1px solid var(--gray-light);
+}
+
+.kenyan-btn-outline {
+    width: 100%;
+    border: 2px solid var(--secondary-color);
+    color: var(--secondary-color);
+    font-weight: 600;
+    padding: 8px;
+    border-radius: 10px;
+    transition: var(--transition);
+    margin-top: 10px;
+}
+
+.kenyan-btn-outline:hover {
+    background-color: var(--secondary-color);
+    color: white;
+}
+
+/* --- Footer --- */
+footer {
+    background-color: var(--primary-color);
+    color: white;
+    padding: 60px 0 20px 0;
+    margin-top: 80px;
+}
+
+footer h5 { color: var(--accent-color); text-transform: uppercase; }
+
+footer a { color: var(--gray-light); text-decoration: none; transition: var(--transition); }
+
+footer a:hover { color: var(--accent-color); padding-left: 4px; }
+
+/* --- Smooth Scrolling --- */
+html { scroll-behavior: smooth; }
+</style>
+</head>
+
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+  <div class="container">
+    <!-- Brand -->
+    <a class="navbar-brand d-flex align-items-center" href="{% url 'tenant_landing' %}">
+      <i class="fas fa-bolt me-2 text-warning"></i>
+      <span>XbomaSwift</span>
+    </a>
+
+    <!-- Toggler -->
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar"
+      aria-controls="mainNavbar" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <!-- Links -->
+    <div class="collapse navbar-collapse justify-content-end mt-3 mt-lg-0" id="mainNavbar">
+      <ul class="navbar-nav align-items-lg-center gap-lg-3">
+
+        {% if user.tenant or not user.is_authenticated %}
+        <li class="nav-item">
+          <a href="{% url 'chat_page' %}" class="nav-link">
+            <i class="fas fa-brain me-1"></i> AI Assistant
+          </a>
+        </li>
+        {% endif %}
+
+        {% if user.is_authenticated %}
+          {% if user.tenant %}
+          <li class="nav-item"><a href="{% url 'tenant_dashboard' %}" class="nav-link"><i class="fas fa-tachometer-alt me-1"></i> Dashboard</a></li>
+          <li class="nav-item"><a href="{% url 'tenant_logout' %}" class="nav-link logout-link"><i class="fas fa-sign-out-alt me-1"></i> Logout</a></li>
+
+          {% elif user.registeruser %}
+          <li class="nav-item"><a href="{% url 'landlord_dashboard' %}" class="nav-link"><i class="fas fa-tachometer-alt me-1"></i> Dashboard</a></li>
+          <li class="nav-item"><a href="{% url 'property_map' %}" class="nav-link"><i class="fas fa-map-marked-alt me-1"></i> Map View</a></li>
+          <li class="nav-item"><a href="{% url 'logout' %}" class="nav-link logout-link"><i class="fas fa-sign-out-alt me-1"></i> Logout</a></li>
+
+          {% elif user.transporter %}
+          <li class="nav-item"><a href="{% url 'transporter_dashboard' %}" class="nav-link"><i class="fas fa-truck me-1"></i> Dashboard</a></li>
+          <li class="nav-item"><a href="{% url 'transporter_map' %}" class="nav-link"><i class="fas fa-map-marked-alt me-1"></i> Map View</a></li>
+          <li class="nav-item"><a href="{% url 'logout' %}" class="nav-link logout-link"><i class="fas fa-sign-out-alt me-1"></i> Logout</a></li>
+
+          {% else %}
+          <li class="nav-item"><span class="nav-link text-danger"><i class="fas fa-exclamation-circle me-1"></i> Role not identified</span></li>
+          {% endif %}
+        {% else %}
+        <li class="nav-item"><a href="{% url 'transporter_map' %}" class="nav-link login-link"><i class="fas fa-truck me-1"></i> Movers</a></li>
+        <li class="nav-item"><a href="{% url 'unified_login' %}" class="nav-link login-link"><i class="fas fa-user-tie me-1"></i> Login</a></li>
+        {% endif %}
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<!-- Flash Messages -->
+<div class="container mt-3">
+  {% if messages %}
+    {% for message in messages %}
+      <div class="alert alert-{{ message.tags }} alert-dismissible fade show shadow-sm auto-dismiss" role="alert">
+        <div class="d-flex align-items-center">
+          {% if message.tags == 'success' %}
+            <i class="fas fa-check-circle text-success me-2"></i>
+          {% elif message.tags == 'error' %}
+            <i class="fas fa-times-circle text-danger me-2"></i>
+          {% elif message.tags == 'warning' %}
+            <i class="fas fa-exclamation-triangle text-warning me-2"></i>
+          {% else %}
+            <i class="fas fa-info-circle text-info me-2"></i>
+          {% endif %}
+          <div>{{ message }}</div>
+        </div>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+    {% endfor %}
+  {% endif %}
+</div>
+
+  <!-- Page Content -->
+   <!-- Make it occupy full width -->
+  <main class="container-fluid my-4">
+    {% block content %}
+    
+    {% endblock %}
+  </main>
+
+  <!-- Enhanced Footer -->
+  <footer>
+    <div class="container">
+      <div class="row g-4">
+        <!-- Brand Column -->
+        <div class="col-lg-4">
+          <div class="d-flex flex-column h-100">
+            <h5>
+              <i class="fas fa-home me-2"></i>XbomaSwift
+            </h5>
+            <p style="color: #D9A441 !important;" class="text-muted mb-4">Helping you find the perfect home faster and smarter across Kenya.</p>
+            <div class="col-lg-4">
+               <!-- About Us link -->
+              <i class="fas fa-info-circle me-2"></i> <a href="{% url 'about_us' %}">About Us</a>
+              <a href="{% url 'faq_list' %}" >
+                <i class="fas fa-question-circle me-2"></i>FAQs
+            </a>
+           
+            </div>
+            <hr>
+           
+            <div class="mt-auto">
+              <div class="social-icons">
+                <a href="https://web.facebook.com/moses.swdev" target="_blank"><i class="fab fa-facebook-f"></i></a>
+                <a href="#"><i class="fab fa-x"></i></a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Quick Links Column -->
+        <div class="col-lg-4">
+          <h5>Quick Links</h5>
+          <ul class="list-unstyled">
+            <!-- Support us -->
+             <li>
+              <a href="{% url 'support' %}">
+                <i class="fas fa-hands-helping me-2"></i>Support Us
+              </a>
+             </li>
+            <li class="mb-2">
+              <a href="{% url 'property_map' %}">
+                <i class="fas fa-map-marker-alt me-2"></i>Search properties on the Map
+              </a>
+            </li>
+            {% if user.is_authenticated and user.registeruser %}
+            
+            {% if landlord.has_active_payment %}
+               <li class="mb-2">
+                  <a href="{% url 'new_property' %}">
+                    <i class="fas fa-plus me-2"></i>Post Property
+                  </a>
+              </li>
+            {% endif %}
+  
+            {% endif %}
+            
+            <li>
+              <a href="{% url 'terms_conditions' %}">
+                <i class="fas fa-file-alt me-2"></i>Terms and Conditions
+              </a>
+            </li>
+           
+            <li>
+              <a href="{% url 'privacy_policy' %}">
+                <i class="fas fa-shield-alt me-2"></i>Privacy Policy
+              </a>
+            </li>
+            <!-- Mover Policy -->
+            <li>
+              <a href="{% url 'mover_policy' %}">
+                <i class="fas fa-truck me-2"></i>Mover Policy
+              </a>
+            </li>
+             <li>
+              <a href="{% url 'refund_policy' %}">
+                <i class="fas fa-undo me-2"></i>Refund Policy
+              </a>
+            </li>
+            
+            
+          </ul>
+        </div>
+
+        <!-- Contact Column -->
+        <div class="col-lg-4">
+          <h5>Contact Us</h5>
+          <div class="contact-item">
+            <i class="fas fa-envelope"></i>
+              <a href="mailto:support@xbomaswift.com">support@xbomaswift.com</a>
+          </div>
+          
+        </div>
+      </div>
+
+      <hr class="footer-divider">
+
+      <div class="text-center pt-2">
+        <small class="copyright">
+          &copy; {% now "Y" %} XbomaSwift System. All rights reserved.
+        </small>
+      </div>
+    </div>
+  </footer>
+  <!-- Toast Container (bottom right corner) -->
+
+{% if user.is_authenticated and user.tenant %}
+<!-- Offcanvas Nearby Properties Panel -->
+<div class="offcanvas offcanvas-end" tabindex="-1" id="nearbyOffcanvas" aria-labelledby="nearbyOffcanvasLabel">
+  <div class="offcanvas-header bg-secondary text-white">
+    <h5 style="color: wheat !important;" class="offcanvas-title" id="nearbyOffcanvasLabel">Nearby Properties</h5>
+    
+    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    
+  </div>
+<span style="font-size: small;
+  color:black;
+  background:rgba(146, 135, 91, 0.434);
+  padding: 4px 4px;">
+  <i class="fas fa-info"></i>
+  Note: The distances shown are straight-line estimates and do not account for actual road routes.  
+  For precise, route-based directions and travel distances, please refer to Google Maps.
+</span>
+
+  <div class="offcanvas-body" id="nearby-content" style="overflow-y:auto; max-height: 80vh;">
+    
+    <!-- Content injected by JS -->
+  </div>
+</div>
+
+{% endif %}
+  
+  <!-- Scripts -->
+  <script nonce="{{ request.csp_once }}" src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+
+</html>

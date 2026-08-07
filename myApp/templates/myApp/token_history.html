@@ -1,0 +1,106 @@
+{% extends 'myApp/base.html' %}
+
+{% block content %}
+<div class="container py-4">
+  <div class="row justify-content-center">
+    <div class="col-12">
+      <div class="card border-0 shadow-lg" style="border-top: 4px solid #0a754f; border-radius: 12px;">
+        
+        <!-- Header -->
+        <div class="card-header bg-white d-flex justify-content-between align-items-center">
+          <h3 class="mb-0 fw-bold" style="color: #0a754f;">
+            <i class="fas fa-history me-2"></i> Swifts Purchase History
+          </h3>
+          <input type="text" id="searchBox" class="form-control form-control-sm w-25" placeholder="🔍 Search transactions">
+        </div>
+
+        <!-- Body -->
+        <div class="card-body p-0">
+          <div class="table-responsive">
+            <table class="table table-hover mb-0 align-middle">
+              <thead style="background-color: #f8f9fa;">
+                <tr>
+                  <th>Date</th>
+                  <th>Swifts</th>
+                  <th>Amount (Ksh)</th>
+                  <th>Receipt</th>
+                  <th>Phone</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody id="txTable">
+                {% for tx in transactions %}
+                <tr class="tx-row" 
+                    style="border-left: 4px solid {% if tx.transaction_status == 'Completed' %}#0a754f{% else %}#ffb74d{% endif %}; transition: all 0.3s ease;">
+                  <td data-label="Date">{{ tx.timestamp|date:"M d, Y H:i" }}</td>
+                  <td data-label="Swifts">{{ tx.tokens_bought }}</td>
+                  <td data-label="Amount">{{ tx.amount_paid }}</td>
+                  <td data-label="Receipt">
+                    <span class="text-primary fw-bold">{{ tx.mpesa_receipt }}</span>
+                  </td>
+                  <td data-label="Phone">{{ tx.phone_number }}</td>
+                  <td data-label="Status">
+                    <!-- status: success, pending and expired -->
+                    <span class="badge rounded-pill px-3 py-2 shadow-sm status-badge" 
+                          style="background: {% if tx.transaction_status == 'Success' %}linear-gradient(135deg,#0a754f,#28a745)
+                          {% elif tx.transaction_status == 'Pending' %}linear-gradient(135deg,#ffb74d,#ff9800)
+                          {% elif tx.transaction_status == 'Expired' %}linear-gradient(135deg,#ff6b6b,#ff3d3d){% endif %};
+                                color: white; transition: transform 0.2s ease;">
+                      <i class="fas 
+                                {% if tx.transaction_status == 'Success' %}fa-check-circle
+                                {% elif tx.transaction_status == 'Pending' %}fa-hourglass-half
+                                {% elif tx.transaction_status == 'Expired' %}fa-times-circle
+                                {% endif %} me-1"></i>
+                      {{ tx.transaction_status }}
+                    </span>
+                  </td>
+                </tr>
+                {% empty %}
+                <tr>
+                  <td colspan="6" class="text-center py-4 text-muted">
+                    <i class="fas fa-info-circle me-2"></i>No transactions found
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Styling -->
+<style>
+  .table th {
+    font-weight: 600;
+    color: #0a754f;
+    border-bottom: 2px solid #0a754f;
+  }
+  .tx-row:hover {
+    transform: scale(1.01);
+    background: rgba(10, 117, 79, 0.05);
+  }
+  .status-badge:hover {
+    transform: scale(1.1);
+  }
+  @media (max-width: 768px) {
+    .table thead { display: none; }
+    .table tr { display: block; margin-bottom: 1rem; border-radius: 0.75rem; }
+    .table td { display: flex; justify-content: space-between; padding: 0.75rem; }
+    .table td::before { content: attr(data-label); font-weight: 600; color: #0a754f; }
+  }
+</style>
+
+<!-- JS Search Filter -->
+<script>
+  document.getElementById('searchBox').addEventListener('keyup', function () {
+    let value = this.value.toLowerCase();
+    document.querySelectorAll('#txTable tr').forEach(row => {
+      row.style.display = row.innerText.toLowerCase().includes(value) ? '' : 'none';
+    });
+  });
+</script>
+{% endblock %}

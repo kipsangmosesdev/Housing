@@ -1,0 +1,505 @@
+{% extends 'myApp/base.html' %}
+{% load static %}
+{% block content %}
+
+<style>
+  :root {
+    --primary: #08415e;
+    --secondary: #6c757d;
+    --success: #1cc88a;
+    --danger: #e74a3b;
+    --warning: #f6c23e;
+    --info: #36b9cc;
+    --light: #f8f9fc;
+    --dark: #5a5c69;
+  }
+  
+  .dashboard-card {
+    border-radius: 15px;
+    box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
+    transition: all 0.3s ease;
+    overflow: hidden;
+    border: none;
+    margin-bottom: 1.5rem;
+  }
+  
+  .dashboard-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 0.5rem 2rem 0 rgba(58, 59, 69, 0.2);
+  }
+  
+  .status-badge {
+    font-size: 0.75rem;
+    padding: 0.35em 0.65em;
+    border-radius: 10px;
+  }
+  
+  .btn-dashboard {
+    border-radius: 1.5rem;
+    padding: 0.75em 1.5em;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    box-shadow: 0 0.15rem 0.5rem rgba(0, 0, 0, 0.1);
+    width: 100%;
+    margin-bottom: 0.75rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .btn-dashboard:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+  }
+  
+  .info-item {
+    padding: 1rem;
+    border-radius: 12px;
+    background-color: rgba(8, 65, 94, 0.05);
+    margin-bottom: 0.75rem;
+    transition: all 0.3s ease;
+    border: 1px solid rgba(8, 65, 94, 0.1);
+  }
+  
+  .info-item:hover {
+    background-color: rgba(8, 65, 94, 0.1);
+    transform: translateY(-3px);
+    box-shadow: 0 0.25rem 0.75rem rgba(0, 0, 0, 0.1);
+  }
+  
+  .profile-img-container {
+    position: relative;
+    display: inline-block;
+  }
+  
+  .online-status {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    border: 2px solid white;
+    box-shadow: 0 0 0 2px var(--success);
+  }
+  
+  .subscription-alert {
+    border-left: 4px solid;
+    border-radius: 8px;
+  }
+  
+  .rating-stars {
+    font-size: 1.1rem;
+  }
+  
+  /* Header styles */
+  .dashboard-header {
+    background: linear-gradient(135deg, var(--primary) 0%, #0a5c83 100%);
+    color: white;
+    border-radius: 15px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+  
+  /* Mobile-first responsive adjustments */
+  @media (max-width: 576px) {
+    .container {
+      padding-left: 15px;
+      padding-right: 15px;
+    }
+    
+    .dashboard-card {
+      border-radius: 12px;
+      margin-bottom: 1rem;
+    }
+    
+    .btn-dashboard {
+      padding: 0.6rem 1rem;
+      font-size: 0.9rem;
+    }
+    
+    .profile-img-container img {
+      width: 120px !important;
+      height: 120px !important;
+    }
+    
+    h1.h3 {
+      font-size: 1.5rem;
+    }
+    
+    .card-body {
+      padding: 1.25rem;
+    }
+    
+    .info-item {
+      padding: 0.75rem;
+    }
+    
+    .online-status {
+      width: 12px;
+      height: 12px;
+      bottom: 8px;
+      right: 8px;
+    }
+    
+    .dashboard-header {
+      padding: 1rem;
+      border-radius: 12px;
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .dashboard-card {
+      border-radius: 12px;
+    }
+    
+    .btn-dashboard {
+      padding: 0.6rem 1.25rem;
+    }
+    
+    .mobile-hidden {
+      display: none;
+    }
+    
+    .mobile-center {
+      text-align: center;
+    }
+    
+    .mobile-stack {
+      flex-direction: column;
+    }
+    
+    .mobile-mt-1 {
+      margin-top: 0.5rem;
+    }
+    
+    .mobile-mb-2 {
+      margin-bottom: 1rem;
+    }
+  }
+  
+  @media (min-width: 769px) and (max-width: 992px) {
+    .profile-img-container img {
+      width: 130px !important;
+      height: 130px !important;
+    }
+  }
+  
+  /* Improved grid for small devices */
+  @media (max-width: 768px) {
+    .col-md-6 {
+      flex: 0 0 100%;
+      max-width: 100%;
+    }
+  }
+  
+  /* Better spacing for all devices */
+  .py-4 {
+    padding-top: 1.5rem !important;
+    padding-bottom: 1.5rem !important;
+  }
+  
+  /* Improved button group for mobile */
+  .btn-group-vertical {
+    width: 100%;
+  }
+</style>
+
+<div class="container py-4">
+  <!-- Header Section -->
+  <div class="dashboard-header">
+    <div class="row align-items-center">
+      <div class="col-md-8">
+        <h1 class="h3 mb-2">Welcome, {{ transporter.full_name }}</h1>
+        <p class="mb-0 opacity-75">Your transporter dashboard</p>
+      </div>
+      <div class="col-md-4 text-md-end">
+        <!-- Verification Status -->
+            {% if transporter.verified %}      
+                <!-- Verification badge icon -->
+                <span class="badge bg-success status-badge p-2"><i class="fas fa-shield-alt text-info"></i> Verified</span>
+            {% else %}
+                <!-- Verification badge icon -->
+                <span class="badge bg-warning text-dark status-badge p-2"><i class="fas fa-circle text-danger"></i> Not Verified</span>
+            {% endif %}
+          
+        {% if transporter.online %}
+          <span class="badge bg-info status-badge p-2"><i class="fas fa-circle me-1"></i> Online</span>
+        {% else %}
+          <span class="badge bg-secondary status-badge p-2"><i class="fas fa-circle me-1"></i> Offline</span>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <!-- Left Column - Profile Info -->
+    <div class="col-lg-4 col-md-5 mb-4">
+      <div class="dashboard-card bg-white h-100">
+        <div class="card-body text-center p-4">
+
+          <!-- Account status for not active transporters -->
+          <div class="mb-4">
+            {% if not transporter.active %}
+              <span class="badge bg-danger status-badge p-2"><i class="fas fa-times-circle me-1"></i> Your account is suspended</span>
+            {% endif %}
+          </div>
+
+          <!-- Profile Image -->
+          <div class="profile-img-container mb-4">
+            {% if transporter.vehicle_image %}
+              <img src="{{ transporter.vehicle_image.url }}" 
+                   alt="Vehicle Image" 
+                   class="img-fluid rounded-circle shadow-sm" 
+                   style="width: 150px; height: 150px; object-fit: cover;">
+            {% else %}
+              <img src="{% static 'images/default_vehicle.png' %}" 
+                   alt="Default Vehicle" 
+                   class="img-fluid rounded-circle shadow-sm" 
+                   style="width: 150px; height: 150px; object-fit: cover;">
+            {% endif %}
+            <div class="online-status {% if transporter.online %}bg-success{% else %}bg-secondary{% endif %}"></div>
+          </div>
+
+          
+          
+          <!-- Availability Status -->
+          <div class="mb-4">
+            {% if transporter.is_available %}
+              <span class="badge bg-success status-badge p-2"><i class="fas fa-check-circle me-1"></i> Available for Jobs</span>
+            {% else %}
+              <span class="badge bg-danger status-badge p-2"><i class="fas fa-times-circle me-1"></i> Not Available</span>
+            {% endif %}
+          </div>
+          
+          <!-- Action Buttons -->
+          <div class="d-grid gap-2 btn-group-vertical">
+            <a href="{% url 'edit_transporter_profile' %}" class="btn btn-secondary btn-dashboard">
+              <i class="fas fa-cog fa-spin me-2"></i>Settings
+            </a>
+            <a href="{% url 'add_transporter_earnings' %}" class="btn btn-info btn-dashboard">
+              <i class="fas fa-cog fa-dollar me-2"></i>Track your earnings
+            </a>
+            <a href="{% url 'transporter_payment_history' %}" class="btn btn-outline-secondary btn-dashboard">
+              <i class="fas fa-history me-2"></i>Payment History
+            </a>
+
+            <!-- Subscription plans link -->
+             <a href="{% url 'mover_pricing' %}" class="btn btn-primary btn-dashboard">
+              <i class="fas fa-crown me-2"></i> Plans & Subscription
+             </a>
+
+             <a href="{% url 'change_password' %}" class="btn btn-outline-secondary btn-dashboard">
+              <i class="fas fa-lock me-2"></i>Change Password
+            </a>
+
+            <a href="{% url 'logout' %}" class="btn btn-outline-danger btn-dashboard">
+              <i class="fas fa-sign-out-alt me-2"></i>Logout
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Right Column - Details -->
+    <div class="col-lg-8 col-md-7">
+      <!-- Subscription Status Card -->
+      <div class="dashboard-card bg-white">
+        <div class="card-body p-4">
+
+          <!-- Subscription Status -->
+          <h4 class="h5 text-dark mb-3"><i class="fas fa-crown text-warning me-2"></i>Subscription Status</h4>
+          
+          <div class="alert 
+              {% if expired %}alert-danger
+              {% elif expiring_soon %}alert-warning
+              {% else %}alert-info
+              {% endif %} subscription-alert mb-4">
+            
+            <div class="d-flex align-items-center">
+              <i class="fas 
+                {% if expired %}fa-exclamation-triangle
+                {% elif expiring_soon %}fa-exclamation-circle
+                {% else %}fa-info-circle
+                {% endif %} me-2 fa-lg"></i>
+              
+              <div>
+                {% if on_trial %}
+                  <p class="mb-1">Your free trial ends on 
+                    <strong>{{ trial_expiry|date:"M d, Y" }}</strong>
+                  {% if expired %}
+                    <p class="mb-0"><strong>Your free trial has ended.</strong> Please subscribe to continue receiving job notifications.</p>
+                    <a href="{% url 'mpesa:transporter_subscribe_view' %}" class="btn btn-primary"><i class="fas fa-crown me-2"></i> Subscribe Now</a>
+                  {% elif expiring_soon %}
+                    <p class="mb-0"><strong>{{ days_left }} days left.</strong> Please consider subscribing after your trial ends.</p>
+                  {% else %}
+                    <p class="mb-0">Enjoy your free trial! You’ll continue receiving job notifications until your trial ends.</p>
+                  {% endif %}
+                
+                {% elif subscription %}
+                  <p class="mb-1">Your subscription expires on 
+                    <strong>{{ subscription.end_date|date:"M d, Y" }}</strong>
+                  </p>
+                  {% if expired %}
+                    <p class="mb-0"><strong>Your subscription has expired.</strong> Please renew to continue receiving job notifications.</p>
+                    <a href="{% url 'mpesa:transporter_subscribe_view' %}" class="btn btn-warning"><i class="fas fa-redo me-2"></i> Renew Now</a>
+                  {% elif expiring_soon %}
+                    <p class="mb-0"><strong>{{ days_left }} days left.</strong> Please consider renewing your subscription.</p>
+                  {% else %}
+                    <p class="mb-0">Your subscription is active. You'll receive job notifications until the expiration date.</p>
+                  {% endif %}
+                
+                {% else %}
+                  <p class="mb-0"><strong>No active trial or subscription.</strong> Please subscribe to start receiving job notifications.</p>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+
+          <hr>
+          
+          <!-- Vehicle Information -->
+          <h4 class="h5 text-dark mb-3"><i class="fas fa-truck text-primary me-2"></i>Vehicle Information</h4>
+
+          <div class="row">
+            <div class="col-md-6 col-sm-12 mb-3">
+              <div class="info-item">
+                <div class="d-flex align-items-center">
+                  <div class="bg-primary p-2 rounded-circle me-3">
+                    <i class="fas fa-truck text-white"></i>
+                  </div>
+                  <div>
+                    <small class="text-muted d-block">Transport Type</small>
+                    <strong>{{ transporter.get_transport_type_display }}</strong>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div class="col-md-6 col-sm-12 mb-3">
+              <div class="info-item">
+                <div class="d-flex align-items-center">
+                  <div class="bg-info p-2 rounded-circle me-3">
+                    <i class="fas fa-id-card text-white"></i>
+                  </div>
+                  <div>
+                    <small class="text-muted d-block">Vehicle Plate</small>
+                    <strong>{{ transporter.vehicle_plate }}</strong>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div class="col-md-6 col-sm-12 mb-3">
+              <div class="info-item">
+                <div class="d-flex align-items-center">
+                  <div class="bg-warning p-2 rounded-circle me-3">
+                    <i class="fas fa-weight-hanging text-white"></i>
+                  </div>
+                  <div>
+                    <small class="text-muted d-block">Vehicle Capacity</small>
+                    <strong>{{ transporter.vehicle_capacity }} {{ transporter.get_capacity_type_display }}</strong>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div class="col-md-6 col-sm-12 mb-3">
+              <div class="info-item">
+                <div class="d-flex align-items-center">
+                  <div class="bg-success p-2 rounded-circle me-3">
+                    <i class="fas fa-file-invoice-dollar text-white"></i>
+                  </div>
+                  <div>
+                    <small class="text-muted d-block">KRA PIN</small>
+                    <strong>{{ transporter.kra_pin }}</strong>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <hr>
+          
+          <!-- Ratings Section -->
+          <div class="info-item bg-light">
+            <div class="d-flex align-items-center">
+              <div class="bg-warning p-1 rounded-circle me-3">
+                <i class="fas fa-star text-white"></i>
+              </div>
+              <div>
+                <small class="text-muted d-block">Customer Rating</small>
+                <div class="d-flex align-items-center">
+                  <div class="rating-stars me-1">
+                    {% for i in "12345" %}
+                      {% if forloop.counter <= avg_rating|floatformat:0 %}
+                        <i class="fas fa-star text-warning"></i>
+                      {% else %}
+                        <i class="far fa-star text-warning"></i>
+                      {% endif %}
+                    {% endfor %}
+                  </div>
+                  <p style="font-size: small;">
+                    <a href="{% url 'all_transporter_ratings' transporter.id %}" class="text-decoration-none">
+                      {{ avg_rating }} / 5.0 ({{ total_ratings }} ratings)
+                    </a>
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Additional Info Card -->
+      <div class="dashboard-card bg-white">
+        <div class="card-body p-4">
+          <h4 class="h5 text-dark mb-3"><i class="fas fa-lightbulb text-info me-2"></i>Tips for Success</h4>
+          <div class="alert alert-light mb-0">
+            <ul class="mb-0 ps-3">
+              <li>Keep your availability status updated to receive more job offers</li>
+              <li>Add a clear description of your services to attract more clients</li>
+              <li>Respond promptly to job requests to improve your rating</li>
+              <li>Ensure your subscription is always active to receive notifications</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Add interactive elements here
+    const infoItems = document.querySelectorAll('.info-item');
+    
+    infoItems.forEach(item => {
+      item.addEventListener('mouseenter', function() {
+        this.style.transform = 'translateY(-3px)';
+      });
+      
+      item.addEventListener('mouseleave', function() {
+        this.style.transform = 'translateY(0)';
+      });
+    });
+    
+    // Handle window resize for better mobile experience
+    function handleResize() {
+      if (window.innerWidth < 768) {
+        document.querySelectorAll('.btn-dashboard').forEach(btn => {
+          btn.classList.add('btn-sm');
+        });
+      } else {
+        document.querySelectorAll('.btn-dashboard').forEach(btn => {
+          btn.classList.remove('btn-sm');
+        });
+      }
+    }
+    
+    // Initial call and event listener
+    handleResize();
+    window.addEventListener('resize', handleResize);
+  });
+</script>
+{% endblock %}

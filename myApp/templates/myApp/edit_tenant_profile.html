@@ -1,0 +1,407 @@
+{% extends 'myApp/base.html' %}
+{% load static %}
+
+{% block title %}Edit Profile - XbomaSwift{% endblock %}
+
+{% block content %}
+<style>
+  :root {
+    --primary: #1a3a5c;
+    --primary-light: #c8a173;
+    --secondary: #2a5a78;
+    --glass-bg: rgba(255, 255, 255, 0.95);
+    --glass-border: rgba(255, 255, 255, 0.2);
+  }
+
+  .edit-profile-container {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    min-height: 100vh;
+    padding: 2rem 0;
+  }
+
+  .edit-profile-header {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+    color: #fff;
+    padding: 2rem;
+    border-radius: 20px;
+    margin-bottom: 2rem;
+    position: relative;
+    overflow: hidden;
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--glass-border);
+    box-shadow: 0 8px 32px rgba(26, 58, 92, 0.15);
+  }
+
+  .edit-profile-header::before {
+    content: "";
+    position: absolute;
+    top: -50%;
+    right: -50%;
+    width: 100%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+    transform: rotate(30deg);
+  }
+
+  .glass-form {
+    background: var(--glass-bg);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--glass-border);
+    border-radius: 20px;
+    padding: 2.5rem;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.08);
+    transition: all 0.3s ease;
+  }
+
+  .glass-form:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 40px rgba(0,0,0,0.15);
+    border-color: rgba(200, 161, 115, 0.3);
+  }
+
+  .form-input-group {
+    position: relative;
+    margin-bottom: 1.5rem;
+  }
+
+  .form-input-group label {
+    font-weight: 600;
+    color: var(--primary);
+    margin-bottom: 0.5rem;
+    display: block;
+  }
+
+  .input-with-icon {
+    position: relative;
+    width: 100%;
+  }
+
+  .input-icon {
+    position: absolute;
+    left: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--primary-light);
+    z-index: 2;
+    width: 20px;
+    text-align: center;
+  }
+
+  .form-control-modern {
+    width: 100%;
+    padding: 1rem 1rem 1rem 3rem;
+    border: 2px solid #e9ecef;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.8);
+    transition: all 0.3s ease;
+    font-size: 1rem;
+    color: #2c3e50;
+  }
+
+  .form-control-modern:focus {
+    border-color: var(--primary-light);
+    background: white;
+    box-shadow: 0 0 0 3px rgba(200, 161, 115, 0.1);
+    transform: translateY(-2px);
+  }
+
+  .form-control-modern:hover {
+    border-color: #c8a173;
+  }
+
+  .btn-modern {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+    border: none;
+    border-radius: 12px;
+    padding: 1rem 2.5rem;
+    font-weight: 600;
+    font-size: 1.1rem;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(26, 58, 92, 0.3);
+    color: white;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .btn-modern:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(26, 58, 92, 0.4);
+    background: linear-gradient(135deg, var(--primary-light) 0%, #d4b18a 100%);
+    color: var(--primary);
+  }
+
+  .error-message {
+    color: #e74c3c;
+    font-size: 0.875rem;
+    margin-top: 0.5rem;
+    padding: 0.5rem 1rem;
+    background: rgba(231, 76, 60, 0.1);
+    border-radius: 8px;
+    border-left: 4px solid #e74c3c;
+  }
+
+  .success-message {
+    color: #27ae60;
+    font-size: 0.875rem;
+    margin-top: 0.5rem;
+    padding: 0.5rem 1rem;
+    background: rgba(39, 174, 96, 0.1);
+    border-radius: 8px;
+    border-left: 4px solid #27ae60;
+  }
+
+  .form-section {
+    margin-bottom: 2rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid rgba(0,0,0,0.1);
+  }
+
+  .form-section:last-of-type {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
+  }
+
+  .form-section-title {
+    color: var(--primary);
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .form-section-title i {
+    color: var(--primary-light);
+  }
+
+  @media (max-width: 768px) {
+    .edit-profile-container {
+      padding: 1rem 0;
+    }
+    
+    .glass-form {
+      padding: 1.5rem;
+      border-radius: 16px;
+    }
+    
+    .edit-profile-header {
+      padding: 1.5rem;
+      border-radius: 16px;
+    }
+    
+    .btn-modern {
+      width: 100%;
+      justify-content: center;
+    }
+  }
+</style>
+
+<div class="edit-profile-container">
+  <div class="container">
+    <!-- Edit Profile Header -->
+    <div class="edit-profile-header">
+      <div class="row align-items-center">
+        <div class="col-md-8">
+          <h1 class="h2 mb-2">Edit Your Profile</h1>
+          <p class="mb-0 opacity-75">Update your personal information and contact details</p>
+        </div>
+        <div class="col-md-4 text-md-end">
+          <div class="profile-icon" style="width: 70px; height: 70px; background: rgba(255,255,255,0.2); display: inline-flex; align-items: center; justify-content: center; border-radius: 50%;">
+            <i class="fas fa-user-edit fa-lg text-white"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Messages -->
+    {% if messages %}
+      <div class="mb-4">
+        {% for message in messages %}
+          <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+            <i class="fas fa-{% if message.tags == 'success' %}check-circle{% else %}exclamation-triangle{% endif %} me-2"></i>
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+
+    <!-- Edit Profile Form -->
+    <div class="glass-form">
+      <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <!-- Personal Information Section -->
+        <div class="form-section">
+          <h3 class="form-section-title">
+            <i class="fas fa-user-circle"></i>
+            Personal Information
+          </h3>
+          
+          <div class="row">
+            <!-- First Name -->
+            <div class="col-md-6">
+              <div class="form-input-group">
+                <label for="{{ form.first_name.id_for_label }}">First Name</label>
+                <div class="input-with-icon">
+                  <i class="fas fa-user input-icon"></i>
+                  {{ form.first_name }}
+                </div>
+                {% if form.first_name.errors %}
+                  <div class="error-message">
+                    <i class="fas fa-exclamation-circle me-1"></i>
+                    {{ form.first_name.errors }}
+                  </div>
+                {% endif %}
+              </div>
+            </div>
+
+            <!-- Last Name -->
+            <div class="col-md-6">
+              <div class="form-input-group">
+                <label for="{{ form.last_name.id_for_label }}">Last Name</label>
+                <div class="input-with-icon">
+                  <i class="fas fa-user input-icon"></i>
+                  {{ form.last_name }}
+                </div>
+                {% if form.last_name.errors %}
+                  <div class="error-message">
+                    <i class="fas fa-exclamation-circle me-1"></i>
+                    {{ form.last_name.errors }}
+                  </div>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Contact Information Section -->
+        <div class="form-section">
+          <h3 class="form-section-title">
+            <i class="fas fa-address-book"></i>
+            Contact Information
+          </h3>
+          
+          <div class="row">
+            <!-- Email -->
+            <div class="col-md-6">
+              <div class="form-input-group">
+                <label for="{{ form.email.id_for_label }}">Email Address</label>
+                <div class="input-with-icon">
+                  <i class="fas fa-envelope input-icon"></i>
+                  {{ form.email }}
+                </div>
+                {% if form.email.errors %}
+                  <div class="error-message">
+                    <i class="fas fa-exclamation-circle me-1"></i>
+                    {{ form.email.errors }}
+                  </div>
+                {% endif %}
+              </div>
+            </div>
+
+            <!-- Phone Number -->
+            <div class="col-md-6">
+              <div class="form-input-group">
+                <label for="{{ form.phone_number.id_for_label }}">Phone Number</label>
+                <div class="input-with-icon">
+                  <i class="fas fa-phone input-icon"></i>
+                  {{ form.phone_number }}
+                </div>
+                {% if form.phone_number.errors %}
+                  <div class="error-message">
+                    <i class="fas fa-exclamation-circle me-1"></i>
+                    {{ form.phone_number.errors }}
+                  </div>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Identification Section -->
+        <div class="form-section">
+          <h3 class="form-section-title">
+            <i class="fas fa-id-card"></i>
+            Identification
+          </h3>
+          
+          <!-- ID Number -->
+          <div class="form-input-group">
+            <label for="{{ form.id_number.id_for_label }}">ID Number</label>
+            <div class="input-with-icon">
+              <i class="fas fa-id-card input-icon"></i>
+              {{ form.id_number }}
+            </div>
+            {% if form.id_number.errors %}
+              <div class="error-message">
+                <i class="fas fa-exclamation-circle me-1"></i>
+                {{ form.id_number.errors }}
+              </div>
+            {% endif %}
+          </div>
+        </div>
+
+        <!-- Form Actions -->
+        <div class="d-flex gap-3 justify-content-end pt-4">
+          <a href="{% url 'tenant_profile' %}" class="btn btn-outline-secondary px-4 py-2 rounded-pill">
+            <i class="fas fa-arrow-left me-2"></i>Cancel
+          </a>
+          <button type="submit" class="btn-modern">
+            <i class="fas fa-save me-2"></i>Save Changes
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Add modern styling to form inputs
+    const formInputs = document.querySelectorAll('input, select, textarea');
+    formInputs.forEach(input => {
+      if (!input.classList.contains('form-control-modern')) {
+        input.classList.add('form-control-modern');
+      }
+    });
+
+    // Add smooth animations
+    const form = document.querySelector('.glass-form');
+    form.style.opacity = '0';
+    form.style.transform = 'translateY(30px)';
+    
+    setTimeout(() => {
+      form.style.transition = 'all 0.6s ease';
+      form.style.opacity = '1';
+      form.style.transform = 'translateY(0)';
+    }, 200);
+
+    // Add focus effects
+    const inputs = document.querySelectorAll('.form-control-modern');
+    inputs.forEach(input => {
+      input.addEventListener('focus', function() {
+        this.parentElement.classList.add('focused');
+      });
+      
+      input.addEventListener('blur', function() {
+        this.parentElement.classList.remove('focused');
+      });
+    });
+
+    // Auto-dismiss alerts after 5 seconds
+    const alerts = document.querySelectorAll('.alert');
+    alerts.forEach(alert => {
+      setTimeout(() => {
+        if (alert.parentNode) {
+          const bsAlert = new bootstrap.Alert(alert);
+          bsAlert.close();
+        }
+      }, 5000);
+    });
+  });
+</script>
+{% endblock %}

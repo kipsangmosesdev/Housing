@@ -1,0 +1,278 @@
+{% extends 'myApp/base.html' %}
+{% load static %}
+
+{% block title %}Terms and Conditions - XbomaSwift{% endblock %}
+
+{% block content %}
+<div class="terms-container">
+    <header class="terms-header">
+        <h1>Terms and Conditions</h1>
+        <div class="divider"></div>
+        <p class="effective-date">Effective Date: <strong>August 2, 2025</strong></p>
+    </header>
+
+    <div class="terms-content">
+        <section class="terms-section">
+            <h2>1. Introduction</h2>
+            <p>Welcome to <strong>XbomaSwift</strong>. These Terms and Conditions govern your use of our platform and related services. By using XbomaSwift, you agree to abide by these Terms. If you do not agree, kindly discontinue use immediately.</p>
+        </section>
+
+        <section class="terms-section">
+            <h2>2. Definitions</h2>
+            <ul>
+                <li><strong>"Platform"</strong>: Refers to the XbomaSwift website and all related digital services.</li>
+                <li><strong>"Tenant"</strong>: A user searching for or viewing rental properties.</li>
+                <li><strong>"Landlord"</strong>: A user listing properties for rent.</li>
+                <li><strong>"Mover"</strong>: A verified service provider offering relocation or moving services to tenants through the XbomaSwift platform.</li>
+                <li><strong>"Swifts"</strong>: Digital credits used to unlock landlord contact details.</li>
+                <li><strong>"Subscription"</strong>: A landlord plan that allows property listings.</li>
+            </ul>
+        </section>
+
+        <section class="terms-section">
+            <h2>3. Eligibility</h2>
+            <p>To use XbomaSwift, you must be at least 18 years of age. By registering as a Tenant, Landlord, or Mover, you confirm that all details provided are accurate. You are responsible for maintaining the confidentiality of your account credentials.</p>
+        </section>
+
+        <section class="terms-section">
+            <h2>4. Account Creation and Usage</h2>
+            <ul>
+                <li>All users must register and be approved before accessing platform features.</li>
+                <li>Each user is responsible for all activity under their account.</li>
+                <li>Accounts violating these Terms or misusing features may be suspended or permanently deleted.</li>
+            </ul>
+        </section>
+
+        <section class="terms-section">
+            <h2>5. Services to Tenants</h2>
+            <ul>
+                <li>Tenants can browse verified rental listings and view them on an interactive map.</li>
+                <li>Tenants use <strong>Swifts</strong> to unlock landlord contact details.</li>
+                <li>Tenants can rate and review properties they have visited or rented.</li>
+                <li>Tenants have access to a <strong>wishlist</strong> and <strong>view history</strong> instead of cookies for personal tracking.</li>
+                <li>Smart automation and AI assistance help tenants find nearby properties instantly, often in under a minute.</li>
+            </ul>
+        </section>
+
+        <section class="terms-section">
+            <h2>6. Services to Landlords</h2>
+            <ul>
+                <li>Landlords must subscribe to a plan to list and manage their properties.</li>
+                <li>Plans are defined by the number of properties allowed (Basic: 1, Standard: 3, Premium: 7).</li>
+                <li>All property details must be accurate and updated regularly.</li>
+                <li>Inactive or rented-out listings should be marked accordingly.</li>
+            </ul>
+        </section>
+
+        <section class="terms-section">
+            <h2>6A. Services to Movers</h2>
+            <ul>
+                <li>Movers can register and list their relocation or transport services on the platform.</li>
+                <li>All Movers must provide accurate company or personal details, including valid business permits where applicable.</li>
+                <li>Movers are responsible for fulfilling service requests promptly and professionally.</li>
+                <li>XbomaSwift serves only as a connection platform and does not employ or directly endorse any mover.</li>
+                <li>Service ratings and reviews help maintain trust and accountability within the platform.</li>
+            </ul>
+        </section>
+
+        <section class="terms-section">
+            <h2>7. Swifts and Payments</h2>
+            <ul>
+                <li>Tenants purchase <strong>Swifts</strong> via M-PESA or other approved payment channels.</li>
+                <li>Each Swift unlocks one landlord’s contact details.</li>
+                <li>Swifts are non-refundable and non-transferable.</li>
+                <li>Landlords pay monthly subscription fees as per their selected plan.</li>
+                <li>Movers may pay service listing or promotion fees depending on their chosen visibility package.</li>
+            </ul>
+            <div class="note-box">
+                <p><strong>Note:</strong> All payments are processed securely through verified payment partners. Every transaction is recorded to assist in dispute resolution and tax compliance.</p>
+            </div>
+        </section>
+
+        <section class="terms-section">
+            <h2>8. Listings and Accuracy</h2>
+            <p>All listed properties and mover services must be accurate, up-to-date, and include genuine images or service descriptions. Misleading or false information may lead to listing removal or account suspension. XbomaSwift verifies listings and user accounts for authenticity, but final due diligence rests with users.</p>
+        </section>
+
+        <section class="terms-section">
+            <h2>9. Reviews and Ratings</h2>
+            <p>Tenants and Movers are encouraged to share honest experiences through reviews and ratings. Feedback must be respectful and truthful. XbomaSwift may remove reviews deemed offensive or misleading.</p>
+        </section>
+
+        <section class="terms-section">
+            <h2>10. Platform Integrity</h2>
+            <ul>
+                <li>Users shall not attempt to reverse-engineer, hack, or manipulate the platform.</li>
+                <li>Impersonation, spamming, or data tampering is strictly prohibited.</li>
+                <li>Violations may lead to account termination or legal action.</li>
+            </ul>
+        </section>
+
+        <section class="terms-section">
+            <h2>11. Automation and AI Assistance</h2>
+            <p>XbomaSwift employs smart automation and AI to enhance user experience, including real-time property suggestions, nearby rental detection, and instant communication features. These technologies are designed to save users time while maintaining transparency and fairness.</p>
+        </section>
+
+        <section class="terms-section">
+            <h2>12. Privacy and Data Usage</h2>
+            <p>XbomaSwift values your privacy. We do not use cookies to track your activity. Instead, registered tenants can manage favorites using a <strong>wishlist</strong> and review their <strong>viewing history</strong> from their accounts. For more details, see our <a href="{% url 'privacy_policy' %}">Privacy Policy</a>.</p>
+        </section>
+
+        <section class="terms-section">
+            <h2>13. Transaction Records</h2>
+            <p>All payment and activity records are securely stored to help resolve disputes, support transparency, and comply with Kenyan tax regulations. XbomaSwift retains the right to use these records for lawful verification purposes only.</p>
+        </section>
+
+        <section class="terms-section">
+            <h2>14. Limitation of Liability</h2>
+            <p>XbomaSwift shall not be held liable for losses, damages, or disputes resulting from user interactions, property transactions, moving services, or third-party payment issues. Users transact at their own discretion and risk.</p>
+        </section>
+
+        <section class="terms-section">
+            <h2>15. Changes to These Terms</h2>
+            <p>We may revise these Terms periodically. Updated versions will be posted with a new effective date. Continued use of the platform constitutes acceptance of any changes.</p>
+        </section>
+        
+        <section class="terms-section">
+            <h2>16. Mover Compliance Policy (NTSA and Legal Responsibility)</h2>
+            <ul>
+                <li>All Movers listed on <strong>XbomaSwift</strong> operate as independent service providers and are solely responsible for their own legal and regulatory compliance.</li>
+                <li>Movers who operate motor vehicles, trucks, pickups, lorries or trailers for commercial transportation of goods are required to possess a valid <strong>Commercial Vehicle License (CVL)</strong> or <strong>Operator’s License</strong> as issued by the <strong>National Transport and Safety Authority (NTSA)</strong>.</li>
+                <li>Only Movers with complete and verified documents will receive a <strong>Verified</strong> badge. Tenants are responsible for confirming mover credentials.</li>
+                <li>Movers must ensure that all vehicles used for relocation or transport are properly registered, insured (including <strong>Goods-in-Transit</strong> or commercial vehicle insurance), and roadworthy according to NTSA standards.</li>
+                <li><strong>XbomaSwift</strong> does not own, operate, or control any moving vehicles or equipment. The platform only connects tenants, landlords, and movers for convenience and transparency.</li>
+                <li>Each Mover shall be fully responsible for compliance with local, county, and national transport laws, including driver qualifications and taxation obligations.</li>
+                <li>In the event of an accident, damage, loss, or legal claim arising from transport activities, the responsibility lies with the individual Mover and not with <strong>XbomaSwift</strong>.</li>
+                <li><strong>XbomaSwift</strong> reserves the right to verify, suspend, or remove any Mover who fails to meet NTSA or insurance requirements, or who engages in unsafe or fraudulent practices.</li>
+            </ul>
+            <div class="note-box">
+                <p><strong>Important:</strong> XbomaSwift acts solely as a connection platform. Users acknowledge that all moving services are offered independently and assume responsibility for hiring decisions.</p>
+            </div>
+        </section>
+
+        <section class="terms-section">
+            <h2>17. Governing Law</h2>
+            <p>These Terms shall be governed by and construed in accordance with the laws of Kenya. Any legal matters will be handled within competent Kenyan courts.</p>
+        </section>
+
+        <section class="terms-section">
+            <h2>18. Contact Information</h2>
+            <ul class="contact-list">
+                <li><i class="fas fa-envelope"></i> <a href="mailto:kipsangmoses@outlook.com">kipsangmoses@outlook.com</a></li>
+                <li><i class="fas fa-globe"></i> <a href="https://www.xbomaswift.com">www.xbomaswift.com</a></li>
+            </ul>
+        </section>
+    </div>
+
+    <footer class="terms-footer">
+        <p>&copy; 2025 XbomaSwift. All rights reserved.</p>
+    </footer>
+</div>
+
+<style>
+    :root {
+        --green: #2a5a78;
+        --gold: #c8a173;
+        --light-bg: #f9f9f9;
+        --text-dark: #333;
+        --text-gray: #555;
+    }
+
+    .terms-container {
+        max-width: 1100px;
+        margin: auto;
+        padding: 20px;
+        font-family: "Segoe UI", Roboto, sans-serif;
+        color: var(--text-dark);
+        line-height: 1.6;
+    }
+
+    .terms-header {
+        text-align: center;
+        margin-bottom: 25px;
+    }
+
+    .terms-header h1 {
+        color: var(--green);
+        font-weight: 700;
+        font-size: 2rem;
+    }
+
+    .divider {
+        width: 70px;
+        height: 3px;
+        margin: 10px auto;
+        background: linear-gradient(90deg, var(--green), var(--gold));
+        border-radius: 2px;
+    }
+
+    .terms-content {
+        background: white;
+        border-radius: 10px;
+        padding: 25px;
+        box-shadow: 0 3px 15px rgba(0, 0, 0, 0.05);
+    }
+
+    .terms-section {
+        margin-bottom: 25px;
+        border-bottom: 1px solid #eee;
+        padding-bottom: 15px;
+    }
+
+    .terms-section h2 {
+        font-size: 1.3rem;
+        color: var(--green);
+        font-weight: 600;
+        margin-bottom: 10px;
+    }
+
+    .terms-section p, .terms-section li {
+        font-size: 0.95rem;
+        color: var(--text-gray);
+    }
+
+    .note-box {
+        background: #fff8e6;
+        border-left: 4px solid var(--gold);
+        padding: 12px 15px;
+        border-radius: 5px;
+        font-size: 0.9rem;
+    }
+
+    .contact-list {
+        list-style: none;
+        padding-left: 0;
+    }
+
+    .contact-list li {
+        margin-bottom: 8px;
+        display: flex;
+        align-items: center;
+    }
+
+    .contact-list i {
+        color: var(--gold);
+        margin-right: 10px;
+    }
+
+    .terms-footer {
+        text-align: center;
+        color: var(--text-gray);
+        margin-top: 25px;
+        font-size: 0.85rem;
+        border-top: 1px solid #eee;
+        padding-top: 15px;
+    }
+
+    @media (max-width: 768px) {
+        .terms-header h1 { font-size: 1.7rem; }
+        .terms-section h2 { font-size: 1.1rem; }
+        .terms-section p, .terms-section li { font-size: 0.9rem; }
+    }
+
+    @media (max-width: 480px) {
+        .terms-header h1 { font-size: 1.5rem; }
+        .terms-content { padding: 15px; box-shadow: none; }
+    }
+</style>
+{% endblock %}

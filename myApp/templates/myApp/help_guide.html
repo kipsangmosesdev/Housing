@@ -1,0 +1,453 @@
+{% extends 'myApp/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="help-guide container py-5">
+  <header class="text-center mb-5">
+    <h1 class="display-4 fw-bold" style="color: #092e20;">XbomaSwift Help Guide</h1>
+    <div class="divider mx-auto my-3" style="height: 3px; width: 80px; background: linear-gradient(90deg, #092e20, #FFD700);"></div>
+    <p class="lead">Everything you need to know about using XbomaSwift</p>
+  </header>
+
+  <div class="row g-4">
+    <!-- ========== TENANT SECTION ========== -->
+    <section class="col-lg-6">
+      <div class="card h-100 border-0 shadow-sm">
+        <div class="card-header" style="background-color: #092e20; color: white;">
+          <h2 class="h3 mb-0"><i class="fas fa-user me-2"></i> For Tenants</h2>
+        </div>
+        <div class="card-body">
+          <!-- Account Creation -->
+          <article class="guide-section">
+            <h3 class="h4" style="color: #092e20;"><i class="fas fa-user-plus me-2" style="color: #FFD700;"></i> Account Creation</h3>
+            <ul class="guide-list">
+              <li>Click the <strong>Login</strong> button at the top-right corner</li>
+              <li>Click <strong>Request Access</strong></li>
+              <li>Select <strong>"I am a Tenant"</strong></li>
+              <li>Fill in your details including:
+                <ul>
+                  <li>Full name</li>
+                  <li>Email address</li>
+                  <li>Phone number</li>
+                  <li>Preferred password</li>
+                </ul>
+              </li>
+              <li>Submit the form</li>
+            </ul>
+          </article>
+
+          <!-- Logging In -->
+          <article class="guide-section mt-4">
+            <h3 class="h4" style="color: #092e20;"><i class="fas fa-sign-in-alt me-2" style="color: #FFD700;"></i> Logging In</h3>
+            <ul class="guide-list">
+              <li>Click the <strong>Login</strong> button</li>
+              <li>Enter your registered username/email and password</li>
+              <li>Click <strong>Login</strong> to access your dashboard</li>
+              <li>Forgot password? Click <strong>Reset Password</strong> link</li>
+            </ul>
+          </article>
+
+          <!-- Dashboard -->
+          <article class="guide-section mt-4">
+            <h3 class="h4" style="color: #092e20;"><i class="fas fa-tachometer-alt me-2" style="color: #FFD700;"></i> Dashboard Overview</h3>
+            <ul class="guide-list">
+              <li><strong>Buy Coins</strong> - Purchase KRH coins for property access</li>
+              <li><strong>View Property Map</strong> - Interactive map of available properties</li>
+              <li><strong>KRH Coin Balance</strong> - Your current coin amount</li>
+              <li><strong>Your Profile</strong> - Update personal information</li>
+              <li><strong>Favourite Properties</strong> - Saved properties</li>
+              <li><strong>Recent Property Views</strong> - Your browsing history</li>
+              <li><strong>Transactions</strong> - Payment and coin purchase records</li>
+            </ul>
+          </article>
+
+          <!-- Buying Coins -->
+          <article class="guide-section mt-4">
+            <h3 class="h4" style="color: #092e20;"><i class="fas fa-coins me-2" style="color: #FFD700;"></i> Buying Coins</h3>
+            <ul class="guide-list">
+              <li>Click <strong>Buy Coins</strong> from the navbar</li>
+              <li>Select your preferred coin bundle:
+                <ul>
+                  <li>1 coin - KES 10</li>
+                  <li>5 coins - KES 45</li>
+                  <li>10 coins - KES 80</li>
+                </ul>
+              </li>
+              <li>Enter your MPESA phone number</li>
+              <li>Confirm payment via MPESA prompt</li>
+              <li>Coins are credited immediately upon successful payment</li>
+            </ul>
+            <div class="note mt-3 p-2 rounded" style="background-color: #FFF8E1; border-left: 3px solid #FFD700;">
+              <i class="fas fa-info-circle me-1" style="color: #FFD700;"></i> 1 coin = 1 property contact unlock
+            </div>
+          </article>
+
+          <!-- Property Map -->
+          <article class="guide-section mt-4">
+            <h3 class="h4" style="color: #092e20;"><i class="fas fa-map-marked-alt me-2" style="color: #FFD700;"></i> Viewing Property Map</h3>
+            <ul class="guide-list">
+              <li>Click <strong>View Property Map</strong> from dashboard</li>
+              <li>Use the search bar to locate specific areas</li>
+              <li>Click <strong>Locate Me</strong> to find your current position</li>
+              
+              <li>Click on map pins to preview:
+                <ul>
+                  <li>Monthly rent</li>
+                  <li>Property images</li>
+                  <li>Bedroom count</li>
+                  <li>Exact location</li>
+                </ul>
+              </li>
+              <li>Click the <strong>Directions icon</strong> to get travel distance and routes</li>
+            </ul>
+          </article>
+
+          <!-- Property Details -->
+          <article class="guide-section mt-4">
+            <h3 class="h4" style="color: #092e20;"><i class="fas fa-info-circle me-2" style="color: #FFD700;"></i> Viewing Property Details</h3>
+            <ul class="guide-list">
+              <li>Click <strong>View Details</strong> on a map pin</li>
+              <li>See complete property information:
+                <ul>
+                  <li>Apartment name and description</li>
+                  <li>Amenities checklist</li>
+                  <li>High-quality image gallery</li>
+                  <li>Interactive map location</li>
+                  <li>Landlord contact (requires coins)</li>
+                </ul>
+              </li>
+              <li>Use <strong>Google Maps</strong> integration for directions</li>
+              <li>Save property to your favorites</li>
+              <li>Leave comments and view previous tenant feedback</li>
+              <li>Click <strong>Contact Landlord</strong> (deducts 1 coin)</li>
+            </ul>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== LANDLORD SECTION ========== -->
+    <section class="col-lg-6">
+      <div class="card h-100 border-0 shadow-sm">
+        <div class="card-header" style="background-color: #092e20; color: white;">
+          <h2 class="h3 mb-0"><i class="fas fa-home me-2"></i> For Landlords</h2>
+        </div>
+        <div class="card-body">
+          <!-- Account Creation -->
+          <article class="guide-section">
+            <h3 class="h4" style="color: #092e20;"><i class="fas fa-user-plus me-2" style="color: #FFD700;"></i> Account Creation</h3>
+            <ul class="guide-list">
+              <li>Click <strong>Login</strong> then <strong>Request Access</strong></li>
+              <li>Select <strong>"I am a Landlord"</strong> option</li>
+              <li>Fill in required details:
+                <ul>
+                  <li>Full name</li>
+                  <li>Email address</li>
+                  <li>Phone number</li>
+                  <li>ID/Registration document</li>
+                </ul>
+              </li>
+              <li>Submit the registration form</li>
+            </ul>
+            <div class="note mt-2 p-2 rounded" style="background-color: #FFF8E1; border-left: 3px solid #FFD700;">
+              <i class="fas fa-info-circle me-1" style="color: #FFD700;"></i> Admins will review and approve your account within 24 hours
+            </div>
+          </article>
+
+          <!-- Logging In -->
+          <article class="guide-section mt-4">
+            <h3 class="h4" style="color: #092e20;"><i class="fas fa-sign-in-alt me-2" style="color: #FFD700;"></i> Logging In</h3>
+            <ul class="guide-list">
+              <li>Enter your registered email/username</li>
+              <li>Enter your password</li>
+              <li>Click <strong>Login</strong> button</li>
+              <li>Forgot password? Use <strong>Reset Password</strong> link</li>
+            </ul>
+          </article>
+
+          <!-- Dashboard -->
+          <article class="guide-section mt-4">
+            <h3 class="h4" style="color: #092e20;"><i class="fas fa-tachometer-alt me-2" style="color: #FFD700;"></i> Dashboard Overview</h3>
+            <ul class="guide-list">
+              <li><strong>Add/Manage Properties</strong> - Create and edit listings</li>
+              <li><strong>View Property Map</strong> - See all your listings</li>
+              <li><strong>Subscription & Receipts</strong> - Manage your plan</li>
+              <li><strong>Analytics</strong> - Views, comments, and ratings</li>
+              <li><strong>Performance Graphs</strong> - Engagement metrics</li>
+              <li><strong>Occupancy Distribution</strong> - Location popularity</li>
+              <li><strong>Tenant Inquiries</strong> - Contact history</li>
+            </ul>
+            <div class="note mt-3 p-2 rounded" style="background-color: #FFF8E1; border-left: 3px solid #FFD700;">
+              <i class="fas fa-info-circle me-1" style="color: #FFD700;"></i> Premium features like ratings analytics require Premium/Agent subscription
+            </div>
+          </article>
+
+          <!-- Adding Properties -->
+          <article class="guide-section mt-4">
+            <h3 class="h4" style="color: #092e20;"><i class="fas fa-plus-circle me-2" style="color: #FFD700;"></i> Adding Properties</h3>
+            <ul class="guide-list">
+              <li>From dashboard, click <strong>Add Property</strong></li>
+              <li>Fill in property details:
+                <ul>
+                  <li>Title and description</li>
+                  <li>Property type (Apartment, House, etc.)</li>
+                  <li>Exact location (address)</li>
+                  <li>Monthly rent amount</li>
+                  <li>Number of bedrooms/bathrooms</li>
+                  <li>Amenities checklist</li>
+                </ul>
+              </li>
+              <li>Pin the location on the map:
+                <ul>
+                  <li>Use satellite view for accuracy</li>
+                  <li>For new constructions, pin nearest landmark</li>
+                </ul>
+              </li>
+              <li>Upload high-quality images (up to 8):
+                <ul>
+                  <li>Include exterior shots</li>
+                  <li>Show all bedrooms</li>
+                  <li>Highlight amenities</li>
+                </ul>
+              </li>
+              <li>Submit for admin approval</li>
+            </ul>
+            <div class="note mt-3 p-2 rounded" style="background-color: #FFF8E1; border-left: 3px solid #FFD700;">
+              <i class="fas fa-info-circle me-1" style="color: #FFD700;"></i> Go to <strong>My Properties</strong> to edit submissions. Approval takes up to 2 hours.
+            </div>
+          </article>
+
+          <!-- Subscription Plans -->
+          <article class="guide-section mt-4">
+            <h3 class="h4" style="color: #092e20;"><i class="fas fa-crown me-2" style="color: #FFD700;"></i> Subscription Plans</h3>
+            <div class="table-responsive">
+              <table class="table table-bordered">
+                <thead style="background-color: #092e20; color: white;">
+                  <tr>
+                    <th>Plan</th>
+                    <th>Properties</th>
+                    <th>Price</th>
+                    <th>Features</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><strong>Basic</strong></td>
+                    <td>1 property</td>
+                    <td>KES 599/month</td>
+                    <td>Standard listing</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Standard</strong></td>
+                    <td>Up to 3</td>
+                    <td>KES 1,499/month</td>
+                    <td>Basic analytics</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Premium/Agent</strong></td>
+                    <td>Up to 7</td>
+                    <td>KES 2,999/month</td>
+                    <td>Full analytics, priority placement</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <ul class="guide-list mt-3">
+              <li>Payments are made via <strong>MPESA</strong></li>
+              <li>Upon successful payment, your properties become visible</li>
+              <li>Receive email receipts for all transactions</li>
+              <li>Upgrade/downgrade anytime</li>
+            </ul>
+          </article>
+
+          <!-- Property Analytics -->
+          <article class="guide-section mt-4">
+            <h3 class="h4" style="color: #092e20;"><i class="fas fa-chart-line me-2" style="color: #FFD700;"></i> Property Analytics</h3>
+            <ul class="guide-list">
+              <li><strong>Total Views</strong> - How many times your listing was seen</li>
+              <li><strong>Contact Clicks</strong> - Number of tenant inquiries</li>
+              <li><strong>Ratings & Reviews</strong> - Tenant feedback (Premium only)</li>
+              <li><strong>Performance Trends</strong> - Views over time</li>
+              <li><strong>Occupancy Distribution</strong> - Popular locations</li>
+              <li><strong>Comparison Metrics</strong> - How you rank in your area</li>
+            </ul>
+          </article>
+
+          <!-- Tenant Inquiries -->
+          <article class="guide-section mt-4">
+            <h3 class="h4" style="color: #092e20;"><i class="fas fa-envelope me-2" style="color: #FFD700;"></i> Tenant Inquiries</h3>
+            <ul class="guide-list">
+              <li>View complete contact logs with timestamps</li>
+              <li>See tenant profiles (if available)</li>
+              <li>Filter inquiries by property</li>
+              <li>Mark inquiries as followed-up</li>
+              <li>Export contact lists for follow-up</li>
+            </ul>
+          </article>
+
+          <!-- Profile Management -->
+          <article class="guide-section mt-4">
+            <h3 class="h4" style="color: #092e20;"><i class="fas fa-user-cog me-2" style="color: #FFD700;"></i> Profile Management</h3>
+            <ul class="guide-list">
+              <li>Update your personal/company information</li>
+              <li>Add/change contact details</li>
+              <li>Write a professional bio</li>
+              <li>Upload verification documents:
+                <ul>
+                  <li>ID copy</li>
+                  <li>Business registration</li>
+                  <li>Rental licenses</li>
+                </ul>
+              </li>
+              <li>Change password</li>
+              <li>Set notification preferences</li>
+            </ul>
+          </article>
+
+          <!-- Landlord Tips -->
+          <article class="guide-section mt-4">
+            <h3 class="h4" style="color: #092e20;"><i class="fas fa-lightbulb me-2" style="color: #FFD700;"></i> Landlord Tips</h3>
+            <ul class="guide-list">
+              <li><strong>Keep listings updated</strong> - Remove rented units promptly</li>
+              <li><strong>Quality images matter</strong> - Use good lighting and angles</li>
+              <li><strong>Monitor subscription</strong> - Renew before expiry to avoid downtime</li>
+              <li><strong>Engage with feedback</strong> - Respond professionally to reviews</li>
+              <li><strong>Accurate pricing</strong> - Research local market rates</li>
+              <li><strong>Detailed descriptions</strong> - Highlight unique features</li>
+            </ul>
+          </article>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- Support Footer -->
+  <div class="support-footer mt-5 p-4 rounded" style="background-color: #f8f9fa; border-top: 3px solid #FFD700;">
+    <div class="row align-items-center">
+      <div class="col-md-8">
+        <h3 style="color: #092e20;"><i class="fas fa-question-circle me-2"></i> Need More Help?</h3>
+        <p class="mb-0">Contact our support team for personalized assistance with any issues.</p>
+      </div>
+      <div class="col-md-4 text-md-end mt-3 mt-md-0">
+        <a href="mailto:support@xbomaswift.co.ke" class="btn btn-primary" style="background-color: #092e20; border-color: #092e20;">
+          <i class="fas fa-envelope me-1"></i> Email Support
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .help-guide {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.7;
+    color: #333;
+  }
+  
+  .guide-section {
+    margin-bottom: 2rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px dashed #e0e0e0;
+  }
+  
+  .guide-section:last-child {
+    border-bottom: none;
+  }
+  
+  .guide-list {
+    padding-left: 1.5rem;
+    margin-bottom: 0;
+  }
+  
+  .guide-list li {
+    margin-bottom: 0.5rem;
+    position: relative;
+  }
+  
+  .guide-list ul {
+    padding-left: 1.5rem;
+    margin-top: 0.5rem;
+  }
+  
+  .note {
+    font-size: 0.9rem;
+    margin-top: 0.5rem;
+  }
+  
+  .card {
+    transition: transform 0.3s ease;
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  
+  .card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+  }
+  
+  .card-header {
+    font-weight: 600;
+    padding: 1rem 1.5rem;
+  }
+  
+  .card-body {
+    padding: 1.5rem;
+  }
+  
+  .table th {
+    font-weight: 600;
+  }
+  
+  .support-footer {
+    transition: all 0.3s ease;
+  }
+  
+  .support-footer:hover {
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+  }
+  
+  @media (max-width: 992px) {
+    .display-4 {
+      font-size: 2.5rem;
+    }
+    
+    .card {
+      margin-bottom: 2rem;
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .display-4 {
+      font-size: 2.2rem;
+    }
+    
+    .card-header, .card-body {
+      padding: 1rem;
+    }
+    
+    .guide-list {
+      padding-left: 1rem;
+    }
+  }
+  
+  /* Color Scheme */
+  strong {
+    color: #092e20;
+  }
+  
+  a {
+    color: #092e20;
+    text-decoration: underline;
+  }
+  
+  a:hover {
+    color: #FFD700;
+  }
+  
+  .btn-primary:hover {
+    background-color: #FFD700 !important;
+    border-color: #FFD700 !important;
+    color: #092e20;
+  }
+</style>
+{% endblock %}

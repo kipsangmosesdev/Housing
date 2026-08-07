@@ -1,0 +1,210 @@
+{% extends 'myApp/base.html' %}
+{% load humanize %}
+
+{% block content %}
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-lg-8">
+      <!-- Header with icon -->
+      <div class="text-center mb-5">
+        <div class="icon-circle mb-3" style="background-color: #ffde8a; color: #0a754f;">
+          <i class="fas fa-star fa-2x"></i>
+        </div>
+        <h2 class="fw-bold" style="color: #0a754f;">Rate XbomaSwift</h2>
+        <p class="text-muted">Share your experience to help us improve</p>
+      </div>
+
+      <!-- Rating Form Card -->
+      <div class="card shadow-sm mb-5 border-0" style="border-top: 3px solid #0a754f;">
+        <div class="card-body p-4" style="background-color: #f9f5e9;">
+          <form method="post">
+            {% csrf_token %}
+            {{ form.non_field_errors }}
+
+            <!-- Star Rating -->
+            <div class="mb-4">
+              <label class="form-label fw-bold" style="color: #0a754f;">Your Rating:</label>
+              <div class="d-flex gap-2 mb-2" id="star-rating">
+                {% for i in "54321" reversed %}
+                  <i class="fas fa-star star"
+                     style="cursor: pointer; font-size: 2rem; color: #e0e0e0; transition: all 0.2s;"
+                     data-value="{{ i }}"
+                     onmouseover="hoverStars(this)"
+                     onmouseout="resetStars()"></i>
+                {% endfor %}
+              </div>
+              <small class="text-muted">Click to rate from 1 (worst) to 5 (best)</small>
+              {{ form.score }}
+              {% for error in form.score.errors %}
+                <div class="text-danger small">{{ error }}</div>
+              {% endfor %}
+            </div>
+
+            <!-- Review Textarea -->
+            <div class="mb-4">
+              {{ form.review.label_tag }}
+              {{ form.review }}
+              {% for error in form.review.errors %}
+                <div class="text-danger">{{ error }}</div>
+              {% endfor %}
+            </div>
+
+            <!-- Submit Button -->
+            <div class="d-grid">
+              <button type="submit" class="btn btn-lg fw-bold py-2" 
+                      style="background-color: #0a754f; color: white;">
+                <i class="fas fa-paper-plane me-2"></i> Submit Feedback
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- Ratings Summary -->
+      <div class="text-center mb-5 p-4 rounded-3" style="background-color: #ffde8a;">
+        <h4 class="fw-bold mb-3" style="color: #0a754f;">Community Feedback</h4>
+        <div class="d-flex justify-content-center align-items-center mb-3">
+          <div class="display-4 fw-bold me-3" style="color: #0a754f;">{{ average_score|floatformat:1 }}</div>
+          <div class="text-start">
+            <div class="mb-1">
+              {% with ''|center:5 as range %}
+                {% for _ in range %}
+                  <i class="fas fa-star{% if forloop.counter <= average_score %}{% else %}-half-alt{% endif %}" 
+                     style="color: #0a754f;"></i>
+                {% endfor %}
+              {% endwith %}
+            </div>
+            <div style="color: #0a754f;">Based on {{ all_ratings.count }} rating{{ all_ratings.count|pluralize }}</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Ratings List -->
+      <h4 class="fw-bold mb-4 border-bottom pb-2" style="color: #0a754f; border-color: #ffde8a !important;">What others are saying</h4>
+
+      {% for rating in all_ratings %}
+      <div class="card mb-3 border-0 shadow-sm" style="border-left: 3px solid #ffde8a;">
+        <div class="card-body">
+          <div class="d-flex align-items-start">
+            <!-- User Initials Avatar -->
+            <div class="me-3">
+              <div class="avatar rounded-circle d-flex align-items-center justify-content-center" 
+                   style="width: 50px; height: 50px; background-color: #0a754f; color: white;">
+                {% with rating.user.get_full_name|default:rating.user.username as full_name %}
+                {% with full_name.split as name_parts %}
+                  {% if name_parts|length >= 2 %}
+                    {{ name_parts.0|first|upper }}{{ name_parts.1|first|upper }}
+                  {% else %}
+                    {{ full_name|slice:":2"|upper }}
+                  {% endif %}
+                {% endwith %}
+                {% endwith %}
+              </div>
+            </div>
+            
+            <div class="flex-grow-1">
+              <div class="d-flex justify-content-between mb-2">
+                <div>
+                  <strong class="me-2">{{ rating.user.get_full_name|default:rating.user.username }}</strong>
+                  <span style="color: #0a754f;">
+                    {% with ''|center:rating.score as range %}
+                    {% for _ in range %}<i class="fas fa-star"></i>{% endfor %}
+                    {% endwith %}
+                  </span>
+                </div>
+                <small class="text-muted">{{ rating.timestamp|naturaltime }}</small>
+              </div>
+              {% if rating.review %}
+                <p class="mb-0">{{ rating.review }}</p>
+              {% else %}
+                <p class="text-muted mb-0"><em>No review provided</em></p>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+      {% empty %}
+      <div class="text-center py-4">
+        <i class="far fa-comment-dots fa-2x text-muted mb-3"></i>
+        <p class="text-muted">No feedback yet. Be the first to share your thoughts!</p>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+<script>
+  const stars = document.querySelectorAll('.star');
+  const scoreInput = document.querySelector('[name="score"]');
+  let currentRating = 0;
+
+  // Hover effect
+  function hoverStars(star) {
+    const value = parseInt(star.getAttribute('data-value'));
+    stars.forEach(s => {
+      const sValue = parseInt(s.getAttribute('data-value'));
+      s.style.color = sValue <= value ? '#0a754f' : '#e0e0e0';
+    });
+  }
+
+  // Reset to current rating or gray
+  function resetStars() {
+    stars.forEach(s => {
+      const sValue = parseInt(s.getAttribute('data-value'));
+      s.style.color = currentRating > 0 && sValue <= currentRating ? '#0a754f' : '#e0e0e0';
+    });
+  }
+
+  // Click handler
+  stars.forEach(star => {
+    star.addEventListener('click', function() {
+      currentRating = parseInt(this.getAttribute('data-value'));
+      scoreInput.value = currentRating;
+      resetStars();
+    });
+  });
+
+  // Initialize with any existing value
+  if (scoreInput.value) {
+    currentRating = parseInt(scoreInput.value);
+    resetStars();
+  }
+</script>
+
+<style>
+  .icon-circle {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  textarea {
+    min-height: 120px;
+    border-radius: 0.5rem;
+    border: 1px solid #ced4da;
+  }
+  
+  textarea:focus {
+    border-color: #ffde8a;
+    box-shadow: 0 0 0 0.25rem rgba(10, 117, 79, 0.15);
+  }
+  
+  .card {
+    transition: transform 0.2s;
+  }
+  
+  .card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1) !important;
+  }
+  
+  @media (max-width: 768px) {
+    .display-4 {
+      font-size: 2.5rem;
+    }
+  }
+</style>
+{% endblock %}
