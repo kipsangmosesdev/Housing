@@ -43,7 +43,7 @@ Thumbs.db
 # Virtual environment
 .env
 
-myProject/
+# myProject/
 settings.py
 
 
