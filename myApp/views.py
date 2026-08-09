@@ -9,6 +9,7 @@ from django.core.mail import send_mail
 from django.db.models import Avg
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
+from django.template import context
 from django.utils import timezone
 from itsdangerous import URLSafeTimedSerializer
 
@@ -1542,7 +1543,7 @@ from geopy.distance import geodesic
 
 # Nearby properties using high-precision geodesic distances
 @csrf_exempt
-@login_required(login_url='unified_login')
+# @login_required(login_url='unified_login')
 def nearby_properties_api(request):
     if request.method != "POST":
         return JsonResponse({"error": "Invalid request method"}, status=400)
@@ -1603,7 +1604,10 @@ def nearby_properties_api(request):
         nearby.append({
             "id": prop.id,
             "title": prop.title,
+            # Get image from PropertyImage model if available, else fallback to main image_url
+            "image_url": prop.images.first().image.url if prop.images.exists() else (prop.image.url if prop.image else ""),
             "property_type": prop.property_type.name if prop.property_type else "",
+            "is_verified": prop.is_verified,
             "rent": prop.rent,
             "bedrooms": prop.bedrooms,
             "bathrooms": prop.bathrooms,

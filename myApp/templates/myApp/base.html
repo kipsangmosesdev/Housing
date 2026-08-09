@@ -41,7 +41,6 @@
 <script nonce="{{ request.csp_nonce }}" src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
   <!-- Toast house location notifications -->
 
-{% if user.is_authenticated and user.tenant %}
 <script>
 // Remove trailing slash from the URL
 const propertyDetailBaseUrl = "{% url 'property_detail' 0 %}".replace(/0\/?$/, "").replace(/\/$/, "");
@@ -109,14 +108,22 @@ document.addEventListener("DOMContentLoaded", function () {
           html += `
             <li class="nearby-property mb-3">
               <i style="color:orange;" class="fas fa-building me-2"></i> 
-              <a href="${url}" class="text-decoration-none text-blue fw-bold">${prop.title}</a><br>
-              <span class="badge bg-secondary text-light">
+              <a href="${url}" class="text-decoration-none text-blue ">${prop.title}
+                
+                ${prop.is_verified ? ' <i class="bi bi-patch-check-fill text-primary fs-6"></i>' : ''}
+                </a><br>
+              
+              <img src="${prop.image_url}" alt="${prop.title}" class="img-fluid rounded mb-1" style="max-width: 150px; max-height: 80px;"><br>
+              <span class="text-muted" style="font-size: 0.875rem;">
                 ${prop.property_type} | 
                 <i class="fas fa-bed"></i> ${prop.bedrooms} | 
                 <i class="fas fa-bath"></i> ${prop.bathrooms}
-              </span><br>
-              <small class="text-muted">Ksh.${prop.rent.toLocaleString()}/month</small><br>
-              <small class="distance_km text-success fw-bold">~ ${distanceText}</small>
+              </span> |
+              <span class="text-muted" style="font-size: 0.875rem;">
+              <small class="text-muted">Ksh.${prop.rent.toLocaleString()}/month</small> <br>
+              <small class="distance_km text-success fw-bold">~ ${distanceText}</small> |
+              <a href="${url}" class="btn btn-sm btn-outline-primary"><i class="fas fa-info-circle"></i> More Info</a>
+              </span>
             </li> <hr>`;
         });
 
@@ -162,7 +169,6 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 });
 </script>
-{% endif %}
 
 <style>
 /* --- Variables & Global Styles --- */
@@ -526,7 +532,7 @@ html { scroll-behavior: smooth; }
   </footer>
   <!-- Toast Container (bottom right corner) -->
 
-{% if user.is_authenticated and user.tenant %}
+
 <!-- Offcanvas Nearby Properties Panel -->
 <div class="offcanvas offcanvas-end" tabindex="-1" id="nearbyOffcanvas" aria-labelledby="nearbyOffcanvasLabel">
   <div class="offcanvas-header bg-secondary text-white">
@@ -550,7 +556,6 @@ html { scroll-behavior: smooth; }
   </div>
 </div>
 
-{% endif %}
   
   <!-- Scripts -->
   <script nonce="{{ request.csp_once }}" src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>

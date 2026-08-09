@@ -210,18 +210,19 @@
   <div class="dashboard-header">
     <div class="row align-items-center">
       <div class="col-md-8">
-        <h1 class="h3 mb-2">Welcome, {{ transporter.full_name }}</h1>
-        <p class="mb-0 opacity-75">Your transporter dashboard</p>
+        <h1 class="h3 mb-2">
+           
+           {{ transporter.full_name }}
+            {% if transporter.verified %}      
+                 <i class="bi bi-patch-check-fill text-primary fs-5"></i>
+            {% endif %}
+          
+          </h1>
+        <!-- <p class="mb-0 opacity-75">Mover's dashboard</p> -->
       </div>
       <div class="col-md-4 text-md-end">
         <!-- Verification Status -->
-            {% if transporter.verified %}      
-                <!-- Verification badge icon -->
-                <span class="badge bg-success status-badge p-2"><i class="fas fa-shield-alt text-info"></i> Verified</span>
-            {% else %}
-                <!-- Verification badge icon -->
-                <span class="badge bg-warning text-dark status-badge p-2"><i class="fas fa-circle text-danger"></i> Not Verified</span>
-            {% endif %}
+            
           
         {% if transporter.online %}
           <span class="badge bg-info status-badge p-2"><i class="fas fa-circle me-1"></i> Online</span>
