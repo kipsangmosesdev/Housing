@@ -35,7 +35,15 @@
                     
                     <!-- Profile Header -->
                     <div class="p-4">
-                        <h1 class="h3 fw-bold text-dark mb-2">{{ transporter.full_name }}</h1>
+                        <h1 class="h3 fw-bold text-dark mb-2">{{ transporter.full_name }}
+
+                            <!-- Give mover a badge if verified -->
+                            {% if transporter.verified %}
+                                <i class="bi bi-patch-check-fill text-primary fs-6"></i>
+                            {% else %}
+                                <i class="bi bi-exclamation-circle-fill text-warning fs-6"></i>
+                            {% endif %}
+                        </h1>
                         
                         <!-- Rating -->
                         <div class="d-flex align-items-center mb-2">

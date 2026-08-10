@@ -355,7 +355,12 @@ function addPropertyMarker(latlng, title, rent, isAvailable, imgUrl, detailsUrl,
 
   const content = `
     <div class="property-popup" style="max-width:250px">
-      <span class="badge bg-success"><i class="fas fa-home me-1"></i>${title}</span><br>
+     <span class="fw-bold">${title}</span>
+     
+     {% if prop.is_verified %}
+      <span class="badge bg-success ms-1"><i class="fas fa-check-circle me-1"></i> Verified</span>
+     {% endif %}
+      <br>
       <img src="${imgUrl}" alt="${title}" class="img-thumbnail mb-2" style="max-height:100px;">
       <div class="d-flex align-items-center my-2">
         <span class="badge bg-primary me-2"><i class="fas fa-money-bill-wave me-1"></i> Ksh ${rent}/m</span>

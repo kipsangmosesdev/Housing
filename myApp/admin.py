@@ -239,7 +239,7 @@ class PropertyAdmin(admin.ModelAdmin):
     list_filter = ('is_available', 'is_approved','is_verified', 'featured', 'city', 'date_posted')
     search_fields = ('title','estate', 'landlord__user__email', 'landlord__id_number')
     actions = [export_as_csv]
-    list_editable = ('is_approved','is_verified','featured',)
+    list_editable = ('is_approved','is_verified','featured','is_available')
 
     inlines = [
         PropertyImageInline, 

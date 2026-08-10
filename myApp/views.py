@@ -1559,7 +1559,7 @@ def nearby_properties_api(request):
     except (TypeError, ValueError, KeyError):
         return JsonResponse({"error": "Invalid coordinates"}, status=400)
 
-    max_distance_km = 5  # 2 km range + 0.5 km allowance
+    max_distance_km = 5  # Define the maximum distance in kilometers to filter nearby properties
     now = timezone.now()
     nearby = []
 
@@ -1570,7 +1570,7 @@ def nearby_properties_api(request):
         is_approved=True,
         is_available=True,
         landlord__is_verified=True,  # Only verified landlords
-    )
+    )[:15]  # Limit to 15 for performance; adjust as needed
 
     # ---------------------------------------
     # 3. Loop through properties and calculate distances

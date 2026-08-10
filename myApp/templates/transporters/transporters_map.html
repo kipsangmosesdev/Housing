@@ -609,28 +609,34 @@
          </div>`;
 
     const availabilityHtml = transporter.is_available
-      ? '<span class="badge bg-success"><i class="fas fa-check-circle me-1"></i> Available</span>'
-      : '<span class="badge bg-secondary"><i class="fas fa-times-circle me-1"></i> Not Available</span>';
+      ? '<span class="badge bg-success"><i class="bi bi-check-circle me-1"></i> Available</span>'
+      : '<span class="badge bg-secondary"><i class="bi bi-times-circle me-1"></i> Not Available</span>';
 
     return `
           <div style="min-width: 250px;">
             <div style="display:flex;align-items:center;margin-bottom:8px;">
               ${imgHtml}
               <div style="flex:1">
-                <h5 style="margin:0 0 4px 0">${transporter.transport_type || 'Transport'}</h5>
+                <h5 style="margin:0 0 4px 0">${transporter.transport_type || 'Transport'}
+                  
+                  ${transporter.verified
+                  ? '<i class="bi bi-patch-check-fill text-primary fs-6"></i> '
+                  : '<i class="bi bi-exclamation-circle-fill text-warning fs-6"></i> '}
+                  
+                  </h5>
                 <div style="font-size:13px;color:#6c757d">Number plate: <small>${transporter.vehicle_plate || ''}</small></div>
     
-                <div style="font-size:13px;color:#6c757d">Mover: <small>${transporter.full_name || ''}</small></div>
-                ${transporter.verified
-                  ? '<span class="badge bg-success"><i class="fas fa-check-circle me-1"></i> Verified</span>'
-                  : '<span class="badge bg-danger"><i class="fas fa-times-circle me-1"></i> Not Verified</span>'}
+                <div style="font-size:13px;color:#6c757d">Mover: <small>${transporter.full_name || ''}
+                  
+                  </small></div>
+                
 
               </div>
             </div>
             <div style="margin-bottom:8px;">${availabilityHtml}</div>
             <div style="display:grid">
               <a style="color:gold" class="btn btn-primary btn-sm" href="/transporters/${transporter.id}/" target="_blank">
-                <i class="fas fa-info-circle me-1"></i> View Details
+                <i class="bi bi-info-circle me-1"></i> View Details
               </a>
             </div>
           </div>
