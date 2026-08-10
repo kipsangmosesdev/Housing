@@ -280,7 +280,8 @@
           "{% url 'property_detail' prop.id %}",
           "{{ prop.city }} | {{ prop.estate }}",
           {{ prop.bedrooms }},
-          {{ prop.bathrooms }}
+          {{ prop.bathrooms }},
+          {{ prop.is_verified|yesno:"true,false" }}
         );
       {% endif %}
     {% endfor %}
@@ -330,9 +331,12 @@ document.getElementById("locateMe").addEventListener("click", () => {
   }
 
 // Add custom property marker
-function addPropertyMarker(latlng, title, rent, isAvailable, imgUrl, detailsUrl, location, bedrooms, bathrooms) {
+function addPropertyMarker(latlng, title, rent, isAvailable, imgUrl, detailsUrl, location, bedrooms, bathrooms, is_verified=false) {
   const availability = isAvailable ? "Vacant" : "Occupied";
   const availabilityClass = isAvailable ? "bg-success" : "bg-danger";
+
+  // Add verified badge if property is verified
+  const verifiedBadge = is_verified ? '<i class="bi bi-patch-check-fill text-primary fs-7"></i>' : '';
 
   // Choose marker icon based on availability
   const markerIcon = isAvailable 
@@ -357,17 +361,17 @@ function addPropertyMarker(latlng, title, rent, isAvailable, imgUrl, detailsUrl,
     <div class="property-popup" style="max-width:250px">
      <span class="fw-bold">${title}</span>
      
-     {% if prop.is_verified %}
-      <span class="badge bg-success ms-1"><i class="fas fa-check-circle me-1"></i> Verified</span>
-     {% endif %}
+
+      ${verifiedBadge}    
+    
       <br>
       <img src="${imgUrl}" alt="${title}" class="img-thumbnail mb-2" style="max-height:100px;">
       <div class="d-flex align-items-center my-2">
-        <span class="badge bg-primary me-2"><i class="fas fa-money-bill-wave me-1"></i> Ksh ${rent}/m</span>
-        <p style="font-weight: 400;color: darkblue !important;" class="text-muted"><i class="fas fa-bed me-1"></i>${bedrooms} | <i class="fas fa-bath me-1"></i>${bathrooms}</p>
+       <p style="font-size: 0.7rem;" class="mb-0">Ksh ${rent}/m | <i class="fas fa-bed me-1"></i>${bedrooms} | <i class="fas fa-bath me-1"></i>${bathrooms}</p>
+        
       </div>
-      <span class="badge ${availabilityClass}"><i class="fas fa-bed me-1"></i>${availability}</span>
-      <p class="mb-2 small"><i class="fas fa-map-marker-alt text-danger me-1"></i>${location}</p>
+      <span class="badge ${availabilityClass}" style="font-size: 0.6rem;">${availability}</span>
+      
       <div class="d-flex gap-2">
         <a href="${detailsUrl}" target="_blank" class="btn btn-sm btn-secondary flex-grow-1"><i class="fas fa-eye me-1"></i> Details</a>
       </div>
