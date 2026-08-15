@@ -428,9 +428,9 @@ class GeneralTipAdmin(admin.ModelAdmin):
     list_filter = ('created_at', 'updated_at')
     
 # Customize admin site titles
-admin.site.site_header = "XbomaSwift"
-admin.site.site_title = "XbomaSwift Admin Portal"
-admin.site.index_title = "Welcome to XbomaSwift Admin Panel"
+admin.site.site_header = "KaoProX Administration"
+admin.site.site_title = "KaoProX Admin Portal"
+admin.site.index_title = "Welcome to KaoProX Admin Panel"
 
 
 

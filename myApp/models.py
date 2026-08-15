@@ -609,8 +609,18 @@ class TokenTransaction(models.Model):
             wallet.tokens += self.tokens_bought
             wallet.save()
 
-            # Set expiry date = 60 days from now
-            self.expiry_date = timezone.now() + timedelta(days=60)
+            # Set expiry date to 2 hours for 1 token, 1 day for 3 tokens, 2 days for 5 tokens,
+            # 7 days for 10 tokens and 14 days for 15 tokens
+            if self.tokens_bought == 1:
+                self.expiry_date = timezone.now() + timedelta(hours=2)
+            elif self.tokens_bought == 3:
+                self.expiry_date = timezone.now() + timedelta(days=1)
+            elif self.tokens_bought == 5:
+                self.expiry_date = timezone.now() + timedelta(days=2)
+            elif self.tokens_bought == 10:
+                self.expiry_date = timezone.now() + timedelta(days=7)
+            elif self.tokens_bought == 15:
+                self.expiry_date = timezone.now() + timedelta(days=14)
             super().save(update_fields=['expiry_date'])
 
     @classmethod

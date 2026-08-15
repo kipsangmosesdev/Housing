@@ -5,9 +5,9 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>XbomaSwift</title>
-  <meta name="description" content="XbomaSwift - Your trusted platform for finding and managing rental properties across Kenya. Explore listings, connect with landlords, and simplify your housing search." />
-  <meta name="author" content="XbomaSwift" />
+  <title>KaoProX</title>
+  <meta name="description" content="KaoProX - Your trusted platform for finding and managing rental properties across Kenya. Explore listings, connect with landlords, and simplify your housing search." />
+  <meta name="author" content="KaoProX" />
   <!-- SEO Optimization -->
   <meta name="keywords" content="rentals, properties, real estate, Kenya, housing" />
 
@@ -110,7 +110,7 @@ document.addEventListener("DOMContentLoaded", function () {
               
               <a href="${url}" class="text-decoration-none text-black ">${prop.title}
                 
-                ${prop.is_verified ? ' <i class="bi bi-patch-check-fill text-primary fs-6"></i>' : ''}
+                ${prop.is_verified ? ' <i class="bi bi-patch-check-fill text-primary fs-8"></i>' : ''}
                 </a><br>
               
               <img src="${prop.image_url}" alt="${prop.title}" class="img-fluid rounded mb-1" style="max-width: 150px; max-height: 80px;"><br>
@@ -121,6 +121,8 @@ document.addEventListener("DOMContentLoaded", function () {
               </span> |
               <span class="text-muted" style="font-size: 0.875rem;">
               <small class="text-muted">Ksh.${prop.rent.toLocaleString()}/month</small> <br>
+               
+              <small class="text-muted"><i class="fas fa-map-marker-alt"></i> ${prop.estate} | ${prop.address}</small> <br>
               <small class="distance_km text-success fw-bold">~ ${distanceText}</small> |
               <a href="${url}" class="btn btn-sm btn-outline-primary"><i class="fas fa-info-circle"></i> More Info</a>
               </span>
@@ -347,7 +349,7 @@ html { scroll-behavior: smooth; }
     <!-- Brand -->
     <a class="navbar-brand d-flex align-items-center" href="{% url 'tenant_landing' %}">
       <i class="fas fa-bolt me-2 text-warning"></i>
-      <span>XbomaSwift</span>
+      <span>KaoProX</span>
     </a>
 
     <!-- Toggler -->

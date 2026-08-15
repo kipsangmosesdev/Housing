@@ -78,8 +78,8 @@ SECURE_HSTS_INCLUDE_SUBDOMAINS = False
 # Application definition
 
 INSTALLED_APPS = [
-    # 'admin_interface',
-    # 'colorfield',
+    'admin_interface',
+    'colorfield',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -114,6 +114,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
 
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
     # 'csp.middleware.CSPMiddleware',
 ]
 

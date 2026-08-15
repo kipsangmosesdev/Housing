@@ -28,7 +28,8 @@ urlpatterns = [
     path('accounts/', include(('accounts.urls', 'accounts'), namespace='accounts')),
     # path('accounts/', include('django.contrib.auth.urls')),
     path('myApp/', include(('myApp.urls', 'myApp'), namespace='myApp')),
-    path('favicon.ico', RedirectView.as_view(url=staticfiles_storage.url('favicon.ico')))
+    path('favicon.ico', RedirectView.as_view(url=staticfiles_storage.url('favicon.ico'))),
+    path('i18n/', include('django.conf.urls.i18n')),
 ]
 
 # Serve media only in development

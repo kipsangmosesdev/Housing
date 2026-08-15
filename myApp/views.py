@@ -1609,6 +1609,8 @@ def nearby_properties_api(request):
             "property_type": prop.property_type.name if prop.property_type else "",
             "is_verified": prop.is_verified,
             "rent": prop.rent,
+            "estate": prop.estate,
+            "address": prop.address,
             "bedrooms": prop.bedrooms,
             "bathrooms": prop.bathrooms,
             "distance": round(distance, 2),  # Round to 2 decimal places for display
