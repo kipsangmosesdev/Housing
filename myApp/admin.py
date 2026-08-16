@@ -91,7 +91,7 @@ from django.utils.html import format_html
 
 from .models import (FAQ, GeneralTip, Payment, TokenWallet, Transporter,
                      TransporterEarnings, TransporterRating,
-                     TransporterSubscription, adminUpdate, registerUser)
+                     TransporterSubscription, YearlySubscriptionPlan, adminUpdate, registerUser)
 
 # from .admin_actions import export_as_csv  # if you have a custom action defined
 
@@ -426,7 +426,14 @@ class GeneralTipAdmin(admin.ModelAdmin):
     list_display = ('tip', 'created_at', 'updated_at')
     search_fields = ('tip',)
     list_filter = ('created_at', 'updated_at')
-    
+
+
+@admin.register(YearlySubscriptionPlan)
+class YearlySubscriptionPlanAdmin(admin.ModelAdmin):
+    list_display = ('landlord_type', 'price')
+    search_fields = ('landlord_type',)
+    list_filter = ('landlord_type',)
+
 # Customize admin site titles
 admin.site.site_header = "KaoProX Administration"
 admin.site.site_title = "KaoProX Admin Portal"

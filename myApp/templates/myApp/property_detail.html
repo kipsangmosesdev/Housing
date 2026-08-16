@@ -600,21 +600,16 @@ span.status-badge {
   <div class="card mb-4 border-0 shadow-sm">
     <div class="card-body p-3 p-md-4">
       <div class="d-flex justify-content-between align-items-center mb-3">
-        <h4 class="h5 mb-0"><i class="fas fa-map-marked-alt text-primary me-2"></i>{{property.title}} Location</h4>
-        <div class="d-flex gap-2">
-          
-          <button id="openDirections" class="btn btn-outline-primary" style="display: none;">
-            <i class="fas fa-directions me-1"></i> Show Route
-          </button>
-        </div>
+          <div class="d-flex gap-2 mt-2">
+              <a href="https://www.google.com/maps/dir/?api=1&destination={{ property.latitude }},{{ property.longitude }}" target="_blank" class="btn btn-sm btn-outline-primary">
+                <i class="fab fa-google me-1"></i> Direction to {{ property.title }} </a>
+          </div>
+        </h4>
+
+        
       </div>
       
-      <div class="position-relative">
-        <!-- Map Container -->
-        <div id="map" class="rounded-3" style="height: 500px;"></div>
-        
-        
-      </div>
+      
       
       <div class="mt-2 small text-muted">
         <i class="fas fa-info-circle me-1"></i> {{ property.address }}
@@ -878,90 +873,9 @@ span.status-badge {
 
 
   {% comment %} end of rating script {% endcomment %}
-<script
-    async
-    defer
-    src="https://maps.googleapis.com/maps/api/js?key={{ GOOGLE_MAPS_API_KEY }}&callback=initMap">
-</script>
 
-<script>
-let map, propertyMarker;
 
-function initMap() {
-  // Get property coordinates
-  const lat = parseFloat({{ property.latitude|default:"-1.2921" }});
-  const lng = parseFloat({{ property.longitude|default:"36.8219" }});
-  const propertyPosition = { lat: lat, lng: lng };
 
-  // Check if property is vacant or occupied
-  const isVacant = {{ property.is_available|yesno:"true,false" }};
-  const markerIcon = isVacant
-    ? "{% static 'myApp/images/marker-blue.jpg' %}"
-    : "{% static 'myApp/images/marker-gold.jpg' %}";
-
-  // Initialize Google Map
-  map = new google.maps.Map(document.getElementById("map"), {
-    center: propertyPosition,
-    zoom: 15,
-    mapTypeId: "roadmap",
-    mapTypeControl: true,
-    mapTypeControlOptions: {
-      style: google.maps.MapTypeControlStyle.DROPDOWN_MENU,
-      position: google.maps.ControlPosition.TOP_RIGHT,
-      mapTypeIds: ["roadmap", "satellite"]
-    },
-    zoomControl: true,
-    zoomControlOptions: { position: google.maps.ControlPosition.TOP_RIGHT }
-  });
-
-  // Create property marker
-  propertyMarker = new google.maps.Marker({
-    position: propertyPosition,
-    map: map,
-    icon: {
-      url: "{% static 'myApp/images/marker-blue.png' %}",
-      scaledSize: new google.maps.Size(30, 42)
-    },
-    title: "{{ property.title|escapejs }}",
-    label: {
-      
-      className: isVacant
-        ? "rent-marker-label green-label rotating-label"
-        : "rent-marker-label red-label"
-    }
-  });
-
-  // Create info window
-  const infoWindow = new google.maps.InfoWindow({
-    content:
-      '<div class="property-popup" style="max-width:230px">' +
-        '<h6 style="color: var(--primary-dark); text-align:center;" class="mb-1">{{ property.title|escapejs }}</h6>' +
-        '<p class="mb-1 small text-muted">' +
-          '<i class="fas fa-money-bill-wave me-1" style="color:red"></i>' +
-          '<strong>KSH {{ property.rent|escapejs }} / month</strong>' +
-        '</p>' +
-        '<div class="d-flex gap-2 mt-2">' +
-          '<a href="https://www.google.com/maps/dir/?api=1&destination=' + lat + ',' + lng + '"' +
-            ' target="_blank" class="btn btn-sm btn-outline-primary">' +
-            '<i class="fab fa-google me-1"></i> Directions' +
-          '</a>' +
-        '</div>' +
-      '</div>'
-  });
-
-  // Open info window immediately on map load
-  infoWindow.open(map, propertyMarker);
-
-  // Optional: also keep it open on click
-  propertyMarker.addListener("click", () => {
-    infoWindow.open(map, propertyMarker);
-  });
-}
-
-// Run init
-initMap();
-
-</script>
 
   <!-- Bottom Navigation -->
   <div class="d-flex flex-column flex-md-row justify-content-between gap-3 mt-4">

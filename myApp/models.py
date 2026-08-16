@@ -48,12 +48,22 @@ class registerUser(models.Model):
             plan = SubscriptionPlan.objects.get(landlord_type=self.landlord_type)
             return plan.price
         except SubscriptionPlan.DoesNotExist:
+                return 0
+    def __str__(self):
+        return f"{self.first_name} {self.last_name} ({self.landlord_type})"
+
+    def yearly_subscription_fee(self):
+        from .models import YearlySubscriptionPlan  # Local import to prevent circular dependency
+        try:
+            yearly_plan = YearlySubscriptionPlan.objects.get(landlord_type=self.landlord_type)
+            return yearly_plan.price
+        except YearlySubscriptionPlan.DoesNotExist:
             return 0
     def __str__(self):
         return f"{self.first_name} {self.last_name} ({self.landlord_type})"
 
 
-
+# Monthly subscription plans for landlords
 class SubscriptionPlan(models.Model):
     LANDLORD_TYPES = [
         ('individual', 'Individual (Basic)'),
@@ -64,12 +74,29 @@ class SubscriptionPlan(models.Model):
     price = models.PositiveIntegerField(help_text="Monthly subscription fee in KES")
     
     class Meta:
-        verbose_name = "Landlord subsription plan"
-        verbose_name_plural = "Landlord subscription plans"
+        verbose_name = "Landlord subscription plan"
+        verbose_name_plural = "Landlords Monthly plans"
 
     def __str__(self):
         return f"{self.get_landlord_type_display()} - KES {self.price}"
 
+
+# Yearly subscription plans for landlords
+class YearlySubscriptionPlan(models.Model):
+    LANDLORD_TYPES = [
+        ('individual', 'Individual (Basic)'),
+        ('company', 'Company (Standard)'),
+        ('agent', 'Agent (Premium)'),
+    ]
+    landlord_type = models.CharField(max_length=20, choices=LANDLORD_TYPES, unique=True)
+    price = models.PositiveIntegerField(help_text="Yearly subscription fee in KES")
+    
+    class Meta:
+        verbose_name = "Landlord yearly subscription plan"
+        verbose_name_plural = "Landlords yearly plans"
+
+    def __str__(self):
+        return f"{self.get_landlord_type_display()} - KES {self.price}"
 
 class adminUpdate(models.Model):
     title = models.CharField(max_length=200)
@@ -297,6 +324,10 @@ from django.db import models
 from django.utils import timezone
 
 
+from django.db import models
+from django.utils import timezone
+from datetime import timedelta
+
 class Payment(models.Model):
     STATUS_CHOICES = [
         ('Pending', 'Pending'),
@@ -304,37 +335,53 @@ class Payment(models.Model):
         ('Failed', 'Failed'),
     ]
 
+    SUBSCRIPTION_TYPE_CHOICES = [
+        ('monthly', 'Monthly'),
+        ('yearly', 'Yearly'),
+    ]
+
     landlord = models.ForeignKey('registerUser', on_delete=models.CASCADE, related_name='payments')
     plan = models.ForeignKey(
         'SubscriptionPlan', on_delete=models.CASCADE, related_name='payments', null=True, blank=True
     )
+    # Replaced yearly_plan foreign key with a clean structural type choice field
+    subscription_type = models.CharField(
+        max_length=10, 
+        choices=SUBSCRIPTION_TYPE_CHOICES, 
+        default='monthly'
+    )
     amount = models.DecimalField(max_digits=8, decimal_places=2)
-    phone_number = models.CharField(max_length=13)  # Should always be in '2547...' format
-    transaction_id = models.CharField(max_length=100, unique=True, null=True, blank=True)  # Can be CheckoutRequestID or receipt
+    phone_number = models.CharField(max_length=13)  # Format: '2547...'
+    transaction_id = models.CharField(max_length=100, unique=True, null=True, blank=True)
     mpesa_receipt = models.CharField(max_length=100, null=True, blank=True)
     checkout_request_id = models.CharField(max_length=100, null=True, blank=True)
-    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='Pending')  # New status field
-    is_successful = models.BooleanField(default=False)  # Optional for quick checks
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='Pending')
+    is_successful = models.BooleanField(default=False)
     timestamp = models.DateTimeField(default=timezone.now)
     expiry_date = models.DateTimeField(null=True, blank=True)
 
     def save(self, *args, **kwargs):
-        # Automatically calculate expiry if successful and not set
-        if self.status == 'Success' and not self.expiry_date:
-            self.expiry_date = self.timestamp + timedelta(days=30)
-            self.is_successful = True  # Keep in sync
-        elif self.status != 'Success':
+        # Sync is_successful boolean with status choices
+        if self.status == 'Success':
+            self.is_successful = True
+            # Dynamically calculate expiry dates upon transition to successful
+            if not self.expiry_date:
+                if self.subscription_type == 'yearly':
+                    self.expiry_date = self.timestamp + timedelta(days=365)
+                else:
+                    self.expiry_date = self.timestamp + timedelta(days=30)
+        else:
             self.is_successful = False
 
         super().save(*args, **kwargs)
 
     def __str__(self):
-        return f"{self.landlord} - {self.amount} KES on {self.timestamp.strftime('%Y-%m-%d')}"
+        return f"{self.landlord} - {self.amount} KES ({self.get_subscription_type_display()}) on {self.timestamp.strftime('%Y-%m-%d')}"
 
     class Meta:
         ordering = ["-timestamp"]
-        verbose_name = "Landlords subscriptions"
-        verbose_name_plural = "Landlords subscriptions"
+        verbose_name = "Landlord Subscription"
+        verbose_name_plural = "Landlords Subscriptions"
         
         indexes = [
             models.Index(fields=['checkout_request_id']),
@@ -710,7 +757,7 @@ class Transporter(models.Model):
     latitude = models.FloatField(null=True, blank=True)
     longitude = models.FloatField(null=True, blank=True)
     online = models.BooleanField(default=True)
-    active = models.BooleanField(default=True)
+    active = models.BooleanField(default=False)
     verified = models.BooleanField(default=False)
     is_available = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)

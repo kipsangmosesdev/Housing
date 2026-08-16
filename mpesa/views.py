@@ -93,53 +93,66 @@ from django.shortcuts import get_object_or_404, redirect, render
 
 from mpesa.mpesa import lipa_na_mpesa  # Update this import as needed
 from myApp.forms import PaymentForm
-from myApp.models import Payment, registerUser
+from myApp.models import Payment, registerUser, SubscriptionPlan, YearlySubscriptionPlan
 
 
 @login_required
 def landlord_payment_view(request):
     landlord = get_object_or_404(registerUser, user=request.user)
-    amount = landlord.subscription_fee()
-
+    monthly_amount = landlord.subscription_fee()
+    yearly_amount = landlord.yearly_subscription_fee()
+    
     if request.method == 'POST':
         form = PaymentForm(request.POST)
         if form.is_valid():
             phone = form.cleaned_data['phone_number']
+            # Safely get the selected subscription type from the form or POST data
+            subscription_type = request.POST.get('subscription_type', 'monthly')
+            
+            # Dynamically determine the amount and description based on selection
+            if subscription_type == 'yearly':
+                selected_amount = yearly_amount
+                desc = f"{landlord.get_landlord_type_display()} Plan Yearly Subscription"
+            else:
+                selected_amount = monthly_amount
+                desc = f"{landlord.get_landlord_type_display()} Plan Monthly Subscription"
+                
             account_ref = f"XbomaSwift-{landlord.first_name}"
-            desc = f"{landlord.get_landlord_type_display()} Plan Subscription"
             
             try:
-                # Send STK push
+                # Send STK push using the selected amount
+                response = lipa_na_mpesa(phone, selected_amount, account_ref, desc)
                 
-                response = lipa_na_mpesa(phone, amount, account_ref, desc)
-
                 # Extract the checkout request ID from M-Pesa
                 checkout_id = response.get('CheckoutRequestID')
-
+                
                 # Save the payment record
                 payment = form.save(commit=False)
                 payment.landlord = landlord
-                payment.amount = amount
+                payment.amount = selected_amount  # Stores the correct amount paid
+                payment.subscription_type = subscription_type # Save the subscription type
                 payment.transaction_id = checkout_id
                 payment.checkout_request_id = checkout_id
                 payment.is_successful = False  # Initially false, updated via callback
                 payment.save()
-
+                
                 messages.success(request, "STK Push sent. Please complete payment on your phone.")
                 return redirect('myApp:landlord_dashboard')
-
+                
             except Exception as e:
                 messages.error(request, f"Payment initiation failed: {str(e)}")
                 return redirect('mpesa:landlord_payment')
-
     else:
-        form = PaymentForm(initial={'amount': amount})
-
+        # Pass monthly_amount as initial but template will handle switching
+        form = PaymentForm(initial={'amount': monthly_amount})
+        
     return render(request, 'payment/landlord_payment_form.html', {
         'form': form,
-        'amount': amount,
+        'monthly_amount': monthly_amount,
+        'yearly_amount': yearly_amount,
         'landlord': landlord,
     })
+
     
     
 from django.contrib import messages

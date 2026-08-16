@@ -44,16 +44,6 @@
     font-weight: 600;
   }
 
-  .instruction-body {
-    padding: 1.5rem;
-    background-color: var(--xboma-gray);
-  }
-
-  .instruction-body li {
-    margin-bottom: 0.75rem;
-    line-height: 1.6;
-  }
-
   /* ===== Payment Form ===== */
   .payment-form {
     background: #fff;
@@ -138,7 +128,7 @@
 
 <div class="payment-container">
   <!-- Back Navigation -->
-  <a href="{% url 'landlord_dashboard' %}" class="nav-link mb-4">
+  <a href="{% url 'myApp:landlord_dashboard' %}" class="nav-link mb-4">
     <i class="fas fa-arrow-left"></i> Back to Dashboard
   </a>
   
@@ -160,12 +150,13 @@
   <div class="plan-card">
     <div class="d-flex justify-content-between align-items-center flex-wrap">
       <div>
-        <h2 class="mb-1 text-dark">Make Payment</h2>
-        <h4 class="text-muted mb-0"><i class="fas fa-crown me-2"></i> Your Plan: {{ landlord.get_landlord_type_display }}</h4>
+        <h5 class="mb-1" style="color: var(--xboma-primary);"><i class="fas fa-user-tie mr-2"></i> {{ landlord.get_landlord_type_display }} Plan</h5>
+        <p class="mb-0 text-muted">Review available payment options below</p>
       </div>
-      <div class="mt-2 mt-md-0 text-end">
-        <h3 class="mb-0" style="color: var(--xboma-primary);">Ksh. {{ amount }}</h3>
-        <small class="text-muted">Subscription Fee</small>
+      <div class="text-right">
+        <h6 class="mb-1" style="color: var(--xboma-primary);">Monthly: <span style="color: var(--xboma-accent); font-weight: bold;">KES {{ monthly_amount }}</span></h6>
+        <h6 class="mb-0" style="color: var(--xboma-primary);">Yearly: <span style="color: var(--xboma-accent); font-weight: bold;">KES {{ yearly_amount }}</span></h6>
+        <small class="text-muted d-block mt-1">Payable via MPESA</small>
       </div>
     </div>
   </div>
@@ -185,11 +176,18 @@
       {% csrf_token %}
       
       <div class="form-group">
-        <label for="id_amount" class="font-weight-bold">Amount (Ksh)</label>
-        <input type="text" class="form-control" id="id_amount" name="amount" value="{{ amount }}" readonly>
-        <small class="form-text text-muted">
-          Subscription amount for {{ landlord.get_landlord_type_display }} plan
-        </small>
+        <label for="id_plan" class="font-weight-bold">Subscription Plan</label>
+        <select class="form-control" id="id_plan" name="subscription_type" required>
+          <option value="monthly" selected>Monthly</option>
+          <option value="yearly">Yearly</option>
+        </select>
+      </div>
+
+      <!-- autopopulate amount based on selected plan on the form -->
+      <div class="form-group">
+        <!-- <label for="id_amount" class="font-weight-bold">Total Amount (KES)</label> -->
+        <input class="form-control" type="hidden" id="id_amount" name="amount" value="{{ monthly_amount }}" readonly>
+        
       </div>
 
       <div class="form-group">
@@ -214,12 +212,44 @@
   </div>
 </div>
 
+<!-- jQuery (Make sure jQuery is loaded in your base.html) -->
+<script src="https://jquery.com"></script>
 <script>
   // Auto-dismiss alerts after 5 seconds
   $(document).ready(function() {
     setTimeout(function() {
       $('.alert').alert('close');
     }, 5000);
+  });
+
+</script>
+
+<!-- jQuery (Ensure this matches or relies on your base.html load order) -->
+<script src="https://jquery.com"></script>
+<script>
+  // Auto-dismiss alerts after 5 seconds
+  $(document).ready(function() {
+    setTimeout(function() {
+      $('.alert').alert('close');
+    }, 5000);
+  });
+
+  // Safely capture Django context variables into JavaScript variables
+  const monthlyFee = "{{ monthly_amount|escapejs }}";
+  const yearlyFee = "{{ yearly_amount|escapejs }}";
+
+  // Dynamic input switching logic
+  $('#id_plan').on('change', function() {
+    const selectedPlan = $(this).val();
+    const amountField = $('#id_amount');
+    
+    if (selectedPlan === 'monthly') {
+      amountField.val(monthlyFee);
+    } else if (selectedPlan === 'yearly') {
+      amountField.val(yearlyFee);
+    } else {
+      amountField.val('');
+    }
   });
 </script>
 {% endblock %}

@@ -80,7 +80,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .hero-overlay {
-    background: linear-gradient(135deg, rgba(14, 42, 69, 0.95) 0%, rgba(10, 95, 161, 0.75) 100%);
+    background: linear-gradient(135deg, rgba(0, 183, 255, 0.389) 0%, rgba(224, 178, 12, 0.241) 100%);
     position: absolute;
     top: 0; left: 0; width: 100%; height: 100%;
     z-index: 1;
@@ -201,23 +201,23 @@ html { scroll-behavior: smooth; }
       <div class="col-12 col-lg-10 col-xl-8 text-center">
         
         <!-- Welcome Message -->
-        <div class="mb-4">
+        <!-- <div class="mb-4">
           <span class="welcome-badge d-inline-flex align-items-center gap-2 px-3 py-1 rounded-pill bg-white text-primary mb-3">
             <i class="fas fa-sparkles fa-xs"></i>
             <span>Welcome to XbomaSwift</span>
           </span>
-        </div>
+        </div> -->
 
         <!-- Main Heading -->
         <h1 class="display-5 fw-bold text-white mb-4">
-          Find Your Perfect Home
+          Find Your Perfect Home and Mover
           <span class="d-block text-accent mt-2">in Seconds</span>
         </h1>
 
         <!-- Subheading -->
-        <p class="lead text-light mb-5 opacity-90">
+        <!-- <p class="lead text-light mb-5 opacity-90">
           Discover handpicked properties, connect with trusted movers, and make your move seamless
-        </p>
+        </p> -->
 
         <!-- Action Buttons -->
         <div class="d-flex flex-wrap justify-content-center gap-3 mt-5">
@@ -266,9 +266,9 @@ html { scroll-behavior: smooth; }
                 <i class="fas fa-map-marked-alt me-2"></i> Explore Properties
               </a>
 
-              <a href="{% url 'chat_page' %}"
+              <a href="{% url 'transporter_map' %}"
                  class="btn btn-light btn-lg px-5 py-3 rounded-pill fw-semibold shadow-sm hover-lift">
-                <i class="fas fa-brain me-2"></i> AI Assistant
+                <i class="fas fa-truck me-2"></i> Movers
               </a>
             </div>
 
@@ -508,7 +508,7 @@ html { scroll-behavior: smooth; }
               </div>
               <div>
                 <h6 class="fw-semibold mb-1">
-                  {{ review.user.get_full_name|default:review.user.username }}
+                  @{{ review.user.get_full_name|default:review.user.username }}
                 </h6>
                 <small class="text-muted d-flex align-items-center">
                   <i class="far fa-clock me-1 fa-xs"></i>
