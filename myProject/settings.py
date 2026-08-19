@@ -90,29 +90,22 @@ INSTALLED_APPS = [
     'accounts',
     'mpesa',
     'django.contrib.humanize',
-    # 'htmlmin',
-    # 'compressor',
-    
-    
+    'htmlmin',
+    'compressor',  
 ]
 
 
 
 MIDDLEWARE = [
-    # 'htmlmin.middleware.HtmlMinifyMiddleware',
-    # 'htmlmin.middleware.MarkRequestMiddleware',
-
-   'django.middleware.security.SecurityMiddleware',
-
-  
-    # 'django.middleware.security.SecurityMiddleware',         
+    'htmlmin.middleware.HtmlMinifyMiddleware',
+    'htmlmin.middleware.MarkRequestMiddleware',
+    'django.middleware.security.SecurityMiddleware',
+    'django.middleware.security.SecurityMiddleware',         
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
-
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
-
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.locale.LocaleMiddleware',
     # 'csp.middleware.CSPMiddleware',
@@ -126,7 +119,7 @@ MIDDLEWARE = [
 # ]
 
 
-# HTML_MINIFY = True
+HTML_MINIFY = True
 # KEEP_COMMENTS_ON_MINIFYING = False
 # EXCLUDE_FROM_MINIFYING = ('^admin/',)  # exclude admin pages
 

@@ -195,6 +195,10 @@ class Property(models.Model):
     amenities = models.ManyToManyField('Amenity', blank=True)
 
     class Meta:
+        indexes = [
+            models.Index(fields=['latitude', 'longitude']),
+            models.Index(fields=['city', 'estate']) 
+        ]
         ordering = ["-date_posted"]
         verbose_name = "Rental"
         verbose_name_plural = "Rentals"
@@ -514,7 +518,7 @@ from django.utils import timezone
 
 class TokenWallet(models.Model):
     tenant = models.OneToOneField(User, on_delete=models.CASCADE)
-    tokens = models.PositiveIntegerField(default=0)
+    tokens = models.PositiveIntegerField(default=1)  # Default to 1 token for new tenants
     last_updated = models.DateTimeField(auto_now=True)  # Tracks when tokens were last changed
 
     class Meta:

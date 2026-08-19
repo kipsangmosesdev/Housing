@@ -950,40 +950,110 @@ def delete_property(request, pk):
     return render(request, 'myApp/delete_property.html', {'property': property_obj})
 
 
+from django.shortcuts import render
+from django.http import JsonResponse
+from django.conf import settings
+from django.utils import timezone
+from django.db.models import Q, Subquery, DateTimeField, OuterRef
+from .models import Property, Payment  # Adjust import paths as needed
+
 def property_map_view(request):
+    # Check if this is an AJAX dynamic map fetch
+    is_ajax = request.GET.get('ne_lat') is not None
+
     # Subquery: get latest expiry_date per landlord
     latest_payment = Payment.objects.filter(
-        landlord=OuterRef('landlord'),is_successful=True
+        landlord=OuterRef('landlord'),
+        is_successful=True
     ).order_by('-expiry_date').values('expiry_date')[:1]
 
-    # Fetch approved properties with landlord expiry annotation
+    now = timezone.now()
+
+    # Queryset with annotated landlord payment expiry date
     properties = (
         Property.objects.annotate(
             landlord_expiry=Subquery(latest_payment, output_field=DateTimeField())
         )
         .filter(
             is_approved=True,
-            landlord__is_verified=True,  # Only verified landlords
+            landlord__is_verified=True,
+        )
+        .filter(
+            # Paid landlords: is_paid AND payment not expired
+            Q(
+                landlord__is_paid=True,
+                landlord_expiry__isnull=False,
+                landlord_expiry__gte=now
             )
+            |
+            # Trial landlords: is_free_trial AND trial_expiry not expired
+            Q(
+                landlord__is_free_trial=True,
+                landlord__trial_expiry__isnull=False,
+                landlord__trial_expiry__gte=now
+            )
+        )
         .select_related("landlord")
         .order_by('-date_posted')
     )
 
-    # Filter in Python: allow paid landlords OR trial landlords
-    valid_properties = [
-        prop for prop in properties
-        if (
-            # Paid landlords: is_paid and not expired
-            (prop.landlord.is_paid and prop.landlord_expiry and prop.landlord_expiry >= timezone.now())
-        )
-        or (
-            # Trial landlords: is_free_trial and not expired
-            (prop.landlord.is_free_trial and prop.landlord.trial_expiry and prop.landlord.trial_expiry >= timezone.now())
-        )
-    ]
-    
+    # ---------------------------------------------------------
+    # Branch 1: AJAX Bounding Box Fetch
+    # ---------------------------------------------------------
+    if is_ajax:
+        try:
+            ne_lat = float(request.GET.get('ne_lat'))
+            ne_lng = float(request.GET.get('ne_lng'))
+            sw_lat = float(request.GET.get('sw_lat'))
+            sw_lng = float(request.GET.get('sw_lng'))
+        except (TypeError, ValueError):
+            return JsonResponse({'error': 'Invalid coordinates'}, status=400)
+
+        # Handle dateline wrapping if needed
+        if sw_lng <= ne_lng:
+            lng_filter = Q(longitude__gte=sw_lng, longitude__lte=ne_lng)
+        else:
+            lng_filter = Q(longitude__gte=sw_lng) | Q(longitude__lte=ne_lng)
+
+        # Apply spatial bounding box query
+        properties = properties.filter(
+            latitude__gte=sw_lat,
+            latitude__lte=ne_lat,
+            latitude__isnull=False,
+            longitude__isnull=False
+        ).filter(lng_filter)[:500]  # Cap result set for safety
+
+        # Prefetch images for efficiency
+        properties = properties.prefetch_related('images')
+
+        data = []
+        for prop in properties:
+            first_img = prop.images.first()
+            img_url = first_img.image.url if first_img else '/static/images/default.jpg'
+
+            data.append({
+                'id': prop.id,
+                'lat': prop.latitude,
+                'lng': prop.longitude,
+                'title': prop.title,
+                'rent': prop.rent,
+                'is_available': prop.is_available,
+                'img_url': img_url,
+                'details_url': f"/dashboard/property/{prop.id}/",
+                'city': prop.city,
+                'estate': prop.estate,
+                'bedrooms': prop.bedrooms,
+                'bathrooms': prop.bathrooms,
+                'is_verified': prop.is_verified,
+            })
+
+        return JsonResponse({'properties': data})
+
+    # ---------------------------------------------------------
+    # Branch 2: Standard HTML Page Render (Initial Load)
+    # ---------------------------------------------------------
     return render(request, 'myApp/property_map.html', {
-        'properties': valid_properties,
+        'properties': [],  # Map JS will fetch points dynamically via AJAX
         'GOOGLE_MAPS_API_KEY': settings.GOOGLE_MAPS_API_KEY
     })
 
@@ -1532,25 +1602,21 @@ def load_more_properties(request):
 from math import radians, sin, cos, sqrt, atan2
 from django.http import JsonResponse
 from django.utils import timezone
-from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
 import json
 from geopy.distance import geodesic
 
+import math
+from django.db.models import Q, Subquery, DateTimeField, OuterRef
+from django.views.decorators.csrf import csrf_exempt
+from .models import Property, Payment  # Adjust imports as needed
 
-# Remove the custom haversine function entirely since we're using geopy's geodesic
-# which is more accurate and doesn't need manual corrections
-
-# Nearby properties using high-precision geodesic distances
 @csrf_exempt
-# @login_required(login_url='unified_login')
 def nearby_properties_api(request):
     if request.method != "POST":
         return JsonResponse({"error": "Invalid request method"}, status=400)
 
-    # --------------------------
-    # 1. Get user coordinates safely
-    # --------------------------
+    # 1. Parse and validate user coordinates
     try:
         data = json.loads(request.body)
         user_lat = float(data.get("latitude"))
@@ -1559,71 +1625,88 @@ def nearby_properties_api(request):
     except (TypeError, ValueError, KeyError):
         return JsonResponse({"error": "Invalid coordinates"}, status=400)
 
-    max_distance_km = 5  # Define the maximum distance in kilometers to filter nearby properties
+    max_distance_km = 5.0
     now = timezone.now()
+
+    # 2. Fast Bounding Box Calculation in SQL (~1 degree lat ~= 111km)
+    # This reduces candidate properties from thousands to only those roughly in range
+    lat_range = max_distance_km / 111.0
+    lng_range = max_distance_km / (111.0 * math.cos(math.radians(user_lat)))
+
+    min_lat = user_lat - lat_range
+    max_lat = user_lat + lat_range
+    min_lng = user_lon - lng_range
+    max_lng = user_lon + lng_range
+
+    # 3. Subquery for latest payment expiry
+    latest_payment = Payment.objects.filter(
+        landlord=OuterRef('landlord'),
+        is_successful=True
+    ).order_by('-expiry_date').values('expiry_date')[:1]
+
+    # 4. Single optimized ORM query with Spatial DB pre-filtering
+    properties = (
+        Property.objects.annotate(
+            landlord_expiry=Subquery(latest_payment, output_field=DateTimeField())
+        )
+        .filter(
+            is_approved=True,
+            is_available=True,
+            landlord__is_verified=True,
+            latitude__gte=min_lat,
+            latitude__lte=max_lat,
+            longitude__gte=min_lng,
+            longitude__lte=max_lng,
+        )
+        .filter(
+            # Paid landlords OR Trial landlords
+            Q(landlord__is_paid=True, landlord_expiry__isnull=False, landlord_expiry__gte=now)
+            | Q(landlord__is_free_trial=True, landlord__trial_expiry__isnull=False, landlord__trial_expiry__gte=now)
+        )
+        .select_related("landlord", "property_type")
+        .prefetch_related("images")[:50]  # Check max 50 spatially relevant properties
+    )
+
     nearby = []
 
-    # ---------------------------------------
-    # 2. Fetch approved and available properties
-    # ---------------------------------------
-    properties = Property.objects.select_related("landlord").filter(
-        is_approved=True,
-        is_available=True,
-        landlord__is_verified=True,  # Only verified landlords
-    )[:15]  # Limit to 15 for performance; adjust as needed
-
-    # ---------------------------------------
-    # 3. Loop through properties and calculate distances
-    # ---------------------------------------
+    # 5. High-precision Geodesic distance calculation on pre-filtered subset
     for prop in properties:
-        if prop.latitude is None or prop.longitude is None:
-            continue
-
         property_coord = (prop.latitude, prop.longitude)
-
-        # High-precision geodesic distance (most accurate method)
         distance = geodesic(user_coord, property_coord).km
 
-        if distance > max_distance_km:
-            continue  # out of range
+        if distance <= max_distance_km:
+            # Handle image fallback safely without additional DB queries
+            first_image = prop.images.first()
+            if first_image and first_image.image:
+                image_url = first_image.image.url
+            elif getattr(prop, 'image', None):
+                image_url = prop.image.url
+            else:
+                image_url = ""
 
-        landlord = prop.landlord
-        has_active_payment = Payment.objects.filter(
-            landlord=landlord,
-            expiry_date__gte=now
-        ).exists()
-        has_free_trial = (
-            landlord.is_free_trial and
-            landlord.trial_expiry and
-            landlord.trial_expiry >= now
-        )
+            nearby.append({
+                "id": prop.id,
+                "title": prop.title,
+                "image_url": image_url,
+                "property_type": prop.property_type.name if prop.property_type else "",
+                "is_verified": prop.is_verified,
+                "rent": prop.rent,
+                "estate": prop.estate,
+                "address": prop.address,
+                "bedrooms": prop.bedrooms,
+                "bathrooms": prop.bathrooms,
+                "distance": round(distance, 2),
+                "lat": prop.latitude,
+                "lng": prop.longitude,
+            })
 
-        if not (has_active_payment or has_free_trial):
-            continue
-
-        nearby.append({
-            "id": prop.id,
-            "title": prop.title,
-            # Get image from PropertyImage model if available, else fallback to main image_url
-            "image_url": prop.images.first().image.url if prop.images.exists() else (prop.image.url if prop.image else ""),
-            "property_type": prop.property_type.name if prop.property_type else "",
-            "is_verified": prop.is_verified,
-            "rent": prop.rent,
-            "estate": prop.estate,
-            "address": prop.address,
-            "bedrooms": prop.bedrooms,
-            "bathrooms": prop.bathrooms,
-            "distance": round(distance, 2),  # Round to 2 decimal places for display
-            "lat": prop.latitude,
-            "lng": prop.longitude,
-        })
-
-    # Sort by closest first
+    # Sort by closest first and return top 15 nearest properties
     nearby.sort(key=lambda x: x["distance"])
+    final_results = nearby[:15]
 
     return JsonResponse({
-        "count": len(nearby),
-        "properties": nearby
+        "count": len(final_results),
+        "properties": final_results
     })
 
 # Nearby vehicles start

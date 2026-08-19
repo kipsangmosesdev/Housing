@@ -1,5 +1,5 @@
 {% load static %}
-
+{% load compress %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -31,12 +31,13 @@
 
 <script src="https://cdn.jsdelivr.net/npm/leaflet.locatecontrol/dist/L.Control.Locate.min.js" defer></script>
 
-
+<!-- Compress javascript -->
+ {% compress js %}
 <script src="{% static 'myApp/js/base.js' %}"></script>
 <script src="{% static 'myApp/js/property_card.js' %}"></script>
 <script src="{% static 'myApp/js/login.js' %}"></script>
 <script src="{% static 'myApp/js/property_map.js' %}"></script>
-
+{% endcompress %}
 
 <script nonce="{{ request.csp_nonce }}" src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
   <!-- Toast house location notifications -->
@@ -44,26 +45,66 @@
 <script>
 // Remove trailing slash from the URL
 const propertyDetailBaseUrl = "{% url 'property_detail' 0 %}".replace(/0\/?$/, "").replace(/\/$/, "");
-document.addEventListener("DOMContentLoaded", function () {
-  // Add a small delay to ensure page is fully loaded
-  setTimeout(function() {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(success, error, {
-        enableHighAccuracy: true,  // Request high accuracy
-        timeout: 10000,           // 10 second timeout
-        maximumAge: 60000         // Don't use cached location older than 1 minute
-      });
-    } else {
-      console.warn("Geolocation is not supported by this browser.");
-    }
-  }, 500);
 
-  function success(position) {
+document.addEventListener("DOMContentLoaded", function () {
+  let watchId = null;
+  let lastLat = null;
+  let lastLon = null;
+  let fetchDebounceTimeout = null;
+  let initialOffcanvasShown = false; // Ensures offcanvas pops up automatically only on the first load
+
+  // Helper: Calculate distance between two coordinates in meters (Haversine formula)
+  function getDistanceInMeters(lat1, lon1, lat2, lon2) {
+    const R = 6371000; // Radius of Earth in meters
+    const dLat = (lat2 - lat1) * Math.PI / 180;
+    const dLon = (lon2 - lon1) * Math.PI / 180;
+    const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+              Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+              Math.sin(dLon / 2) * Math.sin(dLon / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    return R * c;
+  }
+
+  // Start watching user's real-time movement
+  if (navigator.geolocation) {
+    watchId = navigator.geolocation.watchPosition(handleLocationUpdate, handleError, {
+      enableHighAccuracy: true,
+      timeout: 10000,
+      maximumAge: 5000 // Accept positions up to 5 seconds old
+    });
+  } else {
+    console.warn("Geolocation is not supported by this browser.");
+    const container = document.getElementById("nearby-content");
+    if (container) container.innerHTML = `<p class="text-warning">Geolocation is not supported by your browser.</p>`;
+  }
+
+  function handleLocationUpdate(position) {
     const lat = position.coords.latitude;
     const lon = position.coords.longitude;
-    const accuracy = position.coords.accuracy; // Get accuracy in meters
+    const accuracy = position.coords.accuracy;
 
-    console.log(`User location: ${lat}, ${lon} (Accuracy: ${accuracy}m)`);
+    // Check if user has moved significantly (at least 50 meters) before firing request
+    if (lastLat !== null && lastLon !== null) {
+      const movedDistance = getDistanceInMeters(lastLat, lastLon, lat, lon);
+      if (movedDistance < 50) {
+        // User hasn't moved enough, skip backend query
+        return;
+      }
+    }
+
+    // Update last known position
+    lastLat = lat;
+    lastLon = lon;
+
+    // Debounce backend request by 1 second to smooth out rapid location updates
+    clearTimeout(fetchDebounceTimeout);
+    fetchDebounceTimeout = setTimeout(() => {
+      fetchNearbyProperties(lat, lon, accuracy);
+    }, 1000);
+  }
+
+  function fetchNearbyProperties(lat, lon, accuracy) {
+    console.log(`Auto-refreshing nearby properties for location: ${lat}, ${lon} (Accuracy: ${accuracy}m)`);
 
     fetch("{% url 'nearby_properties_api' %}", {
       method: 'POST',
@@ -77,41 +118,36 @@ document.addEventListener("DOMContentLoaded", function () {
       })
     })
     .then(response => {
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
+      if (!response.ok) throw new Error('Network response was not ok');
       return response.json();
     })
     .then(data => {
-      console.log(`Found ${data.count} nearby properties`);
-      
+      const container = document.getElementById("nearby-content");
+      if (!container) return;
+
       if (data.count > 0) {
-        const container = document.getElementById("nearby-content");
         const properties = data.properties;
 
         let html = `<p class="fw-semibold">${data.count} rentals found near you:</p>`;
         
-        // Add location accuracy info if available
         if (accuracy && accuracy > 100) {
-          html += `<small class="text-warning">Note: Location accuracy is approximately ${Math.round(accuracy)} meters</small>`;
+          html += `<small class="text-warning">Note: Location accuracy is approximately ${Math.round(accuracy)} meters</small><br>`;
         }
         
         html += `<ol class="ps-3 mt-2">`;
 
         properties.forEach(prop => {
           const url = `${propertyDetailBaseUrl}/${prop.id}`;
-          // Format distance with better precision
           const distanceText = prop.distance < 0.1 
             ? `${(prop.distance * 1000).toFixed(0)} meters away` 
             : `${prop.distance.toFixed(2)} km away`;
             
           html += `
             <li class="nearby-property mb-3">
-              
-              <a href="${url}" class="text-decoration-none text-black ">${prop.title}
-                
+              <a href="${url}" class="text-decoration-none text-black fw-bold">
+                ${prop.title}
                 ${prop.is_verified ? ' <i class="bi bi-patch-check-fill text-primary fs-8"></i>' : ''}
-                </a><br>
+              </a><br>
               
               <img src="${prop.image_url}" alt="${prop.title}" class="img-fluid rounded mb-1" style="max-width: 150px; max-height: 80px;"><br>
               <span class="text-muted" style="font-size: 0.875rem;">
@@ -120,11 +156,10 @@ document.addEventListener("DOMContentLoaded", function () {
                 <i class="fas fa-bath"></i> ${prop.bathrooms}
               </span> |
               <span class="text-muted" style="font-size: 0.875rem;">
-              <small class="text-muted">Ksh.${prop.rent.toLocaleString()}/month</small> <br>
-               
-              <small class="text-muted"><i class="fas fa-map-marker-alt"></i> ${prop.estate} | ${prop.address}</small> <br>
-              <small class="distance_km text-success fw-bold">~ ${distanceText}</small> |
-              <a href="${url}" class="btn btn-sm btn-outline-primary"><i class="fas fa-info-circle"></i> More Info</a>
+                <small class="text-muted">Ksh.${prop.rent.toLocaleString()}/month</small> <br>
+                <small class="text-muted"><i class="fas fa-map-marker-alt"></i> ${prop.estate} | ${prop.address}</small> <br>
+                <small class="distance_km text-success fw-bold">~ ${distanceText}</small> |
+                <a href="${url}" class="btn btn-sm btn-outline-primary"><i class="fas fa-info-circle"></i> More Info</a>
               </span>
             </li> <hr>`;
         });
@@ -132,24 +167,32 @@ document.addEventListener("DOMContentLoaded", function () {
         html += '</ol>';
         container.innerHTML = html;
 
-        const offcanvasElement = document.getElementById('nearbyOffcanvas');
-        const offcanvas = new bootstrap.Offcanvas(offcanvasElement);
-        offcanvas.show();
+        // Show offcanvas only on initial fetch so it doesn't interrupt the user while scrolling
+        if (!initialOffcanvasShown) {
+          const offcanvasElement = document.getElementById('nearbyOffcanvas');
+          if (offcanvasElement) {
+            const offcanvas = bootstrap.Offcanvas.getOrCreateInstance(offcanvasElement);
+            offcanvas.show();
+          }
+          initialOffcanvasShown = true;
+        }
       } else {
-        const container = document.getElementById("nearby-content");
-        container.innerHTML = `<p class="text-muted">No properties found within 2.5 km of your location.</p>`;
+        container.innerHTML = `<p class="text-muted">No properties found within 2.5 km of your current location.</p>`;
       }
     })
     .catch(error => {
       console.error('Error fetching nearby properties:', error);
       const container = document.getElementById("nearby-content");
-      container.innerHTML = `<p class="text-danger">Error loading nearby properties. Please try again.</p>`;
+      if (container) {
+        container.innerHTML = `<p class="text-danger">Error updating nearby properties. Retrying as you move...</p>`;
+      }
     });
   }
 
-  function error(err) {
+  function handleError(err) {
     console.warn("Location error (" + err.code + "): " + err.message);
     const container = document.getElementById("nearby-content");
+    if (!container) return;
     
     let errorMessage = "Unable to get your location. ";
     switch(err.code) {
@@ -527,7 +570,7 @@ html { scroll-behavior: smooth; }
 
       <div class="text-center pt-2">
         <small class="copyright">
-          &copy; {% now "Y" %} XbomaSwift System. All rights reserved.
+          &copy; {% now "Y" %} Kaoprox System. All rights reserved.
         </small>
       </div>
     </div>

@@ -208,10 +208,6 @@
         <i class="fas fa-arrow-left me-2"></i> Back
       </a>
     {% endif %}
-    
-    <span class="badge bg-primary">
-      <i class="fas fa-map-marker-alt me-1"></i> {{ properties|length }} Properties
-    </span>
   </div>
   
   <!-- Header -->
@@ -242,15 +238,18 @@
 
 <!-- Google Maps API (with Places + Geometry + MarkerClusterer) -->
 <script src="https://maps.googleapis.com/maps/api/js?key={{ GOOGLE_MAPS_API_KEY }}"></script>
-
 <script src="https://unpkg.com/@googlemaps/markerclusterer/dist/index.min.js"></script>
 
 <script>
-  let map, userMarker, directionsRenderer, userPosition = null, markerCluster;
-  const markers = [];
-
-  // Global variable to track the currently open InfoWindow
+  let map, userMarker, userPosition = null, markerCluster;
+  const markerMap = new Map(); // Cache loaded markers by property ID
   let activeInfoWindow = null;
+  let fetchDebounceTimeout = null;
+
+  // Static URLs for JavaScript icon paths
+  const VACANT_MARKER_URL = "{% static 'myApp/images/marker-blue.png' %}";
+  const OCCUPIED_MARKER_URL = "{% static 'myApp/images/marker-gold.png' %}";
+  const USER_MARKER_URL = "{% static 'myApp/images/red-pin.png' %}";
 
   function initMap() {
     // Initialize Map
@@ -268,133 +267,144 @@
       zoomControlOptions: { position: google.maps.ControlPosition.TOP_RIGHT }
     });
 
-    // Add Property Markers from Django
-    {% for prop in properties %}
-      {% if prop.latitude and prop.longitude %}
-        addPropertyMarker(
-          { lat: {{ prop.latitude }}, lng: {{ prop.longitude }} },
-          "{{ prop.title|escapejs }}",
-          "{{ prop.rent }}",
-          {{ prop.is_available|yesno:"true,false" }},
-          "{% if prop.images.all %}{{ prop.images.first.image.url }}{% else %}{% static 'images/default.jpg' %}{% endif %}",
-          "{% url 'property_detail' prop.id %}",
-          "{{ prop.city }} | {{ prop.estate }}",
-          {{ prop.bedrooms }},
-          {{ prop.bathrooms }},
-          {{ prop.is_verified|yesno:"true,false" }}
-        );
-      {% endif %}
-    {% endfor %}
+    // Single shared InfoWindow instance
+    activeInfoWindow = new google.maps.InfoWindow();
 
-    // Cluster markers
-    markerCluster = new markerClusterer.MarkerClusterer({ map, markers });
+    // Initialize Marker Clusterer
+    markerCluster = new markerClusterer.MarkerClusterer({ map, markers: [] });
 
-   // Locate Me Button
-document.getElementById("locateMe").addEventListener("click", () => {
-  if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition((pos) => {
-      userPosition = { lat: pos.coords.latitude, lng: pos.coords.longitude };
-      if (userMarker) userMarker.setMap(null);
-
-      userMarker = new google.maps.Marker({
-        position: userPosition,
-        map: map,
-        icon: {
-          url: "{% static 'myApp/images/red-pin.png' %}",  // your custom user icon
-          scaledSize: new google.maps.Size(30, 35),
-          labelOrigin: new google.maps.Point(12, -10) // <-- adjust Y for label above marker
-        },
-        label: {
-          text: "You are here",
-          color: "#fff",
-          fontSize: "11px",
-          fontWeight: "bold",
-          className: "user-location-label"
-        },
-        title: "You are here"
-      });
-
-      map.setCenter(userPosition);
-      map.setZoom(13);
+    // Listen for map movements to fetch properties within bounds dynamically
+    map.addListener("idle", () => {
+      clearTimeout(fetchDebounceTimeout);
+      fetchDebounceTimeout = setTimeout(fetchPropertiesInBounds, 400);
     });
-  } else {
-    alert("Geolocation is not supported by your browser.");
-  }
-});
+
+    // Locate Me Button
+    document.getElementById("locateMe").addEventListener("click", () => {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition((pos) => {
+          userPosition = { lat: pos.coords.latitude, lng: pos.coords.longitude };
+          if (userMarker) userMarker.setMap(null);
+
+          userMarker = new google.maps.Marker({
+            position: userPosition,
+            map: map,
+            icon: {
+              url: USER_MARKER_URL,
+              scaledSize: new google.maps.Size(30, 35),
+              labelOrigin: new google.maps.Point(12, -10)
+            },
+            label: {
+              text: "You are here",
+              color: "#fff",
+              fontSize: "11px",
+              fontWeight: "bold",
+              className: "user-location-label"
+            },
+            title: "You are here"
+          });
+
+          map.setCenter(userPosition);
+          map.setZoom(13);
+        });
+      } else {
+        alert("Geolocation is not supported by your browser.");
+      }
+    });
 
     // Reset View
     document.getElementById("resetView").addEventListener("click", () => {
       map.setCenter({ lat: -1.2921, lng: 36.8219 });
       map.setZoom(11);
-      clearDirections();
+      if (typeof clearDirections === "function") {
+        clearDirections();
+      }
     });
   }
 
-// Add custom property marker
-function addPropertyMarker(latlng, title, rent, isAvailable, imgUrl, detailsUrl, location, bedrooms, bathrooms, is_verified=false) {
-  const availability = isAvailable ? "Vacant" : "Occupied";
-  const availabilityClass = isAvailable ? "bg-success" : "bg-danger";
+  // Fetch visible properties from backend via bounding box coordinates
+  function fetchPropertiesInBounds() {
+    const bounds = map.getBounds();
+    if (!bounds) return;
 
-  // Add verified badge if property is verified
-  const verifiedBadge = is_verified ? '<i class="bi bi-patch-check-fill text-primary fs-7"></i>' : '';
+    const ne = bounds.getNorthEast();
+    const sw = bounds.getSouthWest();
 
-  // Choose marker icon based on availability
-  const markerIcon = isAvailable 
-    ? "{% static 'myApp/images/marker-blue.png' %}"   // vacant
-    : "{% static 'myApp/images/marker-gold.png' %}"; // occupied
+    const fetchUrl = `{% url 'property_map' %}?ne_lat=${ne.lat()}&ne_lng=${ne.lng()}&sw_lat=${sw.lat()}&sw_lng=${sw.lng()}`;
 
-  const marker = new google.maps.Marker({
-    position: latlng,
-    map: map,
-    icon: {
-      url: markerIcon,
-      scaledSize: new google.maps.Size(25, 30)
-    },
-    label: {
-      text: `Ksh ${rent}`,
-      className: "rent-marker-label"
-    },
-    title: title
-  });
+    fetch(fetchUrl)
+      .then((response) => {
+        if (!response.ok) throw new Error("Network response was not ok");
+        return response.json();
+      })
+      .then((data) => {
+        if (data.properties) {
+          updateMapMarkers(data.properties);
+        }
+      })
+      .catch((error) => console.error("Error loading properties:", error));
+  }
 
-  const content = `
-    <div class="property-popup" style="max-width:250px">
-     <span class="fw-bold">${title}</span>
-     
+  // Update marker cluster with current bounding box data
+  function updateMapMarkers(properties) {
+    const activeMarkersList = [];
 
-      ${verifiedBadge}    
-    
-      <br>
-      <img src="${imgUrl}" alt="${title}" class="img-thumbnail mb-2" style="max-height:100px;">
-      <div class="d-flex align-items-center my-2">
-       <p style="font-size: 0.7rem;" class="mb-0">Ksh ${rent}/m | <i class="fas fa-bed me-1"></i>${bedrooms} | <i class="fas fa-bath me-1"></i>${bathrooms}</p>
-        
-      </div>
-      <span class="badge ${availabilityClass}" style="font-size: 0.6rem;">${availability}</span>
-      
-      <div class="d-flex gap-2">
-        <a href="${detailsUrl}" target="_blank" class="btn btn-sm btn-secondary flex-grow-1"><i class="fas fa-eye me-1"></i> Details</a>
-      </div>
-    </div>
-  `;
+    properties.forEach((prop) => {
+      // Reuse marker if already created
+      if (markerMap.has(prop.id)) {
+        activeMarkersList.push(markerMap.get(prop.id));
+        return;
+      }
 
-  const infowindow = new google.maps.InfoWindow({ content });
-  marker.addListener("click", () => {
-    // Close the previously opened InfoWindow
-    if (activeInfoWindow) {
-      activeInfoWindow.close();
-    }
+      const availability = prop.is_available ? "Vacant" : "Occupied";
+      const availabilityClass = prop.is_available ? "bg-success" : "bg-danger";
+      const verifiedBadge = prop.is_verified ? '<i class="bi bi-patch-check-fill text-primary fs-7"></i>' : '';
+      const markerIcon = prop.is_available ? VACANT_MARKER_URL : OCCUPIED_MARKER_URL;
 
-    // Open the new one and set it as active
-    infowindow.open(map, marker);
-    activeInfoWindow = infowindow;
-  });
+      // DO NOT pass `map: map` here so MarkerClusterer handles map attachment
+      const marker = new google.maps.Marker({
+        position: { lat: prop.lat, lng: prop.lng },
+        icon: {
+          url: markerIcon,
+          scaledSize: new google.maps.Size(25, 30)
+        },
+        label: {
+          text: `Ksh ${prop.rent}`,
+          className: "rent-marker-label"
+        },
+        title: prop.title
+      });
 
-  markers.push(marker);
-}
+      // Set InfoWindow content dynamically when clicked
+      marker.addListener("click", () => {
+        const content = `
+          <div class="property-popup" style="max-width:250px">
+            <span class="fw-bold">${prop.title}</span> ${verifiedBadge}
+            <br>
+            <img src="${prop.img_url}" alt="${prop.title}" class="img-thumbnail mb-2" style="max-height:100px;">
+            <div class="d-flex align-items-center my-2">
+              <p style="font-size: 0.7rem;" class="mb-0">Ksh ${prop.rent}/m | <i class="fas fa-bed me-1"></i>${prop.bedrooms} | <i class="fas fa-bath me-1"></i>${prop.bathrooms}</p>
+            </div>
+            <span class="badge ${availabilityClass}" style="font-size: 0.6rem;">${availability}</span>
+            <div class="d-flex gap-2 mt-2">
+              <a href="${prop.details_url}" target="_blank" class="btn btn-sm btn-secondary flex-grow-1"><i class="fas fa-eye me-1"></i> Details</a>
+            </div>
+          </div>
+        `;
+        activeInfoWindow.setContent(content);
+        activeInfoWindow.open(map, marker);
+      });
 
+      markerMap.set(prop.id, marker);
+      activeMarkersList.push(marker);
+    });
 
-  // Show directions
+    // Refresh clusterer with the updated set of markers
+    markerCluster.clearMarkers();
+    markerCluster.addMarkers(activeMarkersList);
+  }
+
+  // Show directions helper
   function showDirections(destLat, destLng, title) {
     if (!userPosition) {
       alert("Please click 'Locate Me' first.");
@@ -406,10 +416,14 @@ function addPropertyMarker(latlng, title, rent, isAvailable, imgUrl, detailsUrl,
       destination: { lat: destLat, lng: destLng },
       travelMode: google.maps.TravelMode.DRIVING
     };
-
+    directionsService.route(request, (result, status) => {
+      if (status === "OK") {
+        directionsRenderer.setDirections(result);
+      }
+    });
   }
 
-  // Run map init
+  // Initialize map when DOM is loaded
   document.addEventListener("DOMContentLoaded", initMap);
 </script>
 
