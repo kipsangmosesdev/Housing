@@ -100,8 +100,8 @@ class PropertyInline(admin.TabularInline):
     model = Property
     extra = 0  # No extra empty forms
     fields = ('landlord', 'title', 'city', 'estate', 'is_available', 'is_approved', 'featured','is_verified')
-    readonly_fields = ('landlord', 'title', 'city', 'estate', 'is_available')
-    show_change_link = True  # Link to the property change page
+    readonly_fields = ('landlord', 'title', 'city', 'estate')
+    show_change_link = True
     can_delete = True  # Allow deletion from inline
 
 class PaymentInline(admin.TabularInline):

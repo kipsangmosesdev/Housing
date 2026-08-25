@@ -123,6 +123,8 @@ HTML_MINIFY = True
 # KEEP_COMMENTS_ON_MINIFYING = False
 # EXCLUDE_FROM_MINIFYING = ('^admin/',)  # exclude admin pages
 
+DATA_UPLOAD_MAX_NUMBER_FIELDS = 10000  # Default is 1000
+
 
 ROOT_URLCONF = 'myProject.urls'
 

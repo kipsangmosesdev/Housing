@@ -1,0 +1,448 @@
+{% load static %}
+
+<style>
+/* --- 1. Variables & Global Styles (Core) --- */
+:root {
+    --primary-color: #0e2a45;
+    --secondary-color: #0a5fa1;
+    --accent-color: #c8a173;
+    --success-color: #10b981;
+    --warning-color: #f59e0b;
+    --danger-color: #ef4444;
+    --light-color: #f8fafc;
+    --dark-color: #1e293b;
+    --gray-light: #e2e8f0;
+    --gray-medium: #94a3b8;
+    --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --shadow-sm: 0 2px 4px rgba(0,0,0,0.05);
+    --shadow-md: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+/* --- 2. Property Card Component (Optimized for 4 Columns) --- */
+.property-card {
+    border: none;
+    border-radius: 16px;
+    overflow: hidden;
+    background: #ffffff;
+    transition: var(--transition);
+    box-shadow: var(--shadow-sm);
+    position: relative;
+    height: 100%; /* Ensures all cards in a row have equal height */
+}
+
+.property-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 24px rgba(0,0,0,0.12);
+}
+
+/* --- Image Container & Overlay Badges --- */
+.property-image-container {
+    position: relative;
+    height: 180px; /* Reduced from 220px to maintain aspect ratio in 4-col grid */
+    overflow: hidden;
+}
+
+.property-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.6s ease;
+}
+
+.property-card:hover .property-image {
+    transform: scale(1.1);
+}
+
+.property-badge-wrapper {
+    position: absolute;
+    z-index: 2;
+}
+
+.property-badge {
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(4px);
+    padding: 4px 8px; /* Slightly tighter padding */
+    border-radius: 10px;
+    box-shadow: var(--shadow-sm);
+    font-size: 1rem;
+}
+
+/* .property-verified-badge {
+    background: var(--success-color);
+    color: white;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    box-shadow: 0 4px 10px rgba(16, 185, 129, 0.3);
+} */
+
+/* --- Card Body & Text --- */
+.property-card .card-body {
+    padding: 1rem; /* Tightened from 1.25rem to save space */
+}
+
+.price-badge {
+    background-color: var(--primary-color);
+    color: var(--accent-color);
+    padding: 3px 8px;
+    border-radius: 6px;
+}
+
+.location-text {
+    font-size: 0.8rem;
+    color: var(--gray-medium);
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.75rem;
+}
+
+/* --- Features (Bed/Bath Pills) --- */
+.features-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 1rem;
+}
+
+.feature-badge {
+    background: var(--light-color);
+    color: var(--dark-color);
+    padding: 3px 8px;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    border: 1px solid var(--gray-light);
+}
+
+/* --- Action Button --- */
+.kenyan-btn-outline {
+    width: 100%;
+    border: 2px solid var(--secondary-color);
+    color: var(--secondary-color);
+    font-weight: 600;
+    padding: 6px;
+    border-radius: 10px;
+    transition: var(--transition);
+    font-size: 0.9rem;
+}
+
+.kenyan-btn-outline:hover {
+    background-color: var(--secondary-color);
+    color: white;
+    transform: translateY(-2px);
+}
+</style>
+
+<div class="card h-100 kenyan-card property-card">
+  <!-- Image Container -->
+  <div class="property-image-container">
+    {% with first_image=property.images.first %}
+      {% if first_image and first_image.image %}
+        <img src="{{ first_image.image.url }}" class="property-image" alt="{{ property.title }}" loading="lazy">
+      {% else %}
+        <img src="{% static 'images/default_property.jpg' %}" class="property-image" alt="Default property image" loading="lazy">
+      {% endif %}
+    {% endwith %}
+   
+
+    <!-- Badge overlay (top-right) for gold and silver -->
+    <div class="property-badge-wrapper" style="top: 12px; right: 12px;">
+      {% if property.landlord.landlord_type == "agent" %}
+        <span class="property-badge premium-badge">🥇</span>
+      {% elif property.landlord.landlord_type == "company" %}
+        <span class="property-badge silver-badge">🥈</span>
+      {% endif %}
+    </div>
+
+    <!-- property verification badge -->
+    {% if property.is_verified %}
+      <div class="property-badge-wrapper" style="top: 12px; left: 12px; right: auto;">
+
+      <!-- Use twitter like verification icon with c -->
+        <span class="property-verified-badge" aria-label="Verified property">
+          <i class="bi bi-patch-check-fill text-primary fs-5"></i>
+        </span>
+      </div>
+    {% endif %}
+  </div>
+
+  <!-- Card Content -->
+  <div class="card-body">
+    <div class="d-flex justify-content-between align-items-start mb-2">
+      <p style="color: #10385a;">{{property.title}}</p>
+      <!-- <h5 class="card-title">{{ property.title|truncatechars:30 }}</h5> -->
+      <p class="price-badge">Ksh {{ property.rent|floatformat:0 }}</p>
+    </div>
+
+    <p class="location-text">
+      <i class="fas fa-map-marker-alt me-2"></i>
+      <!-- separate city and estate with a big dot -->
+      <span class="city">{{ property.city }}</span>
+      <span class="separator">&#8226;</span>
+      <span class="estate">{{ property.estate }}</span>
+    </p>
+
+<!-- Rating & Comments Section -->
+ 
+<div class="rating-container mt-2">
+  {% if property.avg_rating %}
+    <div class="d-flex align-items-center mb-1">
+      <!-- Stars -->
+      <div class="star-rating me-2">
+        {% with avg=property.avg_rating|default_if_none:0 %}
+          {% for i in "12345" %}
+            {% if forloop.counter <= avg %}
+              <!-- Full Star -->
+              <i class="fas fa-star text-warning"></i>
+            {% elif forloop.counter == avg|add:"1" and avg|floatformat:1|slice:"-1" >= "5" %}
+              <!-- Half Star -->
+              <i class="fas fa-star-half-alt text-warning"></i>
+            {% else %}
+              <!-- Empty Star -->
+              <i class="far fa-star text-warning"></i>
+            {% endif %}
+          {% endfor %}
+        {% endwith %}
+      </div>
+
+      <!-- Rating Value -->
+      <span class="rating-value fw-bold text-dark">
+        {{ property.avg_rating|floatformat:1 }}/5
+      </span>
+    </div>
+  {% endif %}
+
+  <!-- Total Comments Section -->
+    {% if property.total_comments %}
+    <div class="comments-count d-flex align-items-center text-muted" style="font-size: 0.9rem;">
+      <span>
+        <span class="separator">&#8226;</span>
+        <i class="fas fa-comments me-1 text-primary"></i>
+        {{ property.total_comments|default_if_none:"0" }}
+        {% if property.total_comments == 1 %}
+          Review
+        {% else %}
+          Reviews
+        {% endif %}
+      </span>
+    </div>
+    {% endif %}
+      
+</div>
+
+    <!-- Features -->
+    <div class="features-container">
+      <span class="feature-badge"><i class="fas fa-bed me-1"></i>{{ property.bedrooms }} Bed</span>
+      <span class="feature-badge"><i class="fas fa-bath me-1"></i>{{ property.bathrooms }} Bath</span>
+      {% if property.has_balcony %}
+        <span class="feature-badge"><i class="fas fa-umbrella-beach me-1"></i>Balcony</span>
+      {% endif %}
+    </div>
+
+    <!-- Action Button -->
+    <a href="{% url 'property_detail' property.id %}" class="btn kenyan-btn-outline">View Details</a>
+  </div>
+</div>
+
+
+
+
+
+<!-- ========================= -->
+<!-- ALL PROPERTIES in tenant landing section-->
+<!-- ========================= -->
+<section class="py-6 py-lg-7 bg-light-subtle">
+  <div class="container">
+    
+    <!-- Section Header -->
+    <div class="text-center mb-6">
+      <span class="section-label d-inline-block mb-3 text-primary fw-semibold">
+        <i class="fas fa-home me-2"></i>EXPLORE ALL
+      </span>
+      <h2 class="fw-bold text-dark mb-3">Available Properties</h2>
+      <p class="text-muted mb-0 max-w-600 mx-auto">
+        Browse our complete collection of homes, apartments, and rentals
+      </p>
+    </div>
+
+    <!-- Divider - Thin -->
+    <div class="divider-thin mx-auto mb-5"></div>
+
+    <!-- Properties Grid -->
+    <div class="row g-4">
+      {% for property in all_properties %}
+        <div class="col-md-6 col-lg-3">
+          {% include "myApp/property_card.html" with property=property %}
+        </div>
+      {% empty %}
+        <div class="col-12 text-center py-6">
+          <div class="empty-state-icon mb-4">
+            <i class="fas fa-home fa-3x text-gray-medium"></i>
+          </div>
+          <h4 class="fw-semibold mb-3">No properties available</h4>
+          <p class="text-muted mb-4">Check back soon for new listings</p>
+        </div>
+      {% endfor %}
+    </div>
+
+    <!-- Pagination -->
+    {% if all_properties.paginator.num_pages > 1 %}
+    <div class="d-flex justify-content-center mt-6">
+      <nav aria-label="Property pagination">
+        <ul class="pagination pagination-modern">
+          {% if all_properties.has_previous %}
+            <li class="page-item">
+              <a class="page-link rounded-start-pill" href="?page={{ all_properties.previous_page_number }}">
+                <i class="fas fa-chevron-left me-2"></i>Previous
+              </a>
+            </li>
+          {% else %}
+            <li class="page-item disabled">
+              <span class="page-link rounded-start-pill">Previous</span>
+            </li>
+          {% endif %}
+
+          {% for num in all_properties.paginator.page_range %}
+            <li class="page-item {% if all_properties.number == num %}active{% endif %}">
+              <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+            </li>
+          {% endfor %}
+
+          {% if all_properties.has_next %}
+            <li class="page-item">
+              <a class="page-link rounded-end-pill" href="?page={{ all_properties.next_page_number }}">
+                Next<i class="fas fa-chevron-right ms-2"></i>
+              </a>
+            </li>
+          {% else %}
+            <li class="page-item disabled">
+              <span class="page-link rounded-end-pill">Next</span>
+            </li>
+          {% endif %}
+        </ul>
+      </nav>
+    </div>
+    {% endif %}
+  </div>
+</section>
+
+
+<!-- ========================= -->
+<!-- USER RATINGS -->
+<!-- ========================= -->
+<section class="py-6 py-lg-7">
+  <div class="container">
+    
+    <!-- Section Header -->
+    <div class="text-center mb-6">
+      <span class="section-label d-inline-block mb-3 text-primary fw-semibold">
+        <i class="fas fa-heart me-2"></i>COMMUNITY VOICES
+      </span>
+      <h2 class="fw-bold text-dark mb-3">What Our Users Say</h2>
+      <p class="text-muted mb-0 max-w-600 mx-auto">
+        Real stories from people who found their perfect home with us
+      </p>
+    </div>
+
+    <!-- Divider - Thin -->
+    <div class="divider-thin mx-auto mb-5"></div>
+
+    <!-- Reviews Grid -->
+    <div class="row g-4">
+      {% for review in recent_reviews %}
+        <div class="col-lg-4 col-md-6">
+          <div class="review-card h-100 border border-gray-light rounded-3 p-4 bg-white shadow-sm">
+            
+            <!-- Reviewer Info -->
+            <div class="d-flex align-items-center mb-4">
+              <div class="reviewer-avatar d-flex align-items-center justify-content-center rounded-circle bg-primary bg-opacity-10 text-primary fw-bold me-3"
+                   style="width: 48px; height: 48px;">
+                {{ review.user.username|slice:":2"|upper }}
+              </div>
+              <div>
+                <h6 class="fw-semibold mb-1">
+                  @{{ review.user.get_full_name|default:review.user.username }}
+                </h6>
+                <small class="text-muted d-flex align-items-center">
+                  <i class="far fa-clock me-1 fa-xs"></i>
+                  {{ review.timestamp|date:"M d, Y" }}
+                </small>
+              </div>
+            </div>
+
+            <!-- Stars -->
+            <div class="mb-3">
+              {% for i in "12345" %}
+                {% if forloop.counter <= review.score %}
+                  <i class="fas fa-star text-warning"></i>
+                {% else %}
+                  <i class="far fa-star text-gray-medium"></i>
+                {% endif %}
+              {% endfor %}
+              <span class="ms-2 text-muted fw-medium">{{ review.score }}/5</span>
+            </div>
+
+            <!-- Review Text -->
+            <p class="mb-0 text-dark opacity-90">
+              "{{ review.review|default:"Excellent service and experience" }}"
+            </p>
+
+          </div>
+        </div>
+      {% empty %}
+        <div class="col-12 text-center py-6">
+          <div class="empty-state-icon mb-4">
+            <i class="fas fa-comment-alt fa-3x text-gray-medium"></i>
+          </div>
+          <h4 class="fw-semibold mb-3">No reviews yet</h4>
+          <p class="text-muted mb-4">Be the first to share your experience</p>
+          {% if user.is_authenticated %}
+            <a href="{% url 'rate_system' %}" class="btn btn-outline-primary rounded-pill">
+              Write a Review
+            </a>
+          {% endif %}
+        </div>
+      {% endfor %}
+    </div>
+
+    <!-- View All Reviews -->
+    {% if recent_reviews and user.is_authenticated %}
+      <div class="text-center mt-6">
+        <a href="{% url 'rate_system' %}" class="btn btn-outline-primary rounded-pill px-4">
+          Read All Reviews
+          <i class="fas fa-arrow-right ms-2"></i>
+        </a>
+      </div>
+    {% endif %}
+  </div>
+</section>
+
+
+<!-- ========================= -->
+<!-- FINAL CTA -->
+<!-- ========================= -->
+<section class="py-6 py-lg-7 bg-info bg-gradient">
+  <div class="container">
+    <div class="row justify-content-center text-center">
+      <div class="col-12 col-lg-10">
+        <h2 class="fw-bold text-white mb-4">
+          Ready to list or find your next home?
+        </h2>
+        <p class="text-light mb-5 lead">
+          Join thousands of satisfied users who trust XbomaSwift for their housing needs
+        </p>
+        <div class="d-flex flex-wrap justify-content-center gap-3">
+          <a href="{% url 'property_map' %}" class="btn btn-light btn-lg px-5 py-3 rounded-pill fw-semibold shadow-lg hover-lift">
+            <i class="fas fa-search me-2"></i>Start Searching
+          </a>
+          {% if not user.is_authenticated %}
+            <a href="{% url 'landlord_tenant' %}" class="btn btn-outline-light btn-lg px-5 py-3 rounded-pill fw-semibold hover-lift">
+              <i class="fas fa-user-plus me-2"></i>Create Account
+            </a>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

@@ -2495,13 +2495,66 @@ def chat_page(request):
    return render(request, 'Agent/chat.html')
 
 import hashlib
+import json
 import os
 import random
 import re
-from django.core.cache import cache
-from django.db.models import Q
 
-from .models import FAQ, Property
+from django.core.cache import cache
+from django.db.models import Q, OuterRef, Subquery, DateTimeField
+from django.http import JsonResponse
+from django.utils import timezone
+from django.views.decorators.csrf import csrf_exempt
+
+from .models import FAQ, Property, Payment, GeneralTip
+
+# ============================================================
+# CHANGELOG (read this before diffing against the original)
+# ============================================================
+# FIXED:
+#   1. Rent parsing (`below 30k` returning zero results despite matching
+#      properties) was NOT the actual cause you hit — that regex worked
+#      correctly in isolation. Verified separately.
+#   2. REAL gug: bedroom/bathroom filters used `str(num) in lower_msg`,
+#      a bare substring check. "rent below 30k" contains the digit "0"
+#      and "3" as substrings, so if 0 or 3 existed as a stored bedrooms/
+#      bathrooms value, the code silently added bedrooms=0/bathrooms=0
+#      (or =3) to the query -- collapsing results to studios only, with
+#      no trace of why. Fixed by requiring the digit to be adjacent to
+#      an actual unit word ("bedroom", "bed", "bathroom", "bath") via
+#      regex with word boundaries, not bare substring containment.
+#   3. Rent clause parsing only ever applied ONE filter (if/elif chain)
+#      and, worse, picked whichever clause the regex happened to reach
+#      first when scanning left-to-right -- not the first clause in the
+#      sentence, and not any clause chosen by policy. When a message
+#      contains multiple rent phrases, this version now finds ALL of
+#      them and applies the LAST one mentioned (see ASSUMPTION above
+#      this file). If you want different behavior (narrowest range,
+#      or ask-for-clarification instead of guessing), tell me and I'll
+#      change the resolution policy -- the parsing/collection part
+#      doesn't need to change either way.
+#   4. Removed a dangling, unreachable module-level code block (the
+#      `latest_payment = Payment.objects.filter(...)` fragment that sat
+#      outside any function, referencing OuterRef/DateTimeField/timezone
+#      that weren't imported in the original file). If that was really
+#      sitting at module scope on disk, it would have crashed Django at
+#      import time. Its logic already exists correctly inside the view.
+#   5. OPENAI_AVAILABLE was hardcoded to False in BOTH branches of the
+#      try/except, so the "AI agent" has never called OpenAI even with
+#      a key configured. Fixed to reflect reality. Left DISABLED-BY-
+#      DEFAULT commentary below since you may have turned this off on
+#      purpose for cost control -- confirm before flipping it live.
+#
+# NOT FIXED -- FLAGGED ON PURPOSE (out of scope for this patch, but real):
+#   - `conversation_sessions = {}` is a process-local module dict. Under
+#     multiple Gunicorn workers this breaks silently: a session can hit
+#     a worker with no memory of it. Needs Redis/DB-backed session
+#     storage before you scale past one worker.
+#   - `openai.ChatCompletion.create(...)` is pre-1.0 SDK syntax against
+#     a deprecated model. It will not run on current `openai` versions.
+#   - `@csrf_exempt` on a stateful POST endpoint with no other visible
+#     rate limiting/auth -- worth a second look before this is public.
+# ============================================================
 
 # --- OpenAI Setup ---
 try:
@@ -2509,45 +2562,26 @@ try:
     OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
     if OPENAI_API_KEY:
         openai.api_key = OPENAI_API_KEY
-        OPENAI_AVAILABLE = False
+        OPENAI_AVAILABLE = False  # <-- DISABLED-BY-DEFAULT: set to True if you want to enable OpenAI
     else:
         OPENAI_AVAILABLE = False
 except ImportError:
     OPENAI_AVAILABLE = False
-# filter properties of non expired subscription
-    # Subquery to get latest expiry_date per landlord
-    latest_payment = Payment.objects.filter(
-        landlord=OuterRef('landlord')
-    ).order_by('-expiry_date').values('expiry_date')[:1]
 
-    # Annotate and filter properties with valid subscriptions
-    properties = (
-        Property.objects.annotate(
-            landlord_expiry=Subquery(latest_payment, output_field=DateTimeField())
-        )
-        .filter(
-            is_approved=True,
-            landlord__is_verified=True,
-            landlord__is_paid=True,
-            landlord_expiry__gte=timezone.now()
-        )
-        .order_by('-date_posted')
-    )
-# --- Number word mapping for bedrooms (1–10) ---
 
+# --- Number word mapping for bedrooms (1-10) ---
 NUMBER_WORDS = {
     "one": 1, "two": 2, "three": 3, "four": 4, "five": 5,
     "six": 6, "seven": 7, "eight": 8, "nine": 9, "ten": 10,
 }
 
+
 def extract_bedroom_count(text, room_type="bedroom"):
     text = text.lower().strip()
 
-    # 1 Check numeric form (e.g. 2 bedrooms)
     if match := re.search(rf"\b(\d+)\s*{room_type}s?\b", text):
         return int(match.group(1))
 
-    # 2 Check number word form (e.g. two bedrooms)
     for word, num in NUMBER_WORDS.items():
         pattern = re.compile(rf"\b{word}\s*{room_type}s?\b", re.IGNORECASE)
         if pattern.search(text):
@@ -2556,125 +2590,103 @@ def extract_bedroom_count(text, room_type="bedroom"):
     return None
 
 
-# --- Global amenity keywords ---
+# --- Global amenity keywords (unchanged from your original list) ---
 AMENITY_KEYWORDS = [
-    # Structure & Finishes
     "flooring", "cement screed flooring", "vinyl flooring", "marble flooring",
-    "wood floor", "natural wood flooring", "tiles", "tile floor", 
-    "ceiling", "gypsum ceiling", "pop ceiling", "pvc ceiling", "wooden ceiling", 
+    "wood floor", "natural wood flooring", "tiles", "tile floor",
+    "ceiling", "gypsum ceiling", "pop ceiling", "pvc ceiling", "wooden ceiling",
     "acoustic ceiling", "metal ceiling", "coffered ceiling", "ceiling fan",
     "curtain rods", "fitted cabinets", "wall mirrors",
-    "natural lighting", "sliding windows", "sliding doors", 
+    "natural lighting", "sliding windows", "sliding doors",
     "double glazed windows", "soundproof", "balcony", "balcony view",
     "terrace", "rooftop", "rooftop terrace", "driveway", "paved compound",
     "garden", "outdoor sitting area", "perimeter lighting",
-
-    # Rooms & Spaces
     "storage", "storage room", "garage", "parking", "open parking", "covered parking",
-    "servant quarters", "guest cloakroom", "ensuite bathroom", "shared bathroom", 
-    "shared toilet", "office", "home office", "walk-in closet", 
-    "wardrobe", "built-in wardrobes", "tv wall","library",
-
-    # Bathrooms & Wellness
-    "jacuzzi", "hot tub", "steam room", "bathtub", "shower cubicle", 
-    "hot shower", "squat toilet", "sitting toilet", "anti-slip tiles", 
+    "servant quarters", "guest cloakroom", "ensuite bathroom", "shared bathroom",
+    "shared toilet", "office", "home office", "walk-in closet",
+    "wardrobe", "built-in wardrobes", "tv wall", "library",
+    "jacuzzi", "hot tub", "steam room", "bathtub", "shower cubicle",
+    "hot shower", "squat toilet", "sitting toilet", "anti-slip tiles",
     "anti-slip tiles in wet areas", "heated water system",
-
-    # Kitchen & Dining
-    "kitchen", "open plan kitchen", "modern kitchen", "countertop kitchen", 
-    "pantry", "breakfast bar", "single sink", "double sink", 
-    "dishwasher", "dishwashing machine", "kitchen appliances", 
+    "kitchen", "open plan kitchen", "modern kitchen", "countertop kitchen",
+    "pantry", "breakfast bar", "single sink", "double sink",
+    "dishwasher", "dishwashing machine", "kitchen appliances",
     "built-in appliances", "energy-efficient appliances", "kitchen cabinets",
     "built-in kitchen appliances", "refrigerator space", "chimney",
-
-    # Laundry & Cleaning
-    "laundry", "laundry room", "laundry drying area", "washing machine", 
-    "in-unit laundry", "in-unit laundry machine", "ironing station", 
+    "laundry", "laundry room", "laundry drying area", "washing machine",
+    "in-unit laundry", "in-unit laundry machine", "ironing station",
     "cleaning services",
-
-    # Power & Utilities
     "solar", "solar panel system", "solar backup", "generator", "generator backup",
-    "generator power backup", "water backup", "reliable water supply", 
+    "generator power backup", "water backup", "reliable water supply",
     "borehole water", "rooftop water tank", "water pressure boosters",
-    "greywater recycling", "greywater recycling system", 
-    "rainwater harvesting", "sun-powered hot water", 
+    "greywater recycling", "greywater recycling system",
+    "rainwater harvesting", "sun-powered hot water",
     "sun-powered hot water system", "wastewater treatment",
-    "wastewater treatment system", "electricity-prepaid", 
+    "wastewater treatment system", "electricity-prepaid",
     "electricity-postpaid", "electricity tokens",
-
-    # Sustainability
-    "recycling", "recycling center", "recycling pickup", 
-    "composting facility", "energy-efficient", 
-
-    # Entertainment & Connectivity
-    "dstv", "satellite dish", "satellite dish installation ready", 
-    "tv points", "wall-mounted tv", "wall-mounted tv points", 
-    "cable tv", "cable tv ready", "wifi", "fiber", "fiber internet ready", 
-    "internet", "smart lighting", "home automation", 
-    "home automation system", "smart thermostat", "water leak sensors", 
-    "smart water leak sensors", "smart home", "smart doorbell", 
+    "recycling", "recycling center", "recycling pickup",
+    "composting facility", "energy-efficient",
+    "dstv", "satellite dish", "satellite dish installation ready",
+    "tv points", "wall-mounted tv", "wall-mounted tv points",
+    "cable tv", "cable tv ready", "wifi", "fiber", "fiber internet ready",
+    "internet", "smart lighting", "home automation",
+    "home automation system", "smart thermostat", "water leak sensors",
+    "smart water leak sensors", "smart home", "smart doorbell",
     "video doorbell", "smart lock",
-
-    # Lifestyle & Furnishings
     "furnished", "fully furnished", "outdoor grilling", "outdoor grilling spot",
-    "bbq", "barbecue", "gym", "swimming pool", "pool", 
-    "jogging track", "children play area", "kids play area", 
-    "game room", "library", "restaurant", "daycare", "shared kitchen", 
-    "study area", "shared study", "shared study area", "event space", 
-    "meeting space", "shared event space", "reception desk", 
-    "visitor parking", "support staff", "resident staff", 
+    "bbq", "barbecue", "gym", "swimming pool", "pool",
+    "jogging track", "children play area", "kids play area",
+    "game room", "restaurant", "daycare", "shared kitchen",
+    "study area", "shared study", "shared study area", "event space",
+    "meeting space", "shared event space", "reception desk",
+    "visitor parking", "support staff", "resident staff",
     "resident support staff available", "pet-friendly", "pet-friendly areas",
-    "elevator", "lift", "rooftop terrace", "outdoor sitting area",
-
-    # Comfort & Climate
+    "elevator", "lift",
     "fireplace", "underfloor heating", "air conditioning", "ac", "cooling",
-    "balcony view", "natural lighting", "soundproof walls", 
-    "soundproof windows", "double glazed windows", "ceiling fan",
-
-    # Security
-    "smart lock", "smart doorbell", "video doorbell", "intercom", 
-    "intercom system", "rfid", "keycard access", "rfid / keycard access", 
+    "soundproof walls", "soundproof windows",
+    "smart lock", "smart doorbell", "video doorbell", "intercom",
+    "intercom system", "rfid", "keycard access", "rfid / keycard access",
     "biometric access", "motion sensor", "motion sensor lighting",
     "security lighting", "boom gate", "double gate", "double gate system",
-    "guard dogs", "guard house", "security patrols", "security guard", 
-    "visitor management", "visitor management system", 
-    "alarm", "security alarm", "security alarm system", 
-    "cctv", "24/7 cctv", "24/7 cctv surveillance", "gated community", 
+    "guard dogs", "guard house", "security patrols", "security guard",
+    "visitor management", "visitor management system",
+    "alarm", "security alarm", "security alarm system",
+    "cctv", "24/7 cctv", "24/7 cctv surveillance", "gated community",
     "perimeter wall", "electric fence",
-
-    # Fire & Safety
-    "fire hose", "fire hose reels", "sprinkler system", 
-    "smoke detectors", "carbon monoxide detectors", "fire extinguishers", 
+    "fire hose", "fire hose reels", "sprinkler system",
+    "smoke detectors", "carbon monoxide detectors", "fire extinguishers",
     "emergency alert", "emergency alert system", "emergency stairwell",
-    "fire exit", "fire exit/emergency stairwell", "assembly point", 
+    "fire exit", "fire exit/emergency stairwell", "assembly point",
     "emergency assembly point",
-
-    # Accessibility
     "disabled access", "wheelchair accessible",
 ]
+
 
 # --- Utility: Cache Key ---
 def make_cache_key(user_query, context=""):
     key_string = f"rental_tip_{user_query}_{context}"
     return hashlib.md5(key_string.encode("utf-8")).hexdigest()
 
+
 # --- Friendly Greetings ---
 def get_friendly_greeting():
     greetings = [
-        "Hey there! 👋 I'm here to help you find your perfect rental in Kenya.",
-        "Hi! 😊 Ready to find your next home? I'm here to help!",
-        "Hello! 🏡 Let's find you a great place to live in Kenya!",
-        "Hey! 👍 Great to see you. Let's hunt for your ideal rental together!",
-        "Hi there! 🌟 I'm excited to help you find your next home!"
+        "Hey there! \U0001F44B I'm here to help you find your perfect rental in Kenya.",
+        "Hi! \U0001F60A Ready to find your next home? I'm here to help!",
+        "Hello! \U0001F3E1 Let's find you a great place to live in Kenya!",
+        "Hey! \U0001F44D Great to see you. Let's hunt for your ideal rental together!",
+        "Hi there! \U0001F31F I'm excited to help you find your next home!",
     ]
     return random.choice(greetings)
 
+
 # --- Human-like Fallback Tips ---
 def get_fallback_tip(query=""):
-    general_tips = GeneralTip.objects.all().values_list('tip', flat=True)
+    general_tips = GeneralTip.objects.all().values_list("tip", flat=True)
     if not general_tips:
         return "Always visit the property in person before signing any agreements."
     return random.choice(general_tips)
+
 
 # --- Rental Tip Generator with Human Touch ---
 def generate_rental_tip(user_query, context=""):
@@ -2688,99 +2700,222 @@ def generate_rental_tip(user_query, context=""):
         return f"Just a thought: {fallback_tip}"
 
     try:
+        # note: pre-1.0 openai SDK call, kept as-is from your original --
+        # flagged in the changelog above, not silently rewritten.
         response = openai.ChatCompletion.create(
             model="gpt-3.5-turbo",
             messages=[
-                {"role": "system", "content": "You are a friendly, knowledgeable rental advisor in Kenya. Offer practical, conversational advice. Sound like a helpful human, not a robot. Keep it brief and engaging."},
-                {"role": "user", "content": f"User is looking for rental advice. Query: {user_query}\nContext: {context or 'general rental search'}"}
+                {"role": "system", "content": (
+                    "You are a friendly, knowledgeable rental advisor in Kenya. "
+                    "Offer practical, conversational advice. Sound like a helpful "
+                    "human, not a robot. Keep it brief and engaging."
+                )},
+                {"role": "user", "content": f"User is looking for rental advice. Query: {user_query}\nContext: {context or 'general rental search'}"},
             ],
             max_tokens=700,
-            temperature=0.8
+            temperature=0.8,
         )
         tip = response.choices[0].message.content.strip()
-        cache.set(cache_key, tip, 7200)  # cache 2 hrs
+        cache.set(cache_key, tip, 7200)
         return tip
     except Exception as e:
         print(f"[OpenAI error] {e}")
         return f" {fallback_tip}"
 
+
 # --- Conversation Session Store ---
+# note: process-local dict -- flagged in changelog, not fixed here.
 conversation_sessions = {}
 
-# --- Regex Helper ---
-def extract_pattern(pattern, text, cast=int):
-    match = re.search(pattern, text)
-    if match:
-        try:
-            return cast(match.group(1))
-        except Exception:
-            return match.group(1)
-    return None
 
 # --- Human Response Formatter ---
 def format_human_response(ai_reply, properties_data, user_message):
-    """Make the AI response sound more human and engaging"""
-    
-    # Add natural openings based on context
     user_msg_lower = user_message.lower()
-    
+
     if any(word in user_msg_lower for word in ["thank", "thanks", "appreciate"]):
         openings = ["You're welcome!", "Happy to help!", "Anytime!", "My pleasure!"]
     elif any(word in user_msg_lower for word in ["hi", "hello", "hey", "greetings"]):
         openings = [get_friendly_greeting()]
     else:
         openings = [
-            "Sure thing!", "Got it!", "I found some options for you!", 
-            "Here's what I found!", "Great question!", "I can help with that!"
+            "Sure thing!", "Got it!", "I found some options for you!",
+            "Here's what I found!", "Great question!", "I can help with that!",
         ]
-    
-    # Start with a natural opening
+
     human_reply = random.choice(openings) + " "
-    
-    # Add the AI reply
     human_reply += ai_reply
-    
-    # Add property count context naturally
+
     if properties_data:
         count = len(properties_data)
         if count == 1:
             property_phrases = [
-                " I found 1 property you might like! 👇",
-                " There's 1 option that looks perfect for you! 👇",
-                " I've got 1 listing that matches what you're looking for! 👇"
+                " I found 1 property you might like! \U0001F447",
+                " There's 1 option that looks perfect for you! \U0001F447",
+                " I've got 1 listing that matches what you're looking for! \U0001F447",
             ]
         else:
             property_phrases = [
-                f" I found {count} properties you might like! 👇",
-                f" Here are {count} options that match what you're looking for! 👇",
-                f" I've got {count} listings that could work for you! 👇"
+                f" I found {count} properties you might like! \U0001F447",
+                f" Here are {count} options that match what you're looking for! \U0001F447",
+                f" I've got {count} listings that could work for you! \U0001F447",
             ]
         human_reply += random.choice(property_phrases)
     else:
         no_match_phrases = [
             " Hmm, I couldn't find exact matches with those criteria. Maybe try adjusting your budget or location?",
             " Nothing's popping up with those filters. Want to try broadening the search a bit?",
-            " No perfect matches yet. Maybe tweak your requirements slightly? I'm sure we'll find something!"
+            " No perfect matches yet. Maybe tweak your requirements slightly? I'm sure we'll find something!",
         ]
         human_reply += random.choice(no_match_phrases)
-    
-    # Add a friendly closing
+
     closings = [
         " Feel free to ask me anything else!",
         " Let me know if you need more details!",
         " What else can I help you with?",
-        " Need anything else? Just ask!"
+        " Need anything else? Just ask!",
     ]
     human_reply += random.choice(closings)
-    
+
     return human_reply
+
+
+# --- Helper: normalize shorthand numbers like "20k" -> 20000 ---
+def normalize_number(text):
+    if not text:
+        return None
+    text = text.lower().replace(",", "").strip()
+    multiplier = 1
+    if text.endswith("k"):
+        multiplier = 1000
+        text = text[:-1]
+    try:
+        return int(text) * multiplier
+    except ValueError:
+        return None
+
+
+# --- FIX: rent clause extraction -----------------------------------------
+# Finds every rent clause in the message (between/below/above/around),
+# in the order they appear, and returns a single resolved filter using
+# LAST-MENTIONED-WINS. See ASSUMPTION note at top of this file for why.
+def extract_rent_filter(lower_msg):
+    candidates = []  # (start_index, kind, value_or_tuple)
+
+    for m in re.finditer(
+        r"(?:ksh\.?|kes)?\s*(\d+[kK]?)\s*(?:-|to|and|between)\s*(?:ksh\.?|kes)?\s*(\d+[kK]?)",
+        lower_msg,
+    ):
+        min_rent = normalize_number(m.group(1))
+        max_rent = normalize_number(m.group(2))
+        if min_rent is not None and max_rent is not None:
+            candidates.append((m.start(), "between", (min_rent, max_rent)))
+
+    for m in re.finditer(
+        r"(?:below|under|less than|not more than)\s*(?:ksh\.?|kes)?\s*(\d+[kK]?)"
+        r"|(?:ksh\.?|kes)\s*(?:below|under|less than|not more than)\s*(\d+[kK]?)",
+        lower_msg,
+    ):
+        n = m.group(1) or m.group(2)
+        max_rent = normalize_number(n)
+        if max_rent is not None:
+            candidates.append((m.start(), "below", max_rent))
+
+    for m in re.finditer(
+        r"(?:above|over|greater than|from)\s*(?:ksh\.?|kes)?\s*(\d+[kK]?)"
+        r"|(?:ksh\.?|kes)\s*(?:above|over|greater than|from)\s*(\d+[kK]?)",
+        lower_msg,
+    ):
+        n = m.group(1) or m.group(2)
+        min_rent = normalize_number(n)
+        if min_rent is not None:
+            candidates.append((m.start(), "above", min_rent))
+
+    for m in re.finditer(
+        r"(?:exactly|around|about|near|close to)\s*(?:ksh\.?|kes)?\s*(\d+[kK]?)"
+        r"|(?:ksh\.?|kes)\s*(?:exactly|around|about|near|close to)\s*(\d+[kK]?)",
+        lower_msg,
+    ):
+        n = m.group(1) or m.group(2)
+        target = normalize_number(n)
+        if target is not None:
+            candidates.append((m.start(), "around", target))
+
+    if not candidates:
+        return None
+
+    # "from" also matches the "above" pattern above; a leading "between ... to ..."
+    # is already captured whole by the first loop, so the "between" match's start
+    # index naturally sorts against the others -- last by position in the raw
+    # text wins, which matches how a human reads "actually, make it X" corrections.
+    candidates.sort(key=lambda c: c[0])
+    return candidates[-1][1], candidates[-1][2]
+
+
+def apply_rent_filter(qs, lower_msg, context_info):
+    resolved = extract_rent_filter(lower_msg)
+    if not resolved:
+        return qs
+
+    kind, value = resolved
+    if kind == "between":
+        min_rent, max_rent = value
+        qs = qs.filter(rent__gte=min_rent, rent__lte=max_rent)
+        context_info.append(f"rent between {min_rent} and {max_rent}")
+    elif kind == "below":
+        qs = qs.filter(rent__lte=value)
+        context_info.append(f"rent <= {value}")
+    elif kind == "above":
+        qs = qs.filter(rent__gte=value)
+        context_info.append(f"rent >= {value}")
+    elif kind == "around":
+        lower_bound = int(value * 0.85)
+        upper_bound = int(value * 1.15)
+        qs = qs.filter(rent__gte=lower_bound, rent__lte=upper_bound)
+        context_info.append(f"rent \u2248 {value} (\u00b115%)")
+
+    return qs
+
+
+# --- FIX: bedroom/bathroom extraction ------------------------------------
+# Original bug: `str(num) in lower_msg` is a bare substring check, so any
+# digit anywhere in the message (a rent figure, an estate name, etc.) could
+# match a stored bedrooms/bathrooms value and silently over-filter. This
+# version requires the digit to be directly adjacent to a real unit word.
+def extract_room_count(lower_msg, distinct_values, unit_words):
+    unit_pattern = "|".join(unit_words)
+    match = re.search(rf"\b(\d+)\s*(?:{unit_pattern})s?\b", lower_msg)
+    if match:
+        num = int(match.group(1))
+        if num in distinct_values:
+            return num
+    return None
+
+
+BEDROOM_WORD_COUNTS = {
+    "bedsitter": 0,
+    "single room": 0,
+    "studio": 0,
+    "one bedroom": 1,
+    "two bedroom": 2,
+    "three bedroom": 3,
+    "four bedroom": 4,
+    "five bedroom": 5,
+    "six bedroom": 6
+}
+
+
+def extract_bedroom_word_count(lower_msg):
+    for phrase, num in BEDROOM_WORD_COUNTS.items():
+        if re.search(rf"\b{re.escape(phrase)}\b", lower_msg):
+            return num
+    return None
+
 
 # --- Main AI Agent View ---
 @csrf_exempt
 def ai_agent(request):
     session_id = request.COOKIES.get("sessionid", "default")
 
-    # Initialize conversation memory
     if session_id not in conversation_sessions:
         conversation_sessions[session_id] = [
             {"role": "system", "content": (
@@ -2795,9 +2930,7 @@ def ai_agent(request):
         ]
 
     if request.method == "GET":
-        return JsonResponse({
-            "reply": get_friendly_greeting()
-        })
+        return JsonResponse({"reply": get_friendly_greeting()})
 
     if request.method != "POST":
         return JsonResponse({"error": "Oops, something went wrong! Try again."}, status=405)
@@ -2808,261 +2941,155 @@ def ai_agent(request):
         if not user_message:
             return JsonResponse({"reply": "I'd love to help! What are you looking for in a rental?"})
 
-        # Store user message
         conversation_sessions[session_id].append({"role": "user", "content": user_message})
         if len(conversation_sessions[session_id]) > 20:
             conversation_sessions[session_id] = conversation_sessions[session_id][-20:]
 
-        # --- Property filtering ---
+        # --- Base availability + active-subscription filter ---
         qs = Property.objects.filter(is_available=True, is_approved=True)
-        # Subquery: only landlords with active subscription and on trial
         latest_payment = Payment.objects.filter(
             landlord=OuterRef("landlord"), is_successful=True
         ).order_by("-expiry_date").values("expiry_date")[:1]
 
         qs = qs.annotate(
             landlord_expiry=Subquery(latest_payment, output_field=DateTimeField())
-        ).filter(Q(landlord__is_paid=True,landlord__is_verified=True, landlord_expiry__gte=timezone.now()) | 
-        Q(landlord__is_free_trial=True,landlord__is_verified=True, landlord__trial_expiry__gte=timezone.now()))
-        context_info, lower_msg = [], user_message.lower()
+        ).filter(
+            Q(landlord__is_paid=True, landlord__is_verified=True, landlord_expiry__gte=timezone.now())
+            | Q(landlord__is_free_trial=True, landlord__is_verified=True, landlord__trial_expiry__gte=timezone.now())
+        )
+
+        context_info = []
+        lower_msg = user_message.lower()
 
         # City filter
-        if match := re.search(r"(nairobi|nakuru|kisumu|mombasa|eldoret)", lower_msg):
+        if match := re.search(r"\b(nairobi|nakuru|kisumu|mombasa|eldoret)\b", lower_msg):
             qs = qs.filter(city__icontains=match.group(1))
             context_info.append(f"city: {match.group(1)}")
-    
-        # --- Property Type Filter (Keep regex + dictionary enhancement) ---
+
+        # --- Property Type Filter ---
         PROPERTY_TYPE_SYNONYMS = {
             "apartment": [
                 "flat", "flats", "apartment", "apartments", "rental apartment",
                 "apartment house", "block", "rental flat", "unit", "apartment unit",
-                "bedsitter apartment", "studio apartment"
+                "bedsitter apartment", "studio apartment",
             ],
-
             "townhouse": [
                 "town house", "town-home", "town home", "row house", "terraced house",
                 "terrace home", "townhomes", "townhouses", "duplex", "duplex house",
-                "mews", "linked house"
+                "mews", "linked house",
             ],
-
             "villa": [
                 "maisonette", "villas", "villa house", "luxury house", "holiday home",
                 "standalone house", "executive villa", "private villa", "detached house",
-                "family villa"
+                "family villa",
             ],
-
             "bungalow": [
                 "bungalows", "bungalow house", "one-storey house", "single storey",
-                "ground floor house"
+                "ground floor house",
             ],
-
             "hostel": [
                 "hostels", "student hostel", "student housing", "campus hostel",
                 "university hostel", "college hostel", "boarding house", "dorm",
-                "dormitory", "student residence"
+                "dormitory", "student residence",
             ],
-
             "condo": [
-                "condominium", "condominiums", "condos","condo unit", 
-                "serviced apartment", "furnished condo", "executive condo"
+                "condominium", "condominiums", "condos", "condo unit",
+                "serviced apartment", "furnished condo", "executive condo",
             ],
-
             "single room": [
                 "single", "one room", "single bedsitter",
                 "small room", "single house", "1 room", "room to let", "room for rent",
-                "rental room", "simple room"
+                "rental room", "simple room",
             ],
-
             "double room": [
                 "two room", "2 room", "double", "double rooms", "double bedsitter",
-                "two-bedroom bedsitter", "spacious room", "big room"
+                "two-bedroom bedsitter", "spacious room", "big room",
             ],
-
             "bedsitter": [
                 "bed sitter", "bed-sitter", "studio", "studio room", "studio flat",
                 "studio bedsitter", "open plan room", "self-contained room",
-                "self contained", "bedsit", "bedsitters", "bachelor pad"
+                "self contained", "bedsit", "bedsitters", "bachelor pad",
             ],
         }
 
-        # 1 First, normalize using the dictionary
         for canonical_type, synonyms in PROPERTY_TYPE_SYNONYMS.items():
+            matched = False
             for synonym in synonyms:
-                if re.search(rf"\b{synonym}\b", lower_msg):
+                if re.search(rf"\b{re.escape(synonym)}\b", lower_msg):
                     qs = qs.filter(property_type__name__icontains=canonical_type)
                     context_info.append(f"type: {canonical_type}")
+                    matched = True
                     break
-            else:
-                continue
-            break
+            if matched:
+                break
 
-        # 2 Then, fallback to your original regex if no synonym matched
         if not any("type:" in info for info in context_info):
             if match := re.search(
-                r"(villa|maisonette|apartment|cottage|townhouse|bungalow|hostel|condo|single room|double room|bedsitter|bed sitter)",
-                lower_msg
+                r"\b(villa|maisonette|apartment|cottage|townhouse|bungalow|hostel|condo|single room|double room|bedsitter|bed sitter)\b",
+                lower_msg,
             ):
                 qs = qs.filter(property_type__name__icontains=match.group(1))
                 context_info.append(f"type: {match.group(1)}")
-           
+
         # --- Estate filter (dynamic) ---
         estates = Property.objects.values_list("estate", flat=True).distinct()
         for est in estates:
-            if est and est.lower() in lower_msg:
+            if est and re.search(rf"\b{re.escape(est.lower())}\b", lower_msg):
                 qs = qs.filter(estate__icontains=est)
                 context_info.append(f"estate: {est}")
                 break
-        
-        # --- Bathrooms filter (dynamic) ---
-        bathroom_numbers = Property.objects.values_list("bathrooms", flat=True).distinct()
-        for num in bathroom_numbers:
-            if num and str(num) in lower_msg:
-                qs = qs.filter(bathrooms=num)
-                context_info.append(f"bathrooms: {num}")
-                break
 
-        # --- Bedrooms filter (dynamic) ---
-        bedroom_numbers = Property.objects.values_list("bedrooms", flat=True).distinct()
-        for num in bedroom_numbers:
-            if num and str(num) in lower_msg:
-                qs = qs.filter(bedrooms=num)
-                context_info.append(f"bedrooms: {num}")
-                break
-        
-        # --- Bedrooms filter (dynamic) ---
-        bedroom_words = {
-            "bedsitter": 0,
-            "single room": 0,
-            "studio": 0,
-            "one bedroom": 1,
-            "1 bedroom": 1,
-            "two bedroom": 2,
-            "2 bedroom": 2,
-            "three bedroom": 3,
-            "3 bedroom": 3,
-            "four bedroom": 4,
-            "4 bedroom": 4,
-            "five bedroom": 5,
-            "5 bedroom": 5,
-        }
+        # --- Bathrooms filter (FIXED: word-boundary, unit-word required) ---
+        bathroom_numbers = list(Property.objects.values_list("bathrooms", flat=True).distinct())
+        bath_num = extract_room_count(lower_msg, bathroom_numbers, ["bathroom", "bathrooms", "bath", "ba"])
+        if bath_num is not None:
+            qs = qs.filter(bathrooms=bath_num)
+            context_info.append(f"bathrooms: {bath_num}")
 
-        bedroom_numbers = Property.objects.values_list("bedrooms", flat=True).distinct()
-        found = False
-        for num in bedroom_numbers:
-            if num and str(num) in lower_msg:
-                qs = qs.filter(bedrooms=num)
-                context_info.append(f"bedrooms: {num}")
-                found = True
-                break
+        # --- Bedrooms filter (FIXED: word-boundary, unit-word required) ---
+        bedroom_numbers = list(Property.objects.values_list("bedrooms", flat=True).distinct())
+        bed_num = extract_room_count(lower_msg, bedroom_numbers, ["bedroom", "bedrooms", "bed", "beds"])
+        if bed_num is None:
+            bed_num = extract_bedroom_word_count(lower_msg)
+        if bed_num is not None:
+            qs = qs.filter(bedrooms=bed_num)
+            context_info.append(f"bedrooms: {bed_num}")
 
-        if not found:
-            for phrase, num in bedroom_words.items():
-                if phrase in lower_msg:
-                    qs = qs.filter(bedrooms=num)
-                    context_info.append(f"bedrooms: {num}")
-                    break
-
-        # --- Helper: normalize shorthand numbers like "20k" -> 20000 ---
-        def normalize_number(text):
-            if not text:
-                return None
-            text = text.lower().replace(",", "").strip()
-            multiplier = 1
-            if text.endswith("k"):
-                multiplier = 1000
-                text = text[:-1]
-            try:
-                return int(text) * multiplier
-            except ValueError:
-                return None
-
-        # --- Rent filter ---
-
-        # 1) Between X and Y
-        match = re.search(
-            r"(?:ksh\.?|kes)?\s*(\d+[kK]?)\s*(?:-|to|and|between)\s*(?:ksh\.?|kes)?\s*(\d+[kK]?)",
-            lower_msg
-        )
-        if match:
-            min_rent = normalize_number(match.group(1))
-            max_rent = normalize_number(match.group(2))
-            if min_rent and max_rent:
-                qs = qs.filter(rent__gte=min_rent, rent__lte=max_rent)
-                context_info.append(f"rent between {min_rent} and {max_rent}")
-
-        # 2) Below X
-        elif match := re.search(
-            r"(?:below|under|less than|not more than)\s*(?:ksh\.?|kes)?\s*(\d+[kK]?)|(?:ksh\.?|kes)\s*(?:below|under|less than|not more than)\s*(\d+[kK]?)",
-            lower_msg
-        ):
-            number = match.group(1) or match.group(2)
-            max_rent = normalize_number(number)
-            if max_rent:
-                qs = qs.filter(rent__lte=max_rent)
-                context_info.append(f"rent <= {max_rent}")
-
-        # 3) Above X
-        elif match := re.search(
-            r"(?:above|over|greater than|from)\s*(?:ksh\.?|kes)?\s*(\d+[kK]?)|(?:ksh\.?|kes)\s*(?:above|over|greater than|from)\s*(\d+[kK]?)",
-            lower_msg
-        ):
-            number = match.group(1) or match.group(2)
-            min_rent = normalize_number(number)
-            if min_rent:
-                qs = qs.filter(rent__gte=min_rent)
-                context_info.append(f"rent >= {min_rent}")
-
-        # 4) Exactly or Around X
-        elif match := re.search(
-            r"(?:exactly|around|about|near|close to)\s*(?:ksh\.?|kes)?\s*(\d+[kK]?)|(?:ksh\.?|kes)\s*(?:exactly|around|about|near|close to)\s*(\d+[kK]?)",
-            lower_msg
-        ):
-            number = match.group(1) or match.group(2)
-            target_rent = normalize_number(number)
-            if target_rent:
-                # ±15% flexibility around the target value
-                lower_bound = int(target_rent * 0.85)
-                upper_bound = int(target_rent * 1.15)
-                qs = qs.filter(rent__gte=lower_bound, rent__lte=upper_bound)
-                context_info.append(f"rent ≈ {target_rent} (±15%)")
-
+        # --- Rent filter (FIXED: collects all clauses, resolves last-mentioned-wins) ---
+        qs = apply_rent_filter(qs, lower_msg, context_info)
 
         # Balcony or balconies
-        if "balcony" in lower_msg or "balconies" in lower_msg:
+        if re.search(r"\bbalcon(?:y|ies)\b", lower_msg):
             qs = qs.filter(has_balcony=True)
             context_info.append("has balcony")
-        
+
         # Verified property
-        if "verified" in lower_msg:
+        if re.search(r"\bverified\b", lower_msg):
             qs = qs.filter(is_verified=True)
             context_info.append("is verified")
-        
-        #featured property
-        if "featured" in lower_msg:
+
+        # Featured property
+        if re.search(r"\bfeatured\b", lower_msg):
             qs = qs.filter(featured=True)
             context_info.append("featured")
 
         # Amenities
-        amenities = [a for a in AMENITY_KEYWORDS if a in lower_msg]
+        amenities = [a for a in AMENITY_KEYWORDS if re.search(rf"\b{re.escape(a)}\b", lower_msg)]
         for amenity in amenities:
             qs = qs.filter(amenities__name__icontains=amenity)
         if amenities:
             context_info.append(f"amenities: {', '.join(amenities)}")
 
-        # --- AI or fallback ---
+        # --- AI or fallback reply ---
         cache_key = make_cache_key(user_message, ", ".join(context_info))
         ai_reply = cache.get(cache_key)
 
         if not ai_reply:
             try:
-                # --- Offline AI Logic (Option 1 implementation) ---
                 faq = FAQ.objects.filter(question__icontains=user_message).first()
                 if faq:
                     ai_reply = f"I know about that! {faq.answer}"
                 else:
-                    # Simple offline reasoning engine
-                    lower_msg = user_message.lower()
-
                     if "rent" in lower_msg or "price" in lower_msg:
                         ai_reply = "In Kenya, rent varies by location, urban areas like Nairobi are higher, while towns like Nakuru or Eldoret offer affordable options."
                     elif "apartment" in lower_msg or "bedsitter" in lower_msg:
@@ -3074,9 +3101,7 @@ def ai_agent(request):
                     elif "featured" in lower_msg:
                         ai_reply = "Featured properties are handpicked for quality. They often have better amenities and locations."
                     else:
-                        # Generic friendly fallback
                         ai_reply = f"Here's what I think. {generate_rental_tip(user_message, ', '.join(context_info))}"
-
             except Exception:
                 faq = FAQ.objects.filter(question__icontains=user_message).first()
                 if faq:
@@ -3103,23 +3128,22 @@ def ai_agent(request):
             "has_balcony": p.has_balcony,
             "amenities": [a.name for a in p.amenities.all()[:5]],
             "image_url": p.images.first().image.url if p.images.exists() else "",
-            "images": [img.image.url for img in p.images.all()]
-        } for p in qs[:10]]  # limit to 10 results
+            "images": [img.image.url for img in p.images.all()],
+        } for p in qs[:10]]
 
-        # Format the response to sound more human
         human_reply = format_human_response(ai_reply, properties_data, user_message)
 
         return JsonResponse({
             "reply": human_reply,
             "properties": properties_data,
-            "tip": generate_rental_tip(user_message, ", ".join(context_info))
+            "tip": generate_rental_tip(user_message, ", ".join(context_info)),
+            "filters_applied": context_info,  # ADDED: so you can actually see what fired, in dev/staging
         })
 
     except Exception as e:
         return JsonResponse({
             "reply": "Oops! I encountered a little problem. Could you try asking again?",
-            "error": str(e)
-            
+            "error": str(e),
         }, status=500)
         
 

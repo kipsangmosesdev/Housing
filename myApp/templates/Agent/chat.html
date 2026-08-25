@@ -688,8 +688,6 @@ const AMENITIES = [
   "Biometric Access", "24/7 CCTV Surveillance", "Security Guard"
 ];
 
-
-
 // Track selected amenities
 let selectedAmenities = new Set();
 
@@ -794,41 +792,7 @@ function updateSelectedAmenitiesDisplay() {
 }
 
 // Update the input field with selected amenities
-function updateInputField() {
-    if (selectedAmenities.size > 0) {
-        const amenitiesText = Array.from(selectedAmenities).join(', ');
-        userInput.value = `Find properties with: ${amenitiesText}`;
-        userInput.focus();
-    } else {
-        userInput.value = '';
-    }
-}
 
-// Function to show amenities quick selection prompt
-function showAmenitiesPrompt() {
-    const promptMsg = document.createElement('div');
-    promptMsg.className = 'bot-msg message';
-    promptMsg.innerHTML = `
-        <p>I can help you find properties based on specific amenities! </p>
-        <p>You can either:</p>
-        <ul>
-            <li>Type your amenity requirements in the chat</li>
-            <li>Click the amenities below to build your search</li>
-        </ul>
-        <button class="show-amenities-btn">
-            <i class="fas fa-list"></i> Show All Amenities to Choose From
-        </button>
-    `;
-    
-    chatContainer.appendChild(promptMsg);
-    
-    // Add click listener to show amenities panel
-    promptMsg.querySelector('.show-amenities-btn').addEventListener('click', function() {
-        displayAmenitiesPanel();
-    });
-    
-    chatContainer.scrollTop = chatContainer.scrollHeight;
-}
 
 async function displayMessagesSequentially(messages) {
     const normalMessages = messages.filter(m => m.type !== 'tip');
