@@ -2,608 +2,1399 @@
 {% load compress %}
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>KaoProX</title>
-  <meta name="description" content="KaoProX - Your trusted platform for finding and managing rental properties across Kenya. Explore listings, connect with landlords, and simplify your housing search." />
-  <meta name="author" content="KaoProX" />
-  <!-- SEO Optimization -->
-  <meta name="keywords" content="rentals, properties, real estate, Kenya, housing" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>kaoprox.com</title>
+    <meta name="description"
+    content="KaoProX - Your trusted platform for finding and managing rental properties across Kenya. Explore listings, connect with landlords, and simplify your housing search." />
+    <meta name="author" content="KaoProX" />
+    <meta name="keywords" content="rentals, properties, real estate, Kenya, housing" />
+    <meta name="theme-color" content="#0e2a45" />
 
-  <!-- Theme color -->
-  <meta name="theme-color" content="#0e2a45" />
-  <!-- favicon -->
-<link rel="icon" type="image/png" href="{% static 'myApp/images/marker-gold.png' %}" />
-<!-- Bootstrap -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="{% static 'myApp/images/marker-gold.png' %}" />
 
-<!-- Font Awesome -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- Bootstrap 5 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" />
 
-<!-- Google Fonts -->
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Karla:wght@400;500;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+    <!-- Font Awesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
 
-<!--  Custom CSS -->
-<link rel="stylesheet" href="{% static 'myapp/css/styles.css' %}">
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Karla:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" />
 
-<script src="https://cdn.jsdelivr.net/npm/leaflet.locatecontrol/dist/L.Control.Locate.min.js" defer></script>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{% static 'myapp/css/styles.css' %}" />
 
-<!-- Compress javascript -->
- {% compress js %}
-<script src="{% static 'myApp/js/base.js' %}"></script>
-<script src="{% static 'myApp/js/property_card.js' %}"></script>
-<script src="{% static 'myApp/js/login.js' %}"></script>
-<script src="{% static 'myApp/js/property_map.js' %}"></script>
-{% endcompress %}
+    <!-- Leaflet LocateControl (deferred) -->
+    <script src="https://cdn.jsdelivr.net/npm/leaflet.locatecontrol/dist/L.Control.Locate.min.js" defer>
+    </script>
 
-<script nonce="{{ request.csp_nonce }}" src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
-  <!-- Toast house location notifications -->
+    <!-- Compressed JavaScript -->
+    {% compress js %}
+    <script src="{% static 'myApp/js/base.js' %}"></script>
+    <script src="{% static 'myApp/js/property_card.js' %}"></script>
+    <script src="{% static 'myApp/js/login.js' %}"></script>
+    <script src="{% static 'myApp/js/property_map.js' %}"></script>
+    {% endcompress %}
 
-<script>
-// Remove trailing slash from the URL
-const propertyDetailBaseUrl = "{% url 'property_detail' 0 %}".replace(/0\/?$/, "").replace(/\/$/, "");
+    <!-- Chart.js -->
+    <script nonce="{{ request.csp_nonce }}" src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js">
+    </script>
 
-document.addEventListener("DOMContentLoaded", function () {
-  let watchId = null;
-  let lastLat = null;
-  let lastLon = null;
-  let fetchDebounceTimeout = null;
-  let initialOffcanvasShown = false; // Ensures offcanvas pops up automatically only on the first load
+    <style>
+        /* ============================================================
+                   DESIGN SYSTEM — Root Variables (colors unchanged)
+                   ============================================================ */
+        :root {
+            /* Primary palette (unchanged) */
+            --primary-color: #0e2a45;
+            --secondary-color: #0a5fa1;
+            --accent-color: #c8a173;
+            --success-color: #10b981;
+            --warning-color: #f59e0b;
+            --danger-color: #ef4444;
+            --light-color: #f8fafc;
+            --dark-color: #1e293b;
+            --gray-light: #e2e8f0;
+            --gray-medium: #94a3b8;
 
-  // Helper: Calculate distance between two coordinates in meters (Haversine formula)
-  function getDistanceInMeters(lat1, lon1, lat2, lon2) {
-    const R = 6371000; // Radius of Earth in meters
-    const dLat = (lat2 - lat1) * Math.PI / 180;
-    const dLon = (lon2 - lon1) * Math.PI / 180;
-    const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-              Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
-              Math.sin(dLon / 2) * Math.sin(dLon / 2);
-    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-    return R * c;
-  }
+            /* Elevation */
+            --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.04);
+            --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.06);
+            --shadow-md: 0 8px 30px rgba(0, 0, 0, 0.08);
+            --shadow-lg: 0 20px 60px rgba(0, 0, 0, 0.12);
+            --shadow-xl: 0 30px 80px rgba(0, 0, 0, 0.18);
 
-  // Start watching user's real-time movement
-  if (navigator.geolocation) {
-    watchId = navigator.geolocation.watchPosition(handleLocationUpdate, handleError, {
-      enableHighAccuracy: true,
-      timeout: 10000,
-      maximumAge: 5000 // Accept positions up to 5 seconds old
-    });
-  } else {
-    console.warn("Geolocation is not supported by this browser.");
-    const container = document.getElementById("nearby-content");
-    if (container) container.innerHTML = `<p class="text-warning">Geolocation is not supported by your browser.</p>`;
-  }
+            /* Border radius */
+            --radius-sm: 8px;
+            --radius-md: 14px;
+            --radius-lg: 20px;
+            --radius-xl: 28px;
 
-  function handleLocationUpdate(position) {
-    const lat = position.coords.latitude;
-    const lon = position.coords.longitude;
-    const accuracy = position.coords.accuracy;
+            /* Transitions */
+            --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+            --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+            --transition-fast: 0.2s var(--ease-out);
+            --transition-med: 0.4s var(--ease-out);
+            --transition-slow: 0.6s var(--ease-out);
 
-    // Check if user has moved significantly (at least 50 meters) before firing request
-    if (lastLat !== null && lastLon !== null) {
-      const movedDistance = getDistanceInMeters(lastLat, lastLon, lat, lon);
-      if (movedDistance < 50) {
-        // User hasn't moved enough, skip backend query
-        return;
-      }
-    }
-
-    // Update last known position
-    lastLat = lat;
-    lastLon = lon;
-
-    // Debounce backend request by 1 second to smooth out rapid location updates
-    clearTimeout(fetchDebounceTimeout);
-    fetchDebounceTimeout = setTimeout(() => {
-      fetchNearbyProperties(lat, lon, accuracy);
-    }, 1000);
-  }
-
-  function fetchNearbyProperties(lat, lon, accuracy) {
-    console.log(`Auto-refreshing nearby properties for location: ${lat}, ${lon} (Accuracy: ${accuracy}m)`);
-
-    fetch("{% url 'nearby_properties_api' %}", {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'X-CSRFToken': '{{ csrf_token }}'
-      },
-      body: JSON.stringify({ 
-        latitude: lat, 
-        longitude: lon 
-      })
-    })
-    .then(response => {
-      if (!response.ok) throw new Error('Network response was not ok');
-      return response.json();
-    })
-    .then(data => {
-      const container = document.getElementById("nearby-content");
-      if (!container) return;
-
-      if (data.count > 0) {
-        const properties = data.properties;
-
-        let html = `<p class="fw-semibold">${data.count} rentals found near you:</p>`;
-        
-        if (accuracy && accuracy > 100) {
-          html += `<small class="text-warning">Note: Location accuracy is approximately ${Math.round(accuracy)} meters</small><br>`;
+            /* Typography scale */
+            --font-base: 1rem;
+            --font-scale: 1.25;
         }
-        
-        html += `<ol class="ps-3 mt-2">`;
 
-        properties.forEach(prop => {
-          const url = `${propertyDetailBaseUrl}/${prop.id}`;
-          const distanceText = prop.distance < 0.1 
-            ? `${(prop.distance * 1000).toFixed(0)} meters away` 
-            : `${prop.distance.toFixed(2)} km away`;
-            
-          html += `
-            <li class="nearby-property mb-3">
-              <a href="${url}" class="text-decoration-none text-black fw-bold">
-                ${prop.title}
-                ${prop.is_verified ? ' <i class="bi bi-patch-check-fill text-primary fs-8"></i>' : ''}
-              </a><br>
-              
-              <img src="${prop.image_url}" alt="${prop.title}" class="img-fluid rounded mb-1" style="max-width: 150px; max-height: 80px;"><br>
-              <span class="text-muted" style="font-size: 0.875rem;">
-                ${prop.property_type} | 
-                <i class="fas fa-bed"></i> ${prop.bedrooms} | 
-                <i class="fas fa-bath"></i> ${prop.bathrooms}
-              </span> |
-              <span class="text-muted" style="font-size: 0.875rem;">
-                <small class="text-muted">Ksh.${prop.rent.toLocaleString()}/month</small> <br>
-                <small class="text-muted"><i class="fas fa-map-marker-alt"></i> ${prop.estate} | ${prop.address}</small> <br>
-                <small class="distance_km text-success fw-bold">~ ${distanceText}</small> |
-                <a href="${url}" class="btn btn-sm btn-outline-primary"><i class="fas fa-info-circle"></i> More Info</a>
-              </span>
-            </li> <hr>`;
-        });
-
-        html += '</ol>';
-        container.innerHTML = html;
-
-        // Show offcanvas only on initial fetch so it doesn't interrupt the user while scrolling
-        if (!initialOffcanvasShown) {
-          const offcanvasElement = document.getElementById('nearbyOffcanvas');
-          if (offcanvasElement) {
-            const offcanvas = bootstrap.Offcanvas.getOrCreateInstance(offcanvasElement);
-            offcanvas.show();
-          }
-          initialOffcanvasShown = true;
+        /* ============================================================
+                   GLOBAL RESET & BASE
+                   ============================================================ */
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
         }
-      } else {
-        container.innerHTML = `<p class="text-muted">No properties found within 2.5 km of your current location.</p>`;
-      }
-    })
-    .catch(error => {
-      console.error('Error fetching nearby properties:', error);
-      const container = document.getElementById("nearby-content");
-      if (container) {
-        container.innerHTML = `<p class="text-danger">Error updating nearby properties. Retrying as you move...</p>`;
-      }
-    });
-  }
 
-  function handleError(err) {
-    console.warn("Location error (" + err.code + "): " + err.message);
-    const container = document.getElementById("nearby-content");
-    if (!container) return;
-    
-    let errorMessage = "Unable to get your location. ";
-    switch(err.code) {
-      case err.PERMISSION_DENIED:
-        errorMessage += "Please enable location permissions to see nearby properties.";
-        break;
-      case err.POSITION_UNAVAILABLE:
-        errorMessage += "Location information is unavailable.";
-        break;
-      case err.TIMEOUT:
-        errorMessage += "Location request timed out.";
-        break;
-      default:
-        errorMessage += "An unknown error occurred.";
-        break;
-    }
-    
-    container.innerHTML = `<p class="text-warning">${errorMessage}</p>`;
-  }
-});
-</script>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--light-color);
+            color: var(--dark-color);
+            padding-top: 76px;
+            /* accounts for fixed navbar */
+            line-height: 1.7;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
 
-<style>
-/* --- Variables & Global Styles --- */
-:root {
-    --primary-color: #0e2a45;
-    --secondary-color: #0a5fa1;
-    --accent-color: #c8a173;
-    --success-color: #10b981;
-    --warning-color: #f59e0b;
-    --danger-color: #ef4444;
-    --light-color: #f8fafc;
-    --dark-color: #1e293b;
-    --gray-light: #e2e8f0;
-    --gray-medium: #94a3b8;
-    --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    --shadow-sm: 0 2px 4px rgba(0,0,0,0.05);
-    --shadow-md: 0 4px 12px rgba(0,0,0,0.1);
-}
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6 {
+            font-family: 'Karla', sans-serif;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            line-height: 1.2;
+        }
 
-body {
-    font-family: 'Poppins', sans-serif;
-    background-color: var(--light-color);
-    color: var(--dark-color);
-    padding-top: 70px;
-    line-height: 1.6;
-}
+        a {
+            text-decoration: none;
+            transition: var(--transition-fast);
+        }
 
-h1, h2, h3, h4, h5, h6 {
-    font-family: 'Karla', sans-serif;
-    font-weight: 700;
-}
+        img {
+            max-width: 100%;
+            display: block;
+        }
 
-/* --- Hero Section & Landing UI --- */
-.hero-section {
-    min-height: 75vh;
-    display: flex;
-    align-items: center;
-    background: url('https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=1920&q=80');
-    background-size: cover;
-    background-position: center;
-    border-radius: 0 0 40px 40px;
-    position: relative;
-}
+        /* ============================================================
+                   SCROLLBAR STYLING (optional polish)
+                   ============================================================ */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--gray-light);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--secondary-color);
+            border-radius: 10px;
+        }
 
-.hero-overlay {
-    background: linear-gradient(135deg, rgba(14, 42, 69, 0.9) 0%, rgba(10, 95, 161, 0.7) 100%);
-    position: absolute;
-    top: 0; left: 0; width: 100%; height: 100%;
-}
+        /* ============================================================
+                   NAVBAR — refined with depth & clarity
+                   ============================================================ */
+        .navbar {
+            background: rgba(14, 42, 69, 0.92) !important;
+            backdrop-filter: blur(14px) saturate(180%);
+            -webkit-backdrop-filter: blur(14px) saturate(180%);
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+            padding: 0.6rem 0;
+            transition: var(--transition-med);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+        }
 
-.hover-lift {
-    transition: var(--transition);
-}
+        .navbar.scrolled {
+            background: rgba(14, 42, 69, 0.97) !important;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+        }
 
-.hover-lift:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
-}
+        .navbar-brand {
+            font-weight: 800;
+            font-size: 1.5rem;
+            letter-spacing: -0.04em;
+            color: #fff !important;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
 
-/* --- Property Card (Optimized for 4 Columns) --- */
-.property-card {
-    border: none;
-    border-radius: 16px;
-    overflow: hidden;
-    background: #ffffff;
-    transition: var(--transition);
-    box-shadow: var(--shadow-sm);
-    height: 100%;
-}
+        .navbar-brand i {
+            color: var(--accent-color);
+            font-size: 1.6rem;
+        }
 
-.property-card:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 12px 24px rgba(0,0,0,0.12);
-}
+        .navbar-brand span {
+            background: linear-gradient(135deg, #ffffff 60%, var(--accent-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
 
-.property-image-container {
-    position: relative;
-    height: 180px; /* Reduced for 4-column symmetry */
-    overflow: hidden;
-}
+        .navbar-nav .nav-link {
+            font-weight: 500;
+            font-size: 0.95rem;
+            color: rgba(255, 255, 255, 0.8) !important;
+            padding: 0.5rem 1rem !important;
+            border-radius: var(--radius-sm);
+            transition: var(--transition-fast);
+            position: relative;
+        }
 
-.property-image {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transition: transform 0.6s ease;
-}
+        .navbar-nav .nav-link:hover,
+        .navbar-nav .nav-link:focus {
+            color: #fff !important;
+            background: rgba(255, 255, 255, 0.07);
+        }
 
-.property-card:hover .property-image {
-    transform: scale(1.1);
-}
+        .navbar-nav .nav-link i {
+            margin-right: 0.4rem;
+            font-size: 0.9em;
+            opacity: 0.7;
+        }
 
-.price-badge {
-    background-color: var(--primary-color);
-    color: var(--accent-color);
-    padding: 3px 10px;
-    border-radius: 6px;
-    font-weight: 700;
-    font-size: 0.85rem; /* Slightly smaller for 4-col */
-}
+        /* Special "Login" / "Movers" pill */
+        .nav-link-accent {
+            background: var(--secondary-color) !important;
+            border-radius: var(--radius-lg) !important;
+            padding: 0.4rem 1.4rem !important;
+            color: #fff !important;
+            font-weight: 600;
+            transition: var(--transition-fast);
+            box-shadow: 0 4px 12px rgba(10, 95, 161, 0.3);
+        }
 
-/* --- Navbar Styling --- */
-.navbar {
-    background-color: var(--primary-color) !important;
-    backdrop-filter: blur(10px);
-    box-shadow: var(--shadow-md);
-    padding: 0.8rem 0;
-}
+        .nav-link-accent:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(10, 95, 161, 0.4);
+            background: #0b6bb5 !important;
+        }
 
-.navbar-brand { font-weight: 700; letter-spacing: -0.5px; }
+        /* Mobile toggle */
+        .navbar-toggler {
+            border: none;
+            padding: 0.4rem 0.6rem;
+            color: rgba(255, 255, 255, 0.7);
+        }
 
-.nav-link {
-    font-weight: 500;
-    color: rgba(255,255,255,0.9) !important;
-    transition: var(--transition);
-    padding: 0.5rem 1rem !important;
-}
+        .navbar-toggler:focus {
+            box-shadow: 0 0 0 3px rgba(200, 161, 115, 0.3);
+        }
 
-.login-link {
-    background: var(--secondary-color);
-    border-radius: 8px;
-    margin-left: 10px;
-}
+        .navbar-toggler-icon {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3E%3Cpath stroke='rgba(255,255,255,0.85)' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2.5' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E");
+        }
 
-/* --- Utilities & Components --- */
-.btn-success { background-color: var(--success-color); border: none; }
-.btn-primary { background-color: var(--secondary-color); border: none; }
+        /* ============================================================
+                   HERO SECTION — elevated, welcoming, with motion
+                   ============================================================ */
+        .hero-section {
+            position: relative;
+            min-height: 82vh;
+            display: flex;
+            align-items: center;
+            background: url('https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=1920&q=80') center center / cover no-repeat;
+            border-radius: 0 0 48px 48px;
+            overflow: hidden;
+            isolation: isolate;
+        }
 
-.feature-badge {
-    background: var(--light-color);
-    padding: 4px 8px;
-    border-radius: 6px;
-    font-size: 0.75rem;
-    border: 1px solid var(--gray-light);
-}
+        .hero-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(145deg,
+                    rgba(14, 42, 69, 0.88) 0%,
+                    rgba(10, 95, 161, 0.70) 100%);
+            z-index: 1;
+            backdrop-filter: blur(2px);
+        }
 
-.kenyan-btn-outline {
-    width: 100%;
-    border: 2px solid var(--secondary-color);
-    color: var(--secondary-color);
-    font-weight: 600;
-    padding: 8px;
-    border-radius: 10px;
-    transition: var(--transition);
-    margin-top: 10px;
-}
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            padding: 4rem 0;
+            max-width: 720px;
+        }
 
-.kenyan-btn-outline:hover {
-    background-color: var(--secondary-color);
-    color: white;
-}
+        .hero-content .badge-kenya {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(200, 161, 115, 0.18);
+            backdrop-filter: blur(4px);
+            border: 1px solid rgba(200, 161, 115, 0.25);
+            color: var(--accent-color);
+            font-weight: 500;
+            font-size: 0.8rem;
+            padding: 0.35rem 1rem;
+            border-radius: 100px;
+            letter-spacing: 0.04em;
+            margin-bottom: 1.5rem;
+        }
 
-/* --- Footer --- */
-footer {
-    background-color: var(--primary-color);
-    color: white;
-    padding: 60px 0 20px 0;
-    margin-top: 80px;
-}
+        .hero-content .badge-kenya i {
+            font-size: 0.9rem;
+        }
 
-footer h5 { color: var(--accent-color); text-transform: uppercase; }
+        .hero-content h1 {
+            font-size: clamp(2.6rem, 7vw, 4.6rem);
+            font-weight: 800;
+            color: #fff;
+            line-height: 1.1;
+            margin-bottom: 1.2rem;
+            letter-spacing: -0.03em;
+        }
 
-footer a { color: var(--gray-light); text-decoration: none; transition: var(--transition); }
+        .hero-content h1 .highlight {
+            color: var(--accent-color);
+            position: relative;
+        }
 
-footer a:hover { color: var(--accent-color); padding-left: 4px; }
+        .hero-content h1 .highlight::after {
+            content: '';
+            position: absolute;
+            bottom: 4px;
+            left: 0;
+            width: 100%;
+            height: 6px;
+            background: var(--accent-color);
+            opacity: 0.3;
+            border-radius: 4px;
+        }
 
-/* --- Smooth Scrolling --- */
-html { scroll-behavior: smooth; }
-</style>
+        .hero-content p {
+            font-size: 1.2rem;
+            color: rgba(255, 255, 255, 0.8);
+            max-width: 540px;
+            margin-bottom: 2.2rem;
+            font-weight: 300;
+            line-height: 1.8;
+        }
+
+        .hero-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .hero-actions .btn-primary {
+            background: var(--accent-color);
+            border: none;
+            padding: 0.9rem 2.4rem;
+            border-radius: var(--radius-lg);
+            font-weight: 600;
+            color: var(--primary-color);
+            transition: var(--transition-med);
+            box-shadow: 0 8px 28px rgba(200, 161, 115, 0.35);
+            font-size: 1rem;
+        }
+
+        .hero-actions .btn-primary:hover {
+            transform: translateY(-4px) scale(1.02);
+            box-shadow: 0 16px 40px rgba(200, 161, 115, 0.45);
+            background: #d4b186;
+        }
+
+        .hero-actions .btn-outline-light {
+            border: 2px solid rgba(255, 255, 255, 0.35);
+            color: #fff;
+            padding: 0.9rem 2rem;
+            border-radius: var(--radius-lg);
+            font-weight: 500;
+            transition: var(--transition-med);
+            backdrop-filter: blur(4px);
+        }
+
+        .hero-actions .btn-outline-light:hover {
+            background: rgba(255, 255, 255, 0.10);
+            border-color: rgba(255, 255, 255, 0.6);
+            transform: translateY(-4px);
+        }
+
+        /* Hero stats row */
+        .hero-stats {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2.5rem;
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.10);
+        }
+
+        .hero-stats .stat-item {
+            color: rgba(255, 255, 255, 0.85);
+        }
+
+        .hero-stats .stat-number {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #fff;
+            display: block;
+            font-family: 'Karla', sans-serif;
+        }
+
+        .hero-stats .stat-label {
+            font-size: 0.85rem;
+            opacity: 0.7;
+            font-weight: 400;
+        }
+
+        /* ============================================================
+                   SECTION HEADERS
+                   ============================================================ */
+        .section-header {
+            margin-bottom: 2.5rem;
+        }
+
+        .section-header .subtitle {
+            display: inline-block;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--secondary-color);
+            background: rgba(10, 95, 161, 0.08);
+            padding: 0.25rem 1rem;
+            border-radius: 100px;
+            margin-bottom: 0.6rem;
+        }
+
+        .section-header h2 {
+            font-size: clamp(1.8rem, 4vw, 2.8rem);
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        .section-header p {
+            color: var(--gray-medium);
+            max-width: 540px;
+            font-size: 1.05rem;
+        }
+
+        /* ============================================================
+                   PROPERTY CARDS — 4‑col grid, premium feel
+                   ============================================================ */
+        .property-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 1.8rem;
+        }
+
+        .property-card {
+            background: #ffffff;
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+            transition: var(--transition-med);
+            border: 1px solid rgba(0, 0, 0, 0.02);
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .property-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-lg);
+            border-color: rgba(200, 161, 115, 0.15);
+        }
+
+        .property-card .card-img-wrap {
+            position: relative;
+            padding-top: 66%;
+            /* 3:2 ratio */
+            overflow: hidden;
+            background: var(--gray-light);
+        }
+
+        .property-card .card-img-wrap img {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.7s var(--ease-out);
+        }
+
+        .property-card:hover .card-img-wrap img {
+            transform: scale(1.06);
+        }
+
+        /* Badge overlays on image */
+        .property-card .badge-overlay {
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.4rem;
+            z-index: 2;
+        }
+
+        .property-card .badge-overlay .badge {
+            font-weight: 600;
+            font-size: 0.7rem;
+            padding: 0.3rem 0.8rem;
+            border-radius: 100px;
+            letter-spacing: 0.02em;
+            backdrop-filter: blur(4px);
+        }
+
+        .badge-verified {
+            background: rgba(16, 185, 129, 0.90);
+            color: #fff;
+        }
+
+        .badge-featured {
+            background: rgba(200, 161, 115, 0.92);
+            color: #fff;
+        }
+
+        .property-card .price-tag {
+            position: absolute;
+            bottom: 12px;
+            right: 12px;
+            background: rgba(14, 42, 69, 0.88);
+            backdrop-filter: blur(6px);
+            color: var(--accent-color);
+            font-weight: 700;
+            font-size: 0.95rem;
+            padding: 0.35rem 1rem;
+            border-radius: 100px;
+            border: 1px solid rgba(200, 161, 115, 0.2);
+            z-index: 2;
+        }
+
+        .property-card .card-body {
+            padding: 1.2rem 1.2rem 1rem;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .property-card .card-title {
+            font-size: 1.05rem;
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 0.2rem;
+            display: -webkit-box;
+            -webkit-line-clamp: 1;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .property-card .card-title a {
+            color: inherit;
+        }
+
+        .property-card .card-title a:hover {
+            color: var(--secondary-color);
+        }
+
+        .property-card .card-location {
+            font-size: 0.85rem;
+            color: var(--gray-medium);
+            margin-bottom: 0.6rem;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .property-card .card-location i {
+            font-size: 0.75rem;
+            opacity: 0.6;
+        }
+
+        .property-card .card-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.8rem 1.2rem;
+            font-size: 0.82rem;
+            color: var(--dark-color);
+            padding: 0.5rem 0 0.6rem;
+            border-top: 1px solid var(--gray-light);
+            margin-top: auto;
+        }
+
+        .property-card .card-meta span {
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .property-card .card-meta i {
+            color: var(--secondary-color);
+            opacity: 0.6;
+            font-size: 0.8rem;
+        }
+
+        .property-card .card-footer-action {
+            padding: 0.6rem 1.2rem 1.2rem;
+            background: transparent;
+            border-top: none;
+        }
+
+        .property-card .btn-outline-primary {
+            border-color: var(--secondary-color);
+            color: var(--secondary-color);
+            font-weight: 500;
+            border-radius: var(--radius-sm);
+            padding: 0.4rem 1rem;
+            font-size: 0.85rem;
+            transition: var(--transition-fast);
+            width: 100%;
+        }
+
+        .property-card .btn-outline-primary:hover {
+            background: var(--secondary-color);
+            color: #fff;
+            border-color: var(--secondary-color);
+        }
+
+        /* ============================================================
+                   OFFCANVAS — nearby properties, refined
+                   ============================================================ */
+        .offcanvas {
+            --bs-offcanvas-width: 420px;
+            background: var(--light-color);
+            border-left: 1px solid rgba(0, 0, 0, 0.04);
+        }
+
+        .offcanvas-header {
+            background: var(--primary-color);
+            padding: 1.2rem 1.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .offcanvas-header .offcanvas-title {
+            color: var(--accent-color);
+            font-weight: 700;
+            font-size: 1.15rem;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+
+        .offcanvas-header .offcanvas-title i {
+            font-size: 1.2rem;
+        }
+
+        .offcanvas-header .btn-close {
+            filter: brightness(0) invert(1);
+            opacity: 0.6;
+        }
+
+        .offcanvas-header .btn-close:hover {
+            opacity: 1;
+        }
+
+        .offcanvas-body {
+            padding: 1.2rem 1.5rem;
+        }
+
+        .offcanvas-body .nearby-note {
+            font-size: 0.75rem;
+            color: var(--gray-medium);
+            background: rgba(200, 161, 115, 0.08);
+            padding: 0.5rem 0.8rem;
+            border-radius: var(--radius-sm);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: flex-start;
+            gap: 0.5rem;
+            border-left: 3px solid var(--accent-color);
+        }
+
+        .offcanvas-body .nearby-note i {
+            color: var(--accent-color);
+            margin-top: 0.1rem;
+        }
+
+        .offcanvas-body .nearby-item {
+            display: flex;
+            gap: 1rem;
+            padding: 0.8rem 0;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+            transition: var(--transition-fast);
+            border-radius: var(--radius-sm);
+        }
+
+        .offcanvas-body .nearby-item:hover {
+            background: rgba(10, 95, 161, 0.03);
+            padding-left: 0.4rem;
+        }
+
+        .offcanvas-body .nearby-item:last-child {
+            border-bottom: none;
+        }
+
+        .offcanvas-body .nearby-item .thumb {
+            width: 72px;
+            height: 56px;
+            flex-shrink: 0;
+            border-radius: var(--radius-sm);
+            overflow: hidden;
+            background: var(--gray-light);
+        }
+
+        .offcanvas-body .nearby-item .thumb img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .offcanvas-body .nearby-item .info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .offcanvas-body .nearby-item .info .title {
+            font-weight: 600;
+            font-size: 0.92rem;
+            color: var(--primary-color);
+            display: -webkit-box;
+            -webkit-line-clamp: 1;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .offcanvas-body .nearby-item .info .title a {
+            color: inherit;
+        }
+
+        .offcanvas-body .nearby-item .info .title a:hover {
+            color: var(--secondary-color);
+        }
+
+        .offcanvas-body .nearby-item .info .details {
+            font-size: 0.78rem;
+            color: var(--gray-medium);
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.3rem 0.8rem;
+        }
+
+        .offcanvas-body .nearby-item .info .details i {
+            font-size: 0.7rem;
+            opacity: 0.6;
+        }
+
+        .offcanvas-body .nearby-item .distance-badge {
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: var(--success-color);
+            background: rgba(16, 185, 129, 0.10);
+            padding: 0.15rem 0.6rem;
+            border-radius: 100px;
+            white-space: nowrap;
+            align-self: center;
+        }
+
+        /* ============================================================
+                   FLASH MESSAGES — refined with animation
+                   ============================================================ */
+        .alert.auto-dismiss {
+            border: none;
+            border-radius: var(--radius-md);
+            padding: 0.9rem 1.4rem;
+            box-shadow: var(--shadow-sm);
+            animation: slideDown 0.4s var(--ease-out);
+            border-left: 4px solid transparent;
+        }
+
+        .alert-success {
+            background: #ecfdf5;
+            border-left-color: var(--success-color);
+            color: #065f46;
+        }
+
+        .alert-danger {
+            background: #fef2f2;
+            border-left-color: var(--danger-color);
+            color: #991b1b;
+        }
+
+        .alert-warning {
+            background: #fffbeb;
+            border-left-color: var(--warning-color);
+            color: #92400e;
+        }
+
+        .alert-info {
+            background: #eff6ff;
+            border-left-color: var(--secondary-color);
+            color: #1e40af;
+        }
+
+        @keyframes slideDown {
+            0% {
+                opacity: 0;
+                transform: translateY(-16px) scale(0.96);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        /* ============================================================
+                   FOOTER — clean, organized, with breathing room
+                   ============================================================ */
+        footer {
+            background: var(--primary-color);
+            color: rgba(255, 255, 255, 0.8);
+            padding: 4rem 0 1.5rem;
+            margin-top: 5rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.04);
+        }
+
+        footer h5 {
+            color: var(--accent-color);
+            font-weight: 700;
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            margin-bottom: 1.2rem;
+        }
+
+        footer .brand-footer {
+            font-size: 1.4rem;
+            font-weight: 800;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        footer .brand-footer i {
+            color: var(--accent-color);
+        }
+
+        footer .brand-footer span {
+            background: linear-gradient(135deg, #fff 60%, var(--accent-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        footer .footer-description {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.9rem;
+            max-width: 320px;
+            margin: 0.6rem 0 1.2rem;
+        }
+
+        footer ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        footer ul li {
+            margin-bottom: 0.5rem;
+        }
+
+        footer ul li a {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.9rem;
+            transition: var(--transition-fast);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        footer ul li a:hover {
+            color: var(--accent-color);
+            transform: translateX(4px);
+        }
+
+        footer ul li a i {
+            font-size: 0.75rem;
+            opacity: 0.5;
+            width: 1.2rem;
+        }
+
+        footer .social-icons {
+            display: flex;
+            gap: 0.8rem;
+            margin-top: 0.5rem;
+        }
+
+        footer .social-icons a {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.05);
+            color: rgba(255, 255, 255, 0.6);
+            transition: var(--transition-fast);
+            border: 1px solid rgba(255, 255, 255, 0.04);
+        }
+
+        footer .social-icons a:hover {
+            background: rgba(200, 161, 115, 0.15);
+            color: var(--accent-color);
+            transform: translateY(-3px);
+        }
+
+        footer .footer-divider {
+            border-color: rgba(255, 255, 255, 0.06);
+            margin: 2rem 0 1.2rem;
+        }
+
+        footer .copyright {
+            color: rgba(255, 255, 255, 0.3);
+            font-size: 0.8rem;
+        }
+
+        /* ============================================================
+                   RESPONSIVE TWEAKS
+                   ============================================================ */
+        @media (max-width: 991.98px) {
+            body {
+                padding-top: 68px;
+            }
+            .navbar-nav .nav-link {
+                padding: 0.6rem 0.8rem !important;
+            }
+            .navbar-nav .nav-link-accent {
+                margin-top: 0.4rem;
+                text-align: center;
+            }
+            .hero-section {
+                min-height: 70vh;
+                border-radius: 0 0 28px 28px;
+            }
+            .hero-content h1 {
+                font-size: clamp(2rem, 8vw, 3.2rem);
+            }
+            .hero-stats {
+                gap: 1.5rem;
+            }
+            .hero-stats .stat-number {
+                font-size: 1.4rem;
+            }
+            .property-grid {
+                grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+                gap: 1.2rem;
+            }
+            .offcanvas {
+                --bs-offcanvas-width: 360px;
+            }
+        }
+
+        @media (max-width: 575.98px) {
+            .hero-section {
+                min-height: 60vh;
+                border-radius: 0 0 20px 20px;
+            }
+            .hero-content h1 {
+                font-size: 1.8rem;
+            }
+            .hero-content p {
+                font-size: 1rem;
+            }
+            .hero-actions .btn-primary {
+                padding: 0.7rem 1.6rem;
+                font-size: 0.9rem;
+            }
+            .property-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 0.8rem;
+            }
+            .property-card .card-img-wrap {
+                padding-top: 75%;
+            }
+            .offcanvas {
+                --bs-offcanvas-width: 100%;
+            }
+            footer {
+                padding: 2.5rem 0 1rem;
+            }
+        }
+
+        @media (max-width: 420px) {
+            .property-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
 </head>
 
 <body>
 
-<nav class="navbar navbar-expand-lg navbar-dark fixed-top">
-  <div class="container">
-    <!-- Brand -->
-    <a class="navbar-brand d-flex align-items-center" href="{% url 'tenant_landing' %}">
-      <i class="fas fa-bolt me-2 text-warning"></i>
-      <span>KaoProX</span>
-    </a>
+    <!-- ============================================================
+    NAVBAR — sticky, glass-morphism, with scroll shadow
+    ============================================================ -->
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top" id="mainNav">
+        <div class="container">
+            <!-- Brand -->
+            <a class="navbar-brand" href="{% url 'tenant_landing' %}">
+                <i class="fas fa-bolt"></i>
+                <span>KaoProX</span>
+            </a>
 
-    <!-- Toggler -->
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar"
-      aria-controls="mainNavbar" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
+            <!-- Toggler -->
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar"
+            aria-controls="mainNavbar" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
 
-    <!-- Links -->
-    <div class="collapse navbar-collapse justify-content-end mt-3 mt-lg-0" id="mainNavbar">
-      <ul class="navbar-nav align-items-lg-center gap-lg-3">
+        <!-- Collapsible links -->
+        <div class="collapse navbar-collapse justify-content-end mt-3 mt-lg-0" id="mainNavbar">
+            <ul class="navbar-nav align-items-lg-center gap-lg-1">
 
-        {% if user.tenant or not user.is_authenticated %}
-        <li class="nav-item">
-          <a href="{% url 'chat_page' %}" class="nav-link">
-            <i class="fas fa-brain me-1"></i> AI Assistant
-          </a>
-        </li>
-        {% endif %}
+                {% if user.tenant or not user.is_authenticated %}
+                <li class="nav-item">
+                    <a href="{% url 'chat_page' %}" class="nav-link">
+                        <i class="fas fa-brain"></i> AI Assistant
+                    </a>
+                </li>
+                {% endif %}
 
-        {% if user.is_authenticated %}
-          {% if user.tenant %}
-          <li class="nav-item"><a href="{% url 'tenant_dashboard' %}" class="nav-link"><i class="fas fa-tachometer-alt me-1"></i> Dashboard</a></li>
-          <li class="nav-item"><a href="{% url 'tenant_logout' %}" class="nav-link logout-link"><i class="fas fa-sign-out-alt me-1"></i> Logout</a></li>
+                {% if user.is_authenticated %}
+                {% if user.tenant %}
+                <li class="nav-item">
+                    <a href="{% url 'tenant_dashboard' %}" class="nav-link">
+                        <i class="fas fa-tachometer-alt"></i> Dashboard
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{% url 'tenant_logout' %}" class="nav-link">
+                        <i class="fas fa-sign-out-alt"></i> Logout
+                    </a>
+                </li>
 
-          {% elif user.registeruser %}
-          <li class="nav-item"><a href="{% url 'landlord_dashboard' %}" class="nav-link"><i class="fas fa-tachometer-alt me-1"></i> Dashboard</a></li>
-          <li class="nav-item"><a href="{% url 'property_map' %}" class="nav-link"><i class="fas fa-map-marked-alt me-1"></i> Map View</a></li>
-          <li class="nav-item"><a href="{% url 'logout' %}" class="nav-link logout-link"><i class="fas fa-sign-out-alt me-1"></i> Logout</a></li>
+                {% elif user.registeruser %}
+                <li class="nav-item">
+                    <a href="{% url 'landlord_dashboard' %}" class="nav-link">
+                        <i class="fas fa-tachometer-alt"></i> Dashboard
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{% url 'property_map' %}" class="nav-link">
+                        <i class="fas fa-map-marked-alt"></i> Map View
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{% url 'logout' %}" class="nav-link">
+                        <i class="fas fa-sign-out-alt"></i> Logout
+                    </a>
+                </li>
 
-          {% elif user.transporter %}
-          <li class="nav-item"><a href="{% url 'transporter_dashboard' %}" class="nav-link"><i class="fas fa-truck me-1"></i> Dashboard</a></li>
-          <li class="nav-item"><a href="{% url 'transporter_map' %}" class="nav-link"><i class="fas fa-map-marked-alt me-1"></i> Map View</a></li>
-          <li class="nav-item"><a href="{% url 'logout' %}" class="nav-link logout-link"><i class="fas fa-sign-out-alt me-1"></i> Logout</a></li>
+                {% elif user.transporter %}
+                <li class="nav-item">
+                    <a href="{% url 'transporter_dashboard' %}" class="nav-link">
+                        <i class="fas fa-truck"></i> Dashboard
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{% url 'transporter_map' %}" class="nav-link">
+                        <i class="fas fa-map-marked-alt"></i> Map View
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{% url 'logout' %}" class="nav-link">
+                        <i class="fas fa-sign-out-alt"></i> Logout
+                    </a>
+                </li>
 
-          {% else %}
-          <li class="nav-item"><span class="nav-link text-danger"><i class="fas fa-exclamation-circle me-1"></i> Role not identified</span></li>
-          {% endif %}
-        {% else %}
-        <li class="nav-item"><a href="{% url 'transporter_map' %}" class="nav-link login-link"><i class="fas fa-truck me-1"></i> Movers</a></li>
-        <li class="nav-item"><a href="{% url 'unified_login' %}" class="nav-link login-link"><i class="fas fa-user-tie me-1"></i> Login</a></li>
-        {% endif %}
-      </ul>
+                {% else %}
+                <li class="nav-item">
+                    <span class="nav-link text-danger">
+                        <i class="fas fa-exclamation-circle"></i> Role not identified
+                    </span>
+                </li>
+                {% endif %}
+
+                {% else %}
+                <!-- Not authenticated -->
+                <li class="nav-item">
+                    <a href="{% url 'transporter_map' %}" class="nav-link nav-link-accent">
+                        <i class="fas fa-truck"></i> Movers
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{% url 'unified_login' %}" class="nav-link nav-link-accent">
+                        <i class="fas fa-user-tie"></i> Login
+                    </a>
+                </li>
+                {% endif %}
+
+            </ul>
+        </div>
     </div>
-  </div>
 </nav>
 
-<!-- Flash Messages -->
+<!-- ============================================================
+FLASH MESSAGES — auto-dismiss with subtle animation
+============================================================ -->
 <div class="container mt-3">
-  {% if messages %}
+    {% if messages %}
     {% for message in messages %}
-      <div class="alert alert-{{ message.tags }} alert-dismissible fade show shadow-sm auto-dismiss" role="alert">
-        <div class="d-flex align-items-center">
-          {% if message.tags == 'success' %}
-            <i class="fas fa-check-circle text-success me-2"></i>
-          {% elif message.tags == 'error' %}
-            <i class="fas fa-times-circle text-danger me-2"></i>
-          {% elif message.tags == 'warning' %}
-            <i class="fas fa-exclamation-triangle text-warning me-2"></i>
-          {% else %}
-            <i class="fas fa-info-circle text-info me-2"></i>
-          {% endif %}
-          <div>{{ message }}</div>
+    <div class="alert alert-{{ message.tags }} alert-dismissible fade show auto-dismiss shadow-sm" role="alert">
+        <div class="d-flex align-items-center gap-2">
+            {% if message.tags == 'success' %}
+            <i class="fas fa-check-circle text-success fs-5"></i>
+            {% elif message.tags == 'error' %}
+            <i class="fas fa-times-circle text-danger fs-5"></i>
+            {% elif message.tags == 'warning' %}
+            <i class="fas fa-exclamation-triangle text-warning fs-5"></i>
+            {% else %}
+            <i class="fas fa-info-circle text-info fs-5"></i>
+            {% endif %}
+            <div>{{ message }}</div>
         </div>
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-      </div>
-    {% endfor %}
-  {% endif %}
-</div>
-
-  <!-- Page Content -->
-   <!-- Make it occupy full width -->
-  <main class="container-fluid my-4">
-    {% block content %}
-    
-    {% endblock %}
-  </main>
-
-  <!-- Enhanced Footer -->
-  <footer>
-    <div class="container">
-      <div class="row g-4">
-        <!-- Brand Column -->
-        <div class="col-lg-4">
-          <div class="d-flex flex-column h-100">
-            <h5>
-              <i class="fas fa-home me-2"></i>XbomaSwift
-            </h5>
-            <p style="color: #D9A441 !important;" class="text-muted mb-4">Helping you find the perfect home faster and smarter across Kenya.</p>
-            <div class="col-lg-4">
-               <!-- About Us link -->
-              <i class="fas fa-info-circle me-2"></i> <a href="{% url 'about_us' %}">About Us</a>
-              <a href="{% url 'faq_list' %}" >
-                <i class="fas fa-question-circle me-2"></i>FAQs
-            </a>
-           
-            </div>
-            <hr>
-           
-            <div class="mt-auto">
-              <div class="social-icons">
-                <a href="https://web.facebook.com/moses.swdev" target="_blank"><i class="fab fa-facebook-f"></i></a>
-                <a href="#"><i class="fab fa-x"></i></a>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Quick Links Column -->
-        <div class="col-lg-4">
-          <h5>Quick Links</h5>
-          <ul class="list-unstyled">
-            <!-- Support us -->
-             <li>
-              <a href="{% url 'support' %}">
-                <i class="fas fa-hands-helping me-2"></i>Support Us
-              </a>
-             </li>
-            <li class="mb-2">
-              <a href="{% url 'property_map' %}">
-                <i class="fas fa-map-marker-alt me-2"></i>Search properties on the Map
-              </a>
-            </li>
-            {% if user.is_authenticated and user.registeruser %}
-            
-            {% if landlord.has_active_payment %}
-               <li class="mb-2">
-                  <a href="{% url 'new_property' %}">
-                    <i class="fas fa-plus me-2"></i>Post Property
-                  </a>
-              </li>
-            {% endif %}
-  
-            {% endif %}
-            
-            <li>
-              <a href="{% url 'terms_conditions' %}">
-                <i class="fas fa-file-alt me-2"></i>Terms and Conditions
-              </a>
-            </li>
-           
-            <li>
-              <a href="{% url 'privacy_policy' %}">
-                <i class="fas fa-shield-alt me-2"></i>Privacy Policy
-              </a>
-            </li>
-            <!-- Mover Policy -->
-            <li>
-              <a href="{% url 'mover_policy' %}">
-                <i class="fas fa-truck me-2"></i>Mover Policy
-              </a>
-            </li>
-             <li>
-              <a href="{% url 'refund_policy' %}">
-                <i class="fas fa-undo me-2"></i>Refund Policy
-              </a>
-            </li>
-            
-            
-          </ul>
-        </div>
-
-        <!-- Contact Column -->
-        <div class="col-lg-4">
-          <h5>Contact Us</h5>
-          <div class="contact-item">
-            <i class="fas fa-envelope"></i>
-              <a href="mailto:support@xbomaswift.com">support@xbomaswift.com</a>
-          </div>
-          
-        </div>
-      </div>
-
-      <hr class="footer-divider">
-
-      <div class="text-center pt-2">
-        <small class="copyright">
-          &copy; {% now "Y" %} Kaoprox System. All rights reserved.
-        </small>
-      </div>
     </div>
-  </footer>
-  <!-- Toast Container (bottom right corner) -->
-
-
-<!-- Offcanvas Nearby Properties Panel -->
-<div class="offcanvas offcanvas-end" tabindex="-1" id="nearbyOffcanvas" aria-labelledby="nearbyOffcanvasLabel">
-  <div class="offcanvas-header bg-secondary text-white">
-    <h5 style="color: wheat !important;" class="offcanvas-title" id="nearbyOffcanvasLabel">Nearby Properties</h5>
-    
-    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-    
-  </div>
-<span style="font-size: small;
-  color:black;
-  background:rgba(146, 135, 91, 0.434);
-  padding: 4px 4px;">
-  <i class="fas fa-info"></i>
-  Note: The distances shown are straight-line estimates and do not account for actual road routes.  
-  For precise, route-based directions and travel distances, please refer to Google Maps.
-</span>
-
-  <div class="offcanvas-body" id="nearby-content" style="overflow-y:auto; max-height: 80vh;">
-    
-    <!-- Content injected by JS -->
-  </div>
+    {% endfor %}
+    {% endif %}
 </div>
 
-  
-  <!-- Scripts -->
-  <script nonce="{{ request.csp_once }}" src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<!-- ============================================================
+MAIN CONTENT — full-width container
+============================================================ -->
+<main class="container-fluid px-0">
+    {% block content %}
+    <!-- Page-specific content goes here -->
+    {% endblock %}
+</main>
+
+<!-- ============================================================
+FOOTER — clean, hierarchical, with social links
+============================================================ -->
+<footer>
+    <div class="container">
+        <div class="row g-4 g-lg-5">
+
+            <!-- Brand & About -->
+            <div class="col-lg-4">
+                <div class="brand-footer">
+                    <i class="fas fa-home"></i>
+                    <span>XbomaSwift</span>
+                </div>
+                <p class="footer-description">
+                    Helping you find the perfect home faster and smarter across Kenya.
+                </p>
+                <div class="d-flex flex-wrap gap-3">
+                    <a href="{% url 'about_us' %}" class="text-white-50 text-decoration-none">
+                        <i class="fas fa-info-circle me-1"></i> About Us
+                    </a>
+                    <a href="{% url 'faq_list' %}" class="text-white-50 text-decoration-none">
+                        <i class="fas fa-question-circle me-1"></i> FAQs
+                    </a>
+                </div>
+                <div class="social-icons">
+                    <a href="https://web.facebook.com/moses.swdev" target="_blank" aria-label="Facebook">
+                        <i class="fab fa-facebook-f"></i>
+                    </a>
+                    <a href="#" aria-label="X (Twitter)">
+                        <i class="fab fa-x"></i>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Quick Links -->
+            <div class="col-lg-4">
+                <h5>Quick Links</h5>
+                <ul>
+                    <li><a href="{% url 'support' %}"><i class="fas fa-hands-helping"></i> Support Us</a></li>
+                    <li><a href="{% url 'property_map' %}"><i class="fas fa-map-marker-alt"></i> Map View</a></li>
+                    {% if user.is_authenticated and user.registeruser and landlord.has_active_payment %}
+                    <li><a href="{% url 'new_property' %}"><i class="fas fa-plus"></i> Post Property</a></li>
+                    {% endif %}
+                    <li><a href="{% url 'terms_conditions' %}"><i class="fas fa-file-alt"></i> Terms &amp; Conditions</a></li>
+                    <li><a href="{% url 'privacy_policy' %}"><i class="fas fa-shield-alt"></i> Privacy Policy</a></li>
+                    <li><a href="{% url 'mover_policy' %}"><i class="fas fa-truck"></i> Mover Policy</a></li>
+                    <li><a href="{% url 'refund_policy' %}"><i class="fas fa-undo"></i> Refund Policy</a></li>
+                </ul>
+            </div>
+
+            <!-- Contact -->
+            <div class="col-lg-4">
+                <h5>Contact Us</h5>
+                <ul>
+                    <li>
+                        <a href="mailto:support@xbomaswift.com">
+                            <i class="fas fa-envelope"></i> support@xbomaswift.com
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <hr class="footer-divider" />
+        <div class="text-center">
+            <small class="copyright">
+                &copy; {% now "Y" %} Kaoprox System. All rights reserved.
+            </small>
+        </div>
+    </div>
+</footer>
+
+<!-- ============================================================
+OFFCANVAS — Nearby Properties (refined)
+============================================================ -->
+<div class="offcanvas offcanvas-end" tabindex="-1" id="nearbyOffcanvas" aria-labelledby="nearbyOffcanvasLabel">
+    <div class="offcanvas-header">
+        <h5 class="offcanvas-title" id="nearbyOffcanvasLabel">
+            <i class="fas fa-location-dot"></i> Nearby Properties
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body" id="nearby-content">
+        <!-- The nearby-note is injected here by JS; we keep a placeholder -->
+        <div class="nearby-note">
+            <i class="fas fa-info-circle"></i>
+            <span>Distances shown are straight‑line estimates. For precise routes, use Google Maps.</span>
+        </div>
+        <!-- Dynamic content appended here -->
+    </div>
+</div>
+
+<!-- ============================================================
+SCRIPTS — Bootstrap bundle & inline geolocation logic
+============================================================ -->
+<script nonce="{{ request.csp_once }}" src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js">
+</script>
+
+<!-- Inline: nearby properties geolocation (same logic, improved UI) -->
+
+<script nonce="{{ request.csp_nonce }}">
+// Build the base URL for property detail pages (removes trailing slash)
+const propertyDetailBaseUrl = "{% url 'property_detail' 0 %}".replace(/0\/?$/, "").replace(/\/$/, "");
+
+document.addEventListener("DOMContentLoaded", function() {
+    let watchId = null;
+    let lastLat = null;
+    let lastLon = null;
+    let fetchDebounceTimeout = null;
+    let initialOffcanvasShown = false;
+
+    // Helper: Calculate distance in meters (Haversine)
+    function getDistanceInMeters(lat1, lon1, lat2, lon2) {
+        const R = 6371000;
+        const dLat = (lat2 - lat1) * Math.PI / 180;
+        const dLon = (lon2 - lon1) * Math.PI / 180;
+        const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+            Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+            Math.sin(dLon / 2) * Math.sin(dLon / 2);
+        const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        return R * c;
+    }
+
+    // Render nearby properties inside the offcanvas
+    function renderNearbyProperties(data) {
+        const container = document.getElementById("nearby-content");
+        if (!container) return;
+
+        let html = `
+            <div class="nearby-note">
+                <i class="fas fa-info-circle"></i>
+                <span>Distances shown are straight‑line estimates. For precise routes, use Google Maps.</span>
+            </div>
+        `;
+
+        if (data.count > 0) {
+            html += `<p class="fw-semibold mb-2">${data.count} rental${data.count > 1 ? 's' : ''} found near you:</p>`;
+            data.properties.forEach(function(prop) {
+                const url = `${propertyDetailBaseUrl}/${prop.id}`;
+                const dist = prop.distance < 0.1 ?
+                    `${(prop.distance * 1000).toFixed(0)} m` :
+                    `${prop.distance.toFixed(2)} km`;
+                html += `
+                    <div class="nearby-item">
+                        <div class="thumb">
+                            <img src="${prop.image_url}" alt="${prop.title}" loading="lazy" />
+                        </div>
+                        <div class="info">
+                            <div class="title">
+                                <a href="${url}">
+                                    ${prop.title}
+                                    ${prop.is_verified ? ' <i class="bi bi-patch-check-fill text-primary" style="font-size:0.75rem;"></i>' : ''}
+                                </a>
+                            </div>
+                            <div class="details">
+                                <span><i class="fas fa-bed"></i> ${prop.bedrooms}</span>
+                                <span><i class="fas fa-bath"></i> ${prop.bathrooms}</span>
+                                <span><i class="fas fa-tag"></i> Ksh ${prop.rent.toLocaleString()}</span>
+                                <span><i class="fas fa-map-pin"></i> ${prop.estate}</span>
+                            </div>
+                        </div>
+                        <span class="distance-badge">${dist}</span>
+                    </div>
+                `;
+            });
+        } else {
+            html += `<p class="text-muted">No properties found within 2.5 km of your current location.</p>`;
+        }
+
+        container.innerHTML = html;
+
+        // Show offcanvas only once, on first successful fetch
+        if (!initialOffcanvasShown && data.count > 0) {
+            const offcanvasEl = document.getElementById('nearbyOffcanvas');
+            if (offcanvasEl) {
+                const offcanvas = bootstrap.Offcanvas.getOrCreateInstance(offcanvasEl);
+                offcanvas.show();
+            }
+            initialOffcanvasShown = true;
+        }
+    }
+
+    // Fetch nearby properties from the backend
+    function fetchNearbyProperties(lat, lon) {
+        fetch("{% url 'nearby_properties_api' %}", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': '{{ csrf_token }}'
+                },
+                body: JSON.stringify({ latitude: lat, longitude: lon })
+            })
+            .then(r => {
+                if (!r.ok) throw new Error('Network response error');
+                return r.json();
+            })
+            .then(data => renderNearbyProperties(data))
+            .catch(err => {
+                console.error('Nearby fetch error:', err);
+                const container = document.getElementById("nearby-content");
+                if (container) {
+                    container.innerHTML = `
+                        <div class="nearby-note"><i class="fas fa-info-circle"></i> Error updating nearby properties. Retrying as you move…</div>
+                        <p class="text-danger">${err.message || 'Unable to load nearby properties.'}</p>
+                    `;
+                }
+            });
+    }
+
+    // ---- Geolocation handler ----
+    function handleLocationUpdate(position) {
+        const lat = position.coords.latitude;
+        const lon = position.coords.longitude;
+
+        // ---------------------------------------------------------------
+        // Check if user has moved significantly (at least 50 meters)
+        // before firing a new request. This avoids unnecessary API calls.
+        // ---------------------------------------------------------------
+        if (lastLat !== null && lastLon !== null) {
+            const movedDistance = getDistanceInMeters(lastLat, lastLon, lat, lon);
+            if (movedDistance < 50) {
+                // User hasn't moved enough – skip the backend query
+                return;
+            }
+        }
+
+        // Update last known position
+        lastLat = lat;
+        lastLon = lon;
+
+        // Debounce the request to avoid rapid successive calls
+        clearTimeout(fetchDebounceTimeout);
+        fetchDebounceTimeout = setTimeout(() => {
+            fetchNearbyProperties(lat, lon);
+        }, 1000);
+    }
+
+    // Error handler for geolocation
+    function handleError(err) {
+        console.warn('Geolocation error:', err.message);
+        const container = document.getElementById("nearby-content");
+        if (!container) return;
+        let msg = 'Unable to get your location. ';
+        if (err.code === err.PERMISSION_DENIED) {
+            msg += 'Please enable location permissions to see nearby properties.';
+        } else if (err.code === err.POSITION_UNAVAILABLE) {
+            msg += 'Location information is unavailable.';
+        } else if (err.code === err.TIMEOUT) {
+            msg += 'Location request timed out.';
+        } else {
+            msg += 'An unknown error occurred.';
+        }
+        container.innerHTML = `
+            <div class="nearby-note"><i class="fas fa-info-circle"></i> Location services</div>
+            <p class="text-warning">${msg}</p>
+        `;
+    }
+
+    // Start watching the user's position
+    if (navigator.geolocation) {
+        watchId = navigator.geolocation.watchPosition(
+            handleLocationUpdate,
+            handleError,
+            {
+                enableHighAccuracy: true,
+                timeout: 10000,
+                maximumAge: 5000   // Accept positions up to 5 seconds old
+            }
+        );
+    } else {
+        const container = document.getElementById("nearby-content");
+        if (container) {
+            container.innerHTML = `
+                <div class="nearby-note"><i class="fas fa-info-circle"></i> Geolocation not supported</div>
+                <p class="text-warning">Your browser does not support geolocation.</p>
+            `;
+        }
+    }
+});
+</script>
 
 </body>
 
