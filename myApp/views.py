@@ -2672,50 +2672,88 @@ def normalize_number(text):
 # LAST-MENTIONED-WINS. See ASSUMPTION note at top of this file for why.
 def extract_rent_filter(lower_msg):
     candidates = []  # (start_index, kind, value_or_tuple)
+    lower_msg = lower_msg.replace(":", " ").replace("=", " ")
 
     amount = r"(?:(?:ksh|kes)\.?\s*)?(?:\d{1,3}(?:,\d{3})+|\d+(?:\.\d+)?)\s*(?:k|thousand|m|million)?"
-    # Explicit ranges. Requiring "between", "from", rent/budget wording,
-    # currency, or a K suffix avoids interpreting room counts as rent.
-    range_patterns = [
-        rf"\bbetween\s+(?P<low>{amount})\s+(?:and|to|[-–—])\s+(?P<high>{amount})",
-        rf"\b(?:rent|budget|price)\s+(?:of\s+|between\s+|from\s+|range\s+)?(?P<low>{amount})\s+(?:to|and|[-–—])\s+(?P<high>{amount})",
-        rf"(?P<low>(?:(?:ksh|kes)\.?\s*)?(?:\d{{1,3}}(?:,\d{{3}})+|\d+(?:\.\d+)?)(?:\s*(?:k|thousand|m|million)))\s*(?:to|[-–—])\s*(?P<high>{amount})",
-        rf"(?P<low>(?:(?:ksh|kes)\.?\s*)?\d{{1,3}}(?:,\d{{3}})+)\s*(?:to|[-–—])\s*(?P<high>{amount})",
-    ]
-    for pattern in range_patterns:
-        for match in re.finditer(pattern, lower_msg):
-            if re.match(r"\s*(?:bedrooms?|beds?|bathrooms?|baths?|rooms?)\b", lower_msg[match.end():]):
-                continue
-            min_rent = normalize_number(match.group("low"))
-            max_rent = normalize_number(match.group("high"))
-            if min_rent is not None and max_rent is not None:
-                candidates.append((match.start(), "between", (min_rent, max_rent)))
+    range_pattern = re.compile(
+        rf"(?:(?P<prefix>\b(?:rent|budget|price)\b(?:\s+(?:range|of|is))?\s+)?"
+        rf"(?P<range_word>between|from)\s+)?"
+        rf"(?P<low>{amount})\s*(?:to|and|[-–—])\s*(?P<high>{amount})"
+    )
+    range_spans = []
+    rent_context = re.compile(r"\b(?:rent|budget|price|between|from)\b|\b(?:ksh|kes)\b|\d\s*(?:k|thousand|m|million)\b")
+    for match in range_pattern.finditer(lower_msg):
+        if re.match(r"\s*(?:bedrooms?|beds?|bathrooms?|baths?|rooms?)\b", lower_msg[match.end():]):
+            continue
+        before = lower_msg[max(0, match.start() - 32):match.start()]
+        marked_range = bool(match.group("prefix") or match.group("range_word") or rent_context.search(before))
+        marked_range = marked_range or bool(re.search(r"(?:k|thousand|m|million)\s*$|\b(?:ksh|kes)\b", match.group("low")))
+        marked_range = marked_range or bool(re.search(r"(?:k|thousand|m|million)\b", match.group("high")))
+        if not marked_range:
+            continue
+        raw_low, raw_high = match.group("low"), match.group("high")
+        min_rent = normalize_number(raw_low)
+        max_rent = normalize_number(raw_high)
+        suffix_factors = {"k": 1_000, "thousand": 1_000, "m": 1_000_000, "million": 1_000_000}
+        low_suffix = re.search(r"\s*(k|thousand|m|million)\s*$", raw_low)
+        high_suffix = re.search(r"\s*(k|thousand|m|million)\s*$", raw_high)
+        # In shorthand ranges, carry the stated unit across both bounds:
+        # “30 to 50k” means “30k to 50k”, and “1 to 1.5m” means millions.
+        if low_suffix and not high_suffix and max_rent is not None and max_rent < 1_000:
+            max_rent *= suffix_factors[low_suffix.group(1)]
+        elif high_suffix and not low_suffix and min_rent is not None and min_rent < 1_000:
+            min_rent *= suffix_factors[high_suffix.group(1)]
+        if min_rent is not None and max_rent is not None:
+            range_spans.append(match.span())
+            candidates.append((match.start(), "between", (min_rent, max_rent)))
 
+    # Ignore one-sided words that occur inside a two-sided range, e.g. the
+    # “from 30” in “rent from 30 to 50k”.
     single_patterns = [
-        ("below", rf"\b(?:below|under|less than|not more than|up to|at most|max(?:imum)? budget(?: of| is)?|max(?:imum)? (?:rent|price)(?: of| is)?|budget(?: of| is| max(?:imum)?| up to)?|within)\s+(?P<amount>{amount})"),
-        ("above", rf"\b(?:above|over|greater than|at least|min(?:imum)?(?: of| is)?|starting (?:at|from)|from)\s+(?P<amount>{amount})"),
+        ("below", rf"\b(?:below|under|less than|not more than|no more than|up to|at most|maximum(?: budget| rent| price)?(?: of| is)?|max(?:imum)?(?: budget| rent| price)?(?: of| is)?|budget\s+(?:max(?:imum)?|up to)|within(?: budget(?: of| is)?)?)\s+(?P<amount>{amount})"),
+        ("above", rf"\b(?:above|over|greater than|more than|no less than|not less than|at least|minimum(?: budget| rent| price)?(?: of| is)?|min(?:imum)?(?: of| is)?|starting (?:at|from)|from)\s+(?P<amount>{amount})"),
         ("around", rf"\b(?:exactly|around|about|approximately|roughly|near|close to)\s+(?P<amount>{amount})"),
     ]
     for kind, pattern in single_patterns:
         for match in re.finditer(pattern, lower_msg):
+            if any(match.start() < end and match.end() > start for start, end in range_spans):
+                continue
             if re.match(r"\s*(?:bedrooms?|beds?|bathrooms?|baths?|rooms?)\b", lower_msg[match.end():]):
                 continue
             value = normalize_number(match.group("amount"))
             if value is not None:
                 candidates.append((match.start(), kind, value))
 
-    # A standalone KES amount after rent/price means the requested target rent;
-    # model it as a modest range instead of silently treating it as a hard cap.
-    for match in re.finditer(
-        rf"\b(?:rent|price)\s+(?:of|is|around|about)?\s*(?P<amount>{amount})",
-        lower_msg,
-    ):
+    # A stated budget or target rent without a comparator means a target
+    # price, represented as a ±15% band. Explicit range/comparator spans above
+    # take precedence and prevent this pattern from duplicating their amount.
+    target_pattern = re.compile(
+        rf"\b(?:rent|price|budget)\s+(?:of|is|around|about|up to|max(?:imum)?|)?\s*(?P<amount>{amount})"
+    )
+    for match in target_pattern.finditer(lower_msg):
+        if any(match.start() < end and match.end() > start for start, end in range_spans):
+            continue
+        if re.match(r"\s*(?:to|and|[-–—])\s*" + amount, lower_msg[match.end():]):
+            continue
         value = normalize_number(match.group("amount"))
-        if value is not None and not any(
-            start <= match.start() < end
-            for start, end in [(c[0], c[0] + len(match.group(0))) for c in candidates if c[1] == "between"]
-        ):
-            candidates.append((match.start(), "around", value))
+        if value is not None:
+            prefix = lower_msg[max(0, match.start() - 28):match.start()]
+            is_explicit_cap = bool(re.search(r"\b(?:up to|max(?:imum)?|under|below|less than|not more than|no more than|at most|within(?: my)?)\s*$", prefix))
+            is_explicit_cap = is_explicit_cap or bool(re.search(r"\b(?:up to|max(?:imum)?)\b", match.group(0)))
+            kind = "below" if is_explicit_cap else "budget" if re.search(r"\bbudget\b", match.group(0)) else "around"
+            candidates.append((match.start(), kind, value))
+
+    # Also accept the common reversed form “14k budget” / “KES 14,000 rent
+    # budget”, where the amount comes before the budget keyword.
+    reverse_budget_pattern = re.compile(
+        rf"(?P<amount>{amount})\s+(?:(?:monthly|rental|rent)\s+)?budget\b"
+    )
+    for match in reverse_budget_pattern.finditer(lower_msg):
+        if any(match.start() < end and match.end() > start for start, end in range_spans):
+            continue
+        value = normalize_number(match.group("amount"))
+        if value is not None:
+            candidates.append((match.start(), "budget", value))
 
     if not candidates:
         return None
@@ -2744,6 +2782,11 @@ def apply_rent_filter(qs, lower_msg, context_info):
     elif kind == "above":
         qs = qs.filter(rent__gte=value)
         context_info.append(f"rent at least KES {value:,}")
+    elif kind == "budget":
+        lower_bound = max(0, value - 5_000)
+        upper_bound = value + 5_000
+        qs = qs.filter(rent__gte=lower_bound, rent__lte=upper_bound)
+        context_info.append(f"rent within KES {lower_bound:,}–{upper_bound:,} of the KES {value:,} budget")
     elif kind == "around":
         lower_bound = int(value * 0.85)
         upper_bound = int(value * 1.15)
@@ -3076,13 +3119,13 @@ def ai_agent(request):
                 "review_summary": review_summary,
                 "low_rating_reviews": [item["text"] for item in review_data["low_rating_reviews"]],
                 "review_comments": review_data["recent_approved_comments"][:2],
-                "tip": random.choice(tip_pool) if tip_pool else "",
             })
 
         human_reply = format_human_response(properties_data, show_search_status=is_property_search)
         return JsonResponse({
             "reply": human_reply,
             "properties": properties_data,
+            "tip": random.choice(tip_pool) if tip_pool else "",
         })
 
     except Exception as e:

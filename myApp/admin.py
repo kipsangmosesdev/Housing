@@ -435,9 +435,9 @@ class YearlySubscriptionPlanAdmin(admin.ModelAdmin):
     list_filter = ('landlord_type',)
 
 # Customize admin site titles
-admin.site.site_header = "KaoProX Administration"
-admin.site.site_title = "KaoProX Admin Portal"
-admin.site.index_title = "Welcome to KaoProX Admin Panel"
+admin.site.site_header = "XbomaSwift Administration"
+admin.site.site_title = "XbomaSwift Admin Portal"
+admin.site.index_title = "Welcome to XbomaSwift Admin Panel"
 
 
 

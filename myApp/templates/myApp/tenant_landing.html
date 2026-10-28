@@ -727,15 +727,15 @@ html { scroll-behavior: smooth; }
   <button class="home-ai-launcher" id="homeAiLauncher" type="button"
           aria-controls="homeAiPanel" aria-expanded="false">
     <span class="home-ai-launcher-icon"><i class="fas fa-sparkles" aria-hidden="true"></i></span>
-    <span>Find a rental</span>
+    <span>Nyumba assistant</span>
     <span class="home-ai-launcher-dot" aria-label="Online"></span>
   </button>
 
-  <div class="home-ai-panel" id="homeAiPanel" role="dialog" aria-label="Rental finder" aria-modal="false">
+  <div class="home-ai-panel" id="homeAiPanel" role="dialog" aria-label="Nyumba assistant" aria-modal="false">
     <div class="home-ai-header">
       <div class="home-ai-avatar"><i class="fas fa-house-chimney" aria-hidden="true"></i></div>
       <div class="home-ai-heading">
-        <strong>Rental finder</strong>
+        <strong>Nyumba assistant</strong>
         <span><i class="fas fa-circle" style="color:#48d597;font-size:7px" aria-hidden="true"></i> Search available homes</span>
       </div>
       <button class="home-ai-close" id="homeAiClose" type="button" aria-label="Close assistant">&times;</button>
@@ -882,6 +882,8 @@ html { scroll-behavior: smooth; }
     const link = document.createElement('a');
     link.className = 'home-ai-property';
     link.href = `${propertyDetailBase}${encodeURIComponent(property.id)}/`;
+    link.target = '_blank';
+    link.rel = 'noopener noreferrer';
     link.setAttribute('aria-label', `View ${property.title || 'rental property'}`);
 
     const image = document.createElement('img');
@@ -978,15 +980,24 @@ html { scroll-behavior: smooth; }
     link.appendChild(body);
     messages.appendChild(link);
     messages.scrollTop = messages.scrollHeight;
-    if (property.tip) {
-      const tip = document.createElement('div');
-      tip.className = 'home-ai-tip';
-      const label = document.createElement('strong');
-      label.textContent = 'Rental tip';
-      tip.append(label, document.createTextNode(property.tip));
-      messages.appendChild(tip);
+  };
+  const addRentalTip = (text) => {
+    if (!text) return;
+    const tip = document.createElement('div');
+    tip.className = 'home-ai-tip';
+    const label = document.createElement('strong');
+    label.textContent = 'Rental tip';
+    tip.append(label, document.createTextNode(text));
+    messages.appendChild(tip);
+    // The message list uses smooth scrolling. Force the final position after
+    // the property cards and tip have been laid out so the tip is not left
+    // just below the visible part of the chat panel.
+    messages.style.scrollBehavior = 'auto';
+    messages.scrollTop = messages.scrollHeight;
+    requestAnimationFrame(() => {
       messages.scrollTop = messages.scrollHeight;
-    }
+      messages.style.removeProperty('scroll-behavior');
+    });
   };
   launcher.addEventListener('click', () => setOpen(!panel.classList.contains('is-open')));
   closeButton.addEventListener('click', () => setOpen(false));
@@ -1031,7 +1042,7 @@ html { scroll-behavior: smooth; }
       (data.properties || []).slice(0, 5).forEach((property) => {
         addPropertyCard(property);
       });
-      messages.scrollTop = messages.scrollHeight;
+      addRentalTip(data.tip);
     } catch (error) {
       typing.remove();
       addMessage(error.message || 'Something went wrong. Please try again.');
