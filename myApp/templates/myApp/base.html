@@ -999,14 +999,6 @@
         <div class="collapse navbar-collapse justify-content-end mt-3 mt-lg-0" id="mainNavbar">
             <ul class="navbar-nav align-items-lg-center gap-lg-1">
 
-                {% if user.tenant or not user.is_authenticated %}
-                <li class="nav-item">
-                    <a href="{% url 'chat_page' %}" class="nav-link">
-                        <i class="fas fa-brain"></i> AI Assistant
-                    </a>
-                </li>
-                {% endif %}
-
                 {% if user.is_authenticated %}
                 {% if user.tenant %}
                 <li class="nav-item">

@@ -68,19 +68,19 @@ h1, h2, h3, h4, h5, h6 {
 .py-7 { padding-top: 7rem; padding-bottom: 7rem; }
 
 .hero-section {
-    min-height: 75vh;
+    min-height: min(700px, calc(100vh - 70px));
     display: flex;
     align-items: center;
     background: url('https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=1920&q=80');
     background-size: cover;
-    background-position: center;
-    border-radius: 0 0 40px 40px;
+    background-position: center 54%;
+    border-radius: 0 0 28px 28px;
     position: relative;
     overflow: hidden;
 }
 
 .hero-overlay {
-    background: linear-gradient(135deg, rgba(0, 183, 255, 0.389) 0%, rgba(224, 178, 12, 0.241) 100%);
+    background: linear-gradient(90deg, rgba(8, 29, 48, .88) 0%, rgba(8, 29, 48, .72) 43%, rgba(8, 29, 48, .16) 100%);
     position: absolute;
     top: 0; left: 0; width: 100%; height: 100%;
     z-index: 1;
@@ -92,6 +92,35 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .hover-lift:hover { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(0,0,0,0.15); }
+
+.hero-copy { max-width: 670px; text-align: left; padding: 2.5rem 0 4rem; }
+.hero-eyebrow { display: inline-flex; align-items: center; gap: 9px; color: #f1d8b5; font-size: .78rem; font-weight: 600; letter-spacing: .13em; text-transform: uppercase; }
+.hero-eyebrow::before { content: ''; width: 28px; height: 1px; background: #c8a173; }
+.hero-title { max-width: 650px; margin: 1.2rem 0 1rem; color: #fff; font-family: 'Karla', sans-serif; font-size: clamp(2.7rem, 5.3vw, 4.65rem); font-weight: 700; line-height: .99; letter-spacing: -.045em; }
+.hero-title em { color: #e2bd91; font-style: normal; }
+.hero-description { max-width: 510px; margin: 0; color: rgba(255,255,255,.84); font-size: 1.05rem; line-height: 1.75; }
+.hero-actions { justify-content: flex-start !important; gap: 12px !important; margin-top: 2rem !important; }
+.hero-actions .btn { min-height: 54px; padding: .9rem 1.45rem !important; border-radius: 8px !important; font-size: .95rem; }
+.hero-actions .btn-primary { border-color: #c8a173; background: #c8a173; color: #172b3b; }
+.hero-actions .btn-primary:hover { border-color: #d8b88f; background: #d8b88f; }
+.hero-actions .btn-outline-light { border-color: rgba(255,255,255,.55); }
+.hero-note { margin-top: 1.3rem; color: rgba(255,255,255,.72); font-size: .88rem; }
+.hero-note a { color: #f0d3ae !important; font-weight: 600; }
+.photo-credit { color: rgba(255,255,255,.72); font-size: .7rem; }
+.photo-credit a { color: rgba(255,255,255,.9) !important; }
+.section-label { color: #9b744a !important; font-size: .74rem; letter-spacing: .14em; }
+.property-card { border: 1px solid rgba(14,42,69,.07); box-shadow: 0 8px 28px rgba(14,42,69,.07); }
+.property-card:hover { transform: translateY(-5px); box-shadow: 0 16px 34px rgba(14,42,69,.13); }
+@media (max-width: 767.98px) {
+  .hero-section { min-height: 590px; background-position: 57% center; border-radius: 0 0 20px 20px; }
+  .hero-overlay { background: linear-gradient(90deg, rgba(8,29,48,.88), rgba(8,29,48,.62)); }
+  .hero-copy { padding: 2.5rem .4rem 3.5rem; }
+  .hero-title { font-size: clamp(2.55rem, 12vw, 3.55rem); }
+  .hero-description { font-size: .98rem; }
+  .hero-actions { align-items: stretch; }
+  .hero-actions .btn { flex: 1 1 100%; }
+  .photo-credit { display: none; }
+}
 
 /* --- 4. Announcement Bar --- */
 .announcement-bar { 
@@ -197,58 +226,42 @@ html { scroll-behavior: smooth; }
 <!-- ========================= -->
 <section class="hero-section py-6 py-lg-7 position-relative overflow-hidden">
   <div class="container position-relative z-2">
-    <div class="row justify-content-center">
-      <div class="col-12 col-lg-10 col-xl-8 text-center">
-        
-        <!-- Welcome Message -->
-        <!-- <div class="mb-4">
-          <span class="welcome-badge d-inline-flex align-items-center gap-2 px-3 py-1 rounded-pill bg-white text-primary mb-3">
-            <i class="fas fa-sparkles fa-xs"></i>
-            <span>Welcome to XbomaSwift</span>
-          </span>
-        </div> -->
+    <div class="row">
+      <div class="col-12 col-lg-9 col-xl-8">
+        <div class="hero-copy">
+          <span class="hero-eyebrow">A better way to find home</span>
+          <h1 class="hero-title">Find a place that feels <em>right.</em></h1>
+          <p class="hero-description">Browse homes across Kenya, compare what matters, and make your next move with confidence.</p>
 
-        <!-- Main Heading -->
-        <h1 class="display-5 fw-bold text-white mb-4">
-          Find Your Perfect Home and Mover
-          <span class="d-block text-accent mt-2">in Seconds</span>
-        </h1>
-
-        <!-- Subheading -->
-        <!-- <p class="lead text-light mb-5 opacity-90">
-          Discover handpicked properties, connect with trusted movers, and make your move seamless
-        </p> -->
-
-        <!-- Action Buttons -->
-        <div class="d-flex flex-wrap justify-content-center gap-3 mt-5">
+          <div class="d-flex flex-wrap hero-actions">
 
           {% if user.is_authenticated %}
 
             {% if user.tenant %}
               <!-- Tenant -->
-              <a href="{% url 'property_map' %}" class="btn btn-success btn-lg px-5 py-3 rounded-pill fw-semibold shadow-lg hover-lift">
-                <i class="fas fa-map-marked-alt me-2"></i> Browse Properties
+              <a href="{% url 'property_map' %}" class="btn btn-primary btn-lg fw-semibold shadow-lg hover-lift">
+                <i class="fas fa-house me-2"></i> Browse homes
               </a>
-              <a href="{% url 'transporter_map' %}" class="btn btn-outline-light btn-lg px-5 py-3 rounded-pill fw-semibold hover-lift">
-                <i class="fas fa-truck me-2"></i> Find Movers
+              <a href="{% url 'transporter_map' %}" class="btn btn-outline-light btn-lg fw-semibold hover-lift">
+                <i class="fas fa-truck me-2"></i> Find a mover
               </a>
 
             {% elif user.registeruser %}
               <!-- Landlord -->
-              <a href="{% url 'landlord_dashboard' %}" class="btn btn-success btn-lg px-5 py-3 rounded-pill fw-semibold shadow-lg hover-lift">
-                <i class="fas fa-tachometer-alt me-2"></i> Go to Dashboard
+              <a href="{% url 'landlord_dashboard' %}" class="btn btn-primary btn-lg fw-semibold shadow-lg hover-lift">
+                <i class="fas fa-tachometer-alt me-2"></i> Go to dashboard
               </a>
-              <a href="{% url 'property_map' %}" class="btn btn-outline-light btn-lg px-5 py-3 rounded-pill fw-semibold hover-lift">
-                <i class="fas fa-map-marked-alt me-2"></i> View Properties
+              <a href="{% url 'property_map' %}" class="btn btn-outline-light btn-lg fw-semibold hover-lift">
+                <i class="fas fa-house me-2"></i> Browse homes
               </a>
 
             {% elif user.transporter %}
               <!-- Transporter -->
-              <a href="{% url 'transporter_dashboard' %}" class="btn btn-warning btn-lg px-5 py-3 rounded-pill fw-semibold shadow-lg hover-lift">
-                <i class="fas fa-truck me-2"></i> My Dashboard
+              <a href="{% url 'transporter_dashboard' %}" class="btn btn-primary btn-lg fw-semibold shadow-lg hover-lift">
+                <i class="fas fa-truck me-2"></i> My dashboard
               </a>
-              <a href="{% url 'transporter_map' %}" class="btn btn-outline-light btn-lg px-5 py-3 rounded-pill fw-semibold hover-lift">
-                <i class="fas fa-map-marked-alt me-2"></i> View Map
+              <a href="{% url 'transporter_map' %}" class="btn btn-outline-light btn-lg fw-semibold hover-lift">
+                <i class="fas fa-map-marked-alt me-2"></i> View movers
               </a>
 
             {% else %}
@@ -260,27 +273,27 @@ html { scroll-behavior: smooth; }
 
           {% else %}
             <!-- Guest User -->
-            <div class="d-flex flex-wrap gap-4 justify-content-center">
+            <div class="d-flex flex-wrap hero-actions">
               <a href="{% url 'property_map' %}"
-                 class="btn btn-primary btn-lg px-5 py-3 rounded-pill fw-semibold shadow-lg hover-lift">
-                <i class="fas fa-map-marked-alt me-2"></i> Explore Properties
+                 class="btn btn-primary btn-lg fw-semibold shadow-lg hover-lift">
+                <i class="fas fa-house me-2"></i> Explore homes
               </a>
 
               <a href="{% url 'transporter_map' %}"
-                 class="btn btn-light btn-lg px-5 py-3 rounded-pill fw-semibold shadow-sm hover-lift">
-                <i class="fas fa-truck me-2"></i> Movers
+                 class="btn btn-outline-light btn-lg fw-semibold hover-lift">
+                <i class="fas fa-truck me-2"></i> Find a mover
               </a>
             </div>
 
             <!-- Guest CTA -->
-            <p class="text-light mt-4 opacity-75">
-              <a href="{% url 'login' %}" class="text-warning text-decoration-none">Sign in</a> 
-              or 
-              <a href="{% url 'landlord_tenant' %}" class="text-warning text-decoration-none">create an account</a> 
-              for personalized experience
+            <p class="hero-note">
+              Have an account? <a href="{% url 'login' %}" class="text-decoration-none">Sign in</a>
+              <span aria-hidden="true"> · </span>
+              <a href="{% url 'landlord_tenant' %}" class="text-decoration-none">Create an account</a>
             </p>
           {% endif %}
 
+          </div>
         </div>
       </div>
     </div>
@@ -409,5 +422,626 @@ html { scroll-behavior: smooth; }
 <!-- ========================= -->
 <!-- FINAL CTA -->
 <!-- ========================= -->
+
+<style>
+  .home-ai-launcher {
+    position: fixed;
+    right: 28px;
+    bottom: 26px;
+    z-index: 1050;
+    display: inline-flex;
+    align-items: center;
+    gap: 11px;
+    min-height: 58px;
+    padding: 8px 20px 8px 9px;
+    border: 0;
+    border-radius: 999px;
+    color: #fff;
+    background: linear-gradient(135deg, #0e2a45, #145782);
+    box-shadow: 0 12px 32px rgba(14, 42, 69, .28);
+    font: 600 15px/1.2 'Poppins', sans-serif;
+    transition: transform .2s ease, box-shadow .2s ease;
+  }
+  .home-ai-launcher:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 16px 36px rgba(14, 42, 69, .34);
+  }
+  .home-ai-launcher:focus-visible,
+  .home-ai-close:focus-visible,
+  .home-ai-send:focus-visible {
+    outline: 3px solid #c8a173;
+    outline-offset: 3px;
+  }
+  .home-ai-launcher-icon {
+    display: grid;
+    width: 41px;
+    height: 41px;
+    place-items: center;
+    border: 1px solid rgba(255,255,255,.28);
+    border-radius: 50%;
+    background: rgba(255,255,255,.14);
+    font-size: 18px;
+  }
+  .home-ai-launcher-dot {
+    width: 9px;
+    height: 9px;
+    margin-left: 1px;
+    border: 2px solid #0e2a45;
+    border-radius: 50%;
+    background: #48d597;
+  }
+  .home-ai-panel {
+    position: fixed;
+    right: 28px;
+    bottom: 98px;
+    z-index: 1050;
+    display: flex;
+    width: min(390px, calc(100vw - 32px));
+    height: min(590px, calc(100dvh - 130px));
+    min-height: 400px;
+    flex-direction: column;
+    overflow: hidden;
+    border: 1px solid rgba(14,42,69,.12);
+    border-radius: 22px;
+    background: #fff;
+    box-shadow: 0 24px 70px rgba(14,42,69,.24);
+    transform: translateY(12px) scale(.98);
+    transform-origin: bottom right;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity .18s ease, transform .18s ease, visibility .18s;
+  }
+  .home-ai-panel.is-open {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+    visibility: visible;
+  }
+  .home-ai-header {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    padding: 17px 18px;
+    color: #fff;
+    background: linear-gradient(120deg, #0e2a45, #145782);
+  }
+  .home-ai-avatar {
+    display: grid;
+    width: 43px;
+    height: 43px;
+    flex: 0 0 43px;
+    place-items: center;
+    border: 1px solid rgba(255,255,255,.3);
+    border-radius: 50%;
+    background: rgba(255,255,255,.14);
+    font-size: 19px;
+  }
+  .home-ai-heading { flex: 1; min-width: 0; }
+  .home-ai-heading strong { display: block; font-size: 15px; font-weight: 650; }
+  .home-ai-heading span { color: rgba(255,255,255,.78); font-size: 12px; }
+  .home-ai-close {
+    display: grid;
+    width: 34px;
+    height: 34px;
+    place-items: center;
+    border: 0;
+    border-radius: 50%;
+    color: #fff;
+    background: rgba(255,255,255,.12);
+    font-size: 18px;
+  }
+  .home-ai-messages {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: 12px;
+    overflow-y: auto;
+    padding: 18px 15px;
+    background: #f6f8fa;
+    scroll-behavior: smooth;
+  }
+  .home-ai-message {
+    max-width: 88%;
+    padding: 11px 13px;
+    border-radius: 15px;
+    color: #263645;
+    background: #fff;
+    box-shadow: 0 2px 8px rgba(14,42,69,.07);
+    font-size: 13px;
+    line-height: 1.55;
+    overflow-wrap: anywhere;
+    white-space: pre-wrap;
+  }
+  .home-ai-turn {
+    display: flex;
+    align-items: flex-end;
+    gap: 8px;
+    align-self: flex-start;
+    max-width: 100%;
+  }
+  .home-ai-turn.is-user {
+    align-self: flex-end;
+    flex-direction: row-reverse;
+  }
+  .home-ai-message-avatar {
+    display: grid;
+    width: 28px;
+    height: 28px;
+    flex: 0 0 28px;
+    place-items: center;
+    border-radius: 50%;
+    color: #fff;
+    background: #145782;
+    font-size: 12px;
+  }
+  .home-ai-turn.is-user .home-ai-message-avatar {
+    color: #0e2a45;
+    background: #e1e9ef;
+  }
+  .home-ai-turn .home-ai-message {
+    max-width: min(320px, calc(100% - 38px));
+  }
+  .home-ai-message p { margin: 0 0 7px; }
+  .home-ai-message p:last-child { margin-bottom: 0; }
+  .home-ai-message h3,
+  .home-ai-message h4,
+  .home-ai-message h5 {
+    margin: 2px 0 7px;
+    color: #0e2a45;
+    font: 650 14px/1.35 'Poppins', sans-serif;
+    letter-spacing: 0;
+  }
+  .home-ai-message ul,
+  .home-ai-message ol { margin: 2px 0 7px; padding-left: 19px; }
+  .home-ai-message li { margin: 2px 0; }
+  .home-ai-turn.is-user .home-ai-message {
+    color: #fff;
+    background: #145782;
+    border-bottom-right-radius: 5px;
+  }
+  .home-ai-turn.is-agent .home-ai-message { border-bottom-left-radius: 5px; }
+  .home-ai-property {
+    display: block;
+    width: 100%;
+    flex: 0 0 auto;
+    align-self: stretch;
+    overflow: hidden;
+    border: 1px solid #e2e8ef;
+    border-radius: 13px;
+    background: #fff;
+    color: #263645;
+    font-size: 12px;
+    text-decoration: none;
+    box-shadow: 0 2px 8px rgba(14,42,69,.06);
+    transition: transform .18s ease, box-shadow .18s ease;
+  }
+  .home-ai-property:hover {
+    color: #263645;
+    text-decoration: none;
+    transform: translateY(-2px);
+    box-shadow: 0 7px 18px rgba(14,42,69,.12);
+  }
+  .home-ai-property-image {
+    display: block;
+    width: 100%;
+    height: 132px;
+    object-fit: cover;
+    background: #e9eff3;
+  }
+  .home-ai-property-body { display: block; padding: 10px 12px 12px; }
+  .home-ai-property strong { display: block; margin-bottom: 4px; color: #0e2a45; font-size: 13px; }
+  .home-ai-property span { display: block; color: #68798a; }
+  .home-ai-property b { display: block; margin-top: 5px; color: #145782; }
+  .home-ai-property-section { margin-top: 9px; }
+  .home-ai-property-label { margin-bottom: 4px; color: #718096 !important; font-size: 10px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; }
+  .home-ai-amenities { display: flex; flex-wrap: wrap; gap: 5px; }
+  .home-ai-amenities span { display: inline-flex; padding: 3px 7px; border-radius: 999px; background: #f1f5f8; color: #465b6b; font-size: 10px; }
+  .home-ai-review-summary { margin-top: 8px; color: #526879 !important; }
+  .home-ai-negative-review { margin-top: 5px; color: #805744 !important; font-size: 11px; }
+  .home-ai-tip { align-self: stretch; padding: 9px 11px; border-left: 3px solid #c8a173; border-radius: 8px; background: #fff8ef; color: #695338; font-size: 11px; line-height: 1.5; }
+  .home-ai-tip strong { margin-right: 4px; color: #8a6237; }
+  .home-ai-property-cta {
+    display: inline-flex !important;
+    align-items: center;
+    gap: 6px;
+    width: max-content;
+    margin-top: 9px;
+    padding: 6px 10px;
+    border-radius: 999px;
+    color: #fff !important;
+    background: #145782;
+    font-size: 11px;
+    font-weight: 600;
+  }
+  .home-ai-property:hover .home-ai-property-cta { background: #0e2a45; }
+  .home-ai-typing {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    min-height: 22px;
+    color: #718096;
+    font-size: 13px;
+  }
+  .home-ai-typing span {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #7891a3;
+    animation: homeAiTyping 1s infinite ease-in-out;
+  }
+  .home-ai-typing span:nth-child(2) { animation-delay: .14s; }
+  .home-ai-typing span:nth-child(3) { animation-delay: .28s; }
+  @keyframes homeAiTyping {
+    0%, 60%, 100% { opacity: .35; transform: translateY(0); }
+    30% { opacity: 1; transform: translateY(-4px); }
+  }
+  .home-ai-composer {
+    display: flex;
+    gap: 9px;
+    align-items: center;
+    padding: 13px;
+    border-top: 1px solid #e8edf1;
+    background: #fff;
+  }
+  .home-ai-input {
+    width: 100%;
+    min-width: 0;
+    height: 43px;
+    padding: 0 14px;
+    border: 1px solid #dbe3e9;
+    border-radius: 999px;
+    color: #263645;
+    background: #f9fbfc;
+    font: 400 13px 'Poppins', sans-serif;
+  }
+  .home-ai-input:focus { border-color: #145782; outline: 3px solid rgba(20,87,130,.12); }
+  .home-ai-send {
+    display: grid;
+    width: 43px;
+    height: 43px;
+    flex: 0 0 43px;
+    place-items: center;
+    border: 0;
+    border-radius: 50%;
+    color: #fff;
+    background: #145782;
+  }
+  .home-ai-send:disabled { opacity: .55; }
+  @media (max-width: 575.98px) {
+    .home-ai-launcher { right: 16px; bottom: 16px; min-height: 54px; }
+    .home-ai-panel {
+      right: 10px;
+      bottom: 82px;
+      width: calc(100vw - 20px);
+      height: min(650px, calc(100dvh - 100px));
+      min-height: 360px;
+      border-radius: 19px;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .home-ai-launcher, .home-ai-panel, .home-ai-property { transition: none; }
+    .home-ai-typing span { animation: none; }
+  }
+</style>
+
+<section class="home-ai-widget" aria-label="Rental search assistant">
+  <button class="home-ai-launcher" id="homeAiLauncher" type="button"
+          aria-controls="homeAiPanel" aria-expanded="false">
+    <span class="home-ai-launcher-icon"><i class="fas fa-sparkles" aria-hidden="true"></i></span>
+    <span>Find a rental</span>
+    <span class="home-ai-launcher-dot" aria-label="Online"></span>
+  </button>
+
+  <div class="home-ai-panel" id="homeAiPanel" role="dialog" aria-label="Rental finder" aria-modal="false">
+    <div class="home-ai-header">
+      <div class="home-ai-avatar"><i class="fas fa-house-chimney" aria-hidden="true"></i></div>
+      <div class="home-ai-heading">
+        <strong>Rental finder</strong>
+        <span><i class="fas fa-circle" style="color:#48d597;font-size:7px" aria-hidden="true"></i> Search available homes</span>
+      </div>
+      <button class="home-ai-close" id="homeAiClose" type="button" aria-label="Close assistant">&times;</button>
+    </div>
+    <div class="home-ai-messages" id="homeAiMessages" aria-live="polite" aria-relevant="additions text">
+      <div class="home-ai-turn is-agent">
+        <span class="home-ai-message-avatar" aria-label="Rental finder"><i class="fas fa-house-chimney" aria-hidden="true"></i></span>
+        <div class="home-ai-message">Tell me your area, rent range, and the kind of home you’re looking for.</div>
+      </div>
+    </div>
+    <form class="home-ai-composer" id="homeAiForm">
+      <input class="home-ai-input" id="homeAiInput" type="text" maxlength="1000"
+             placeholder="Area, rent, rooms, amenities…" autocomplete="off" aria-label="Search rentals">
+      <button class="home-ai-send" id="homeAiSend" type="submit" aria-label="Send message">
+        <i class="fas fa-paper-plane" aria-hidden="true"></i>
+      </button>
+    </form>
+  </div>
+</section>
+
+<script>
+(() => {
+  const launcher = document.getElementById('homeAiLauncher');
+  const panel = document.getElementById('homeAiPanel');
+  const closeButton = document.getElementById('homeAiClose');
+  const form = document.getElementById('homeAiForm');
+  const input = document.getElementById('homeAiInput');
+  const messages = document.getElementById('homeAiMessages');
+  const sendButton = document.getElementById('homeAiSend');
+  const propertyDetailBase = "{% url 'property_detail' 0 %}".replace(/0\/?$/, '');
+
+  const setOpen = (open) => {
+    panel.classList.toggle('is-open', open);
+    launcher.setAttribute('aria-expanded', String(open));
+    if (open) window.setTimeout(() => input.focus(), 100);
+  };
+  const addMessage = (text, isUser = false, typewriter = false) => {
+    const row = document.createElement('div');
+    row.className = `home-ai-turn ${isUser ? 'is-user' : 'is-agent'}`;
+    const avatar = document.createElement('span');
+    avatar.className = 'home-ai-message-avatar';
+    avatar.setAttribute('aria-label', isUser ? 'You' : 'Rental finder');
+    const avatarIcon = document.createElement('i');
+    avatarIcon.className = `fas ${isUser ? 'fa-user' : 'fa-house-chimney'}`;
+    avatarIcon.setAttribute('aria-hidden', 'true');
+    avatar.appendChild(avatarIcon);
+    const item = document.createElement('div');
+    item.className = 'home-ai-message';
+    row.append(avatar, item);
+    messages.appendChild(row);
+    if (!typewriter) item.textContent = text;
+    messages.scrollTop = messages.scrollHeight;
+    return typewriter ? { row, item } : row;
+  };
+  const appendInlineFormatting = (container, text) => {
+    const tokenPattern = /(\*\*[^*]+\*\*|\*[^*]+\*|`[^`]+`)/g;
+    const parts = text.split(tokenPattern);
+    parts.forEach((part) => {
+      if (part.startsWith('**') && part.endsWith('**')) {
+        const strong = document.createElement('strong');
+        strong.textContent = part.slice(2, -2);
+        container.appendChild(strong);
+      } else if (part.startsWith('*') && part.endsWith('*')) {
+        const emphasis = document.createElement('em');
+        emphasis.textContent = part.slice(1, -1);
+        container.appendChild(emphasis);
+      } else if (part.startsWith('`') && part.endsWith('`')) {
+        const code = document.createElement('code');
+        code.textContent = part.slice(1, -1);
+        container.appendChild(code);
+      } else {
+        container.appendChild(document.createTextNode(part));
+      }
+    });
+  };
+  const formatAssistantText = (container, text) => {
+    container.replaceChildren();
+    let currentList = null;
+    let currentListType = null;
+    text.split(/\r?\n/).forEach((line) => {
+      const trimmed = line.trim();
+      if (!trimmed) {
+        currentList = null;
+        currentListType = null;
+        return;
+      }
+
+      const heading = trimmed.match(/^(#{1,3})\s+(.+)$/);
+      const bullet = trimmed.match(/^[-*]\s+(.+)$/);
+      const numbered = trimmed.match(/^\d+[.)]\s+(.+)$/);
+      if (heading) {
+        currentList = null;
+        currentListType = null;
+        const title = document.createElement(heading[1].length === 1 ? 'h3' : heading[1].length === 2 ? 'h4' : 'h5');
+        appendInlineFormatting(title, heading[2]);
+        container.appendChild(title);
+      } else if (bullet || numbered) {
+        const listType = bullet ? 'ul' : 'ol';
+        if (!currentList || currentListType !== listType) {
+          currentList = document.createElement(listType);
+          currentListType = listType;
+          container.appendChild(currentList);
+        }
+        const listItem = document.createElement('li');
+        appendInlineFormatting(listItem, (bullet || numbered)[1]);
+        currentList.appendChild(listItem);
+      } else {
+        currentList = null;
+        currentListType = null;
+        const paragraph = document.createElement('p');
+        appendInlineFormatting(paragraph, trimmed);
+        container.appendChild(paragraph);
+      }
+    });
+  };
+  const typeMessage = async (item, text) => {
+    const chunkSize = 4;
+    for (let index = 0; index < text.length; index += chunkSize) {
+      item.textContent = text.slice(0, index + chunkSize);
+      messages.scrollTop = messages.scrollHeight;
+      await new Promise((resolve) => window.setTimeout(resolve, 18));
+    }
+  };
+  const addTypingIndicator = () => {
+    const row = document.createElement('div');
+    row.className = 'home-ai-turn is-agent';
+    const avatar = document.createElement('span');
+    avatar.className = 'home-ai-message-avatar';
+    avatar.setAttribute('aria-label', 'Rental finder');
+    avatar.innerHTML = '<i class="fas fa-house-chimney" aria-hidden="true"></i>';
+    const bubble = document.createElement('div');
+    bubble.className = 'home-ai-message';
+    bubble.setAttribute('aria-label', 'Assistant is typing');
+    const dots = document.createElement('span');
+    dots.className = 'home-ai-typing';
+    dots.innerHTML = '<span></span><span></span><span></span>';
+    bubble.appendChild(dots);
+    row.append(avatar, bubble);
+    messages.appendChild(row);
+    messages.scrollTop = messages.scrollHeight;
+    return row;
+  };
+  const addPropertyCard = (property) => {
+    const link = document.createElement('a');
+    link.className = 'home-ai-property';
+    link.href = `${propertyDetailBase}${encodeURIComponent(property.id)}/`;
+    link.setAttribute('aria-label', `View ${property.title || 'rental property'}`);
+
+    const image = document.createElement('img');
+    image.className = 'home-ai-property-image';
+    const imageSrc = property.image_url || (property.images && property.images[0]) || '';
+    image.alt = property.title ? `Photo of ${property.title}` : 'Rental property photo';
+    image.loading = 'lazy';
+    image.onerror = () => {
+      image.remove();
+      const placeholder = document.createElement('div');
+      placeholder.className = 'home-ai-property-image';
+      placeholder.style.display = 'grid';
+      placeholder.style.placeItems = 'center';
+      const placeholderIcon = document.createElement('i');
+      placeholderIcon.className = 'fas fa-house';
+      placeholderIcon.setAttribute('aria-hidden', 'true');
+      placeholder.appendChild(placeholderIcon);
+      link.prepend(placeholder);
+    };
+
+    const body = document.createElement('span');
+    body.className = 'home-ai-property-body';
+    const title = document.createElement('strong');
+    title.textContent = property.title || 'Rental property';
+    const details = document.createElement('span');
+    details.textContent = [property.estate, property.city, `${Number(property.bedrooms) || 0} bed`]
+      .filter(Boolean).join(' · ');
+    const rent = document.createElement('b');
+    rent.textContent = `KES ${Number(property.rent || 0).toLocaleString()} / month`;
+    const addSectionLabel = (label) => {
+      const heading = document.createElement('span');
+      heading.className = 'home-ai-property-label';
+      heading.textContent = label;
+      return heading;
+    };
+    const amenities = (property.amenities || []).slice(0, 5);
+    if (amenities.length) {
+      const amenitySection = document.createElement('span');
+      amenitySection.className = 'home-ai-property-section';
+      amenitySection.appendChild(addSectionLabel('Amenities'));
+      const amenityList = document.createElement('span');
+      amenityList.className = 'home-ai-amenities';
+      amenities.forEach((name) => {
+        const chip = document.createElement('span');
+        chip.textContent = name;
+        amenityList.appendChild(chip);
+      });
+      amenitySection.appendChild(amenityList);
+      body.append(title, details, rent, amenitySection);
+    } else {
+      body.append(title, details, rent);
+    }
+    if (property.review_summary) {
+      const reviewSummary = document.createElement('span');
+      reviewSummary.className = 'home-ai-review-summary';
+      reviewSummary.textContent = `★ ${property.review_summary}`;
+      body.appendChild(reviewSummary);
+    }
+    (property.low_rating_reviews || []).slice(0, 2).forEach((review) => {
+      const negativeReview = document.createElement('span');
+      negativeReview.className = 'home-ai-negative-review';
+      negativeReview.textContent = `Low-rated review: “${review}”`;
+      body.appendChild(negativeReview);
+    });
+    if (!property.low_rating_reviews?.length && property.review_comments?.length) {
+      const comments = document.createElement('span');
+      comments.className = 'home-ai-review-summary';
+      comments.textContent = `Review: “${property.review_comments[0]}”`;
+      body.appendChild(comments);
+    }
+    const cta = document.createElement('span');
+    cta.className = 'home-ai-property-cta';
+    cta.textContent = 'View property';
+    const ctaIcon = document.createElement('i');
+    ctaIcon.className = 'fas fa-arrow-right';
+    ctaIcon.setAttribute('aria-hidden', 'true');
+    cta.appendChild(ctaIcon);
+    body.appendChild(cta);
+    if (imageSrc) {
+      image.src = imageSrc;
+      link.appendChild(image);
+    }
+    else {
+      const placeholder = document.createElement('div');
+      placeholder.className = 'home-ai-property-image';
+      placeholder.style.display = 'grid';
+      placeholder.style.placeItems = 'center';
+      const placeholderIcon = document.createElement('i');
+      placeholderIcon.className = 'fas fa-house';
+      placeholderIcon.setAttribute('aria-hidden', 'true');
+      placeholder.appendChild(placeholderIcon);
+      link.appendChild(placeholder);
+    }
+    link.appendChild(body);
+    messages.appendChild(link);
+    messages.scrollTop = messages.scrollHeight;
+    if (property.tip) {
+      const tip = document.createElement('div');
+      tip.className = 'home-ai-tip';
+      const label = document.createElement('strong');
+      label.textContent = 'Rental tip';
+      tip.append(label, document.createTextNode(property.tip));
+      messages.appendChild(tip);
+      messages.scrollTop = messages.scrollHeight;
+    }
+  };
+  launcher.addEventListener('click', () => setOpen(!panel.classList.contains('is-open')));
+  closeButton.addEventListener('click', () => setOpen(false));
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape' && panel.classList.contains('is-open')) {
+      setOpen(false);
+      launcher.focus();
+    }
+  });
+
+  form.addEventListener('submit', async (event) => {
+    event.preventDefault();
+    const message = input.value.trim();
+    if (!message || sendButton.disabled) return;
+
+    addMessage(message, true);
+    input.value = '';
+    input.disabled = true;
+    sendButton.disabled = true;
+    const requestStarted = Date.now();
+    const typing = addTypingIndicator();
+
+    try {
+      const response = await fetch("{% url 'ai_agent' %}", {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message })
+      });
+      if (!response.ok) throw new Error('The assistant is temporarily unavailable.');
+      const data = await response.json();
+      const minimumTypingTime = 650;
+      const remainingTypingTime = minimumTypingTime - (Date.now() - requestStarted);
+      if (remainingTypingTime > 0) {
+        await new Promise((resolve) => window.setTimeout(resolve, remainingTypingTime));
+      }
+      typing.remove();
+      const answer = addMessage(data.reply || 'I could not create a reply. Please try again.', false, true);
+      const answerText = data.reply || 'I could not create a reply. Please try again.';
+      await typeMessage(answer.item, answerText);
+      formatAssistantText(answer.item, answerText);
+
+      (data.properties || []).slice(0, 5).forEach((property) => {
+        addPropertyCard(property);
+      });
+      messages.scrollTop = messages.scrollHeight;
+    } catch (error) {
+      typing.remove();
+      addMessage(error.message || 'Something went wrong. Please try again.');
+    } finally {
+      input.disabled = false;
+      sendButton.disabled = false;
+      input.focus();
+    }
+  });
+})();
+</script>
 
 {% endblock %}

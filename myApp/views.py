@@ -1,4 +1,5 @@
 import json
+import re
 from datetime import timedelta, timezone
 from django.conf import settings
 from django.contrib import messages
@@ -21,8 +22,8 @@ from .forms import (CommentForm, EditLandlordProfileForm, EditUserEmailForm,
                     PropertyForm, PropertyImageFormSet, SystemRatingForm, TenantEditForm,
                     TenantPaymentForm, TenantRegistrationForm,
                     TransporterRegistrationForm)
-from .models import (GeneralTip, Payment, Property, PropertyImage, PropertyType,
-                     PropertyView, SystemRating, Tenant, Transporter,
+from .models import (Amenity, GeneralTip, Payment, Property, PropertyImage, PropertyType,
+                     PropertyView, Rating, SystemRating, Tenant, Transporter,
                      TransporterSubscription, adminUpdate)
 
 
@@ -2494,19 +2495,15 @@ def add_faq(request):
 def chat_page(request):
    return render(request, 'Agent/chat.html')
 
-import hashlib
 import json
-import os
 import random
-import re
 
-from django.core.cache import cache
 from django.db.models import Q, OuterRef, Subquery, DateTimeField
 from django.http import JsonResponse
 from django.utils import timezone
 from django.views.decorators.csrf import csrf_exempt
 
-from .models import FAQ, Property, Payment, GeneralTip
+from .models import Property, Payment, GeneralTip
 
 # ============================================================
 # CHANGELOG (read this before diffing against the original)
@@ -2539,35 +2536,12 @@ from .models import FAQ, Property, Payment, GeneralTip
 #      that weren't imported in the original file). If that was really
 #      sitting at module scope on disk, it would have crashed Django at
 #      import time. Its logic already exists correctly inside the view.
-#   5. OPENAI_AVAILABLE was hardcoded to False in BOTH branches of the
-#      try/except, so the "AI agent" has never called OpenAI even with
-#      a key configured. Fixed to reflect reality. Left DISABLED-BY-
-#      DEFAULT commentary below since you may have turned this off on
-#      purpose for cost control -- confirm before flipping it live.
+#   5. Chat results and rental tips are now served entirely from the
+#      property and GeneralTip database records.
 #
-# NOT FIXED -- FLAGGED ON PURPOSE (out of scope for this patch, but real):
-#   - `conversation_sessions = {}` is a process-local module dict. Under
-#     multiple Gunicorn workers this breaks silently: a session can hit
-#     a worker with no memory of it. Needs Redis/DB-backed session
-#     storage before you scale past one worker.
-#   - `openai.ChatCompletion.create(...)` is pre-1.0 SDK syntax against
-#     a deprecated model. It will not run on current `openai` versions.
-#   - `@csrf_exempt` on a stateful POST endpoint with no other visible
-#     rate limiting/auth -- worth a second look before this is public.
+# Existing endpoint note: `@csrf_exempt` is retained from the current
+# chat integration; no session history is stored by the database search.
 # ============================================================
-
-# --- OpenAI Setup ---
-try:
-    import openai
-    OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
-    if OPENAI_API_KEY:
-        openai.api_key = OPENAI_API_KEY
-        OPENAI_AVAILABLE = False  # <-- DISABLED-BY-DEFAULT: set to True if you want to enable OpenAI
-    else:
-        OPENAI_AVAILABLE = False
-except ImportError:
-    OPENAI_AVAILABLE = False
-
 
 # --- Number word mapping for bedrooms (1-10) ---
 NUMBER_WORDS = {
@@ -2662,121 +2636,17 @@ AMENITY_KEYWORDS = [
 ]
 
 
-# --- Utility: Cache Key ---
-def make_cache_key(user_query, context=""):
-    key_string = f"rental_tip_{user_query}_{context}"
-    return hashlib.md5(key_string.encode("utf-8")).hexdigest()
-
-
-# --- Friendly Greetings ---
-def get_friendly_greeting():
-    greetings = [
-        "Hey there! \U0001F44B I'm here to help you find your perfect rental in Kenya.",
-        "Hi! \U0001F60A Ready to find your next home? I'm here to help!",
-        "Hello! \U0001F3E1 Let's find you a great place to live in Kenya!",
-        "Hey! \U0001F44D Great to see you. Let's hunt for your ideal rental together!",
-        "Hi there! \U0001F31F I'm excited to help you find your next home!",
-    ]
-    return random.choice(greetings)
-
-
-# --- Human-like Fallback Tips ---
-def get_fallback_tip(query=""):
-    general_tips = GeneralTip.objects.all().values_list("tip", flat=True)
-    if not general_tips:
-        return "Always visit the property in person before signing any agreements."
-    return random.choice(general_tips)
-
-
 # --- Rental Tip Generator with Human Touch ---
-def generate_rental_tip(user_query, context=""):
-    cache_key = make_cache_key(user_query, context)
-    cached = cache.get(cache_key)
-    if cached:
-        return cached
-
-    fallback_tip = get_fallback_tip(user_query)
-    if not OPENAI_AVAILABLE:
-        return f"Just a thought: {fallback_tip}"
-
-    try:
-        # note: pre-1.0 openai SDK call, kept as-is from your original --
-        # flagged in the changelog above, not silently rewritten.
-        response = openai.ChatCompletion.create(
-            model="gpt-3.5-turbo",
-            messages=[
-                {"role": "system", "content": (
-                    "You are a friendly, knowledgeable rental advisor in Kenya. "
-                    "Offer practical, conversational advice. Sound like a helpful "
-                    "human, not a robot. Keep it brief and engaging."
-                )},
-                {"role": "user", "content": f"User is looking for rental advice. Query: {user_query}\nContext: {context or 'general rental search'}"},
-            ],
-            max_tokens=700,
-            temperature=0.8,
-        )
-        tip = response.choices[0].message.content.strip()
-        cache.set(cache_key, tip, 7200)
-        return tip
-    except Exception as e:
-        print(f"[OpenAI error] {e}")
-        return f" {fallback_tip}"
-
-
-# --- Conversation Session Store ---
-# note: process-local dict -- flagged in changelog, not fixed here.
-conversation_sessions = {}
-
-
 # --- Human Response Formatter ---
-def format_human_response(ai_reply, properties_data, user_message):
-    user_msg_lower = user_message.lower()
-
-    if any(word in user_msg_lower for word in ["thank", "thanks", "appreciate"]):
-        openings = ["You're welcome!", "Happy to help!", "Anytime!", "My pleasure!"]
-    elif any(word in user_msg_lower for word in ["hi", "hello", "hey", "greetings"]):
-        openings = [get_friendly_greeting()]
-    else:
-        openings = [
-            "Sure thing!", "Got it!", "I found some options for you!",
-            "Here's what I found!", "Great question!", "I can help with that!",
-        ]
-
-    human_reply = random.choice(openings) + " "
-    human_reply += ai_reply
-
-    if properties_data:
-        count = len(properties_data)
-        if count == 1:
-            property_phrases = [
-                " I found 1 property you might like! \U0001F447",
-                " There's 1 option that looks perfect for you! \U0001F447",
-                " I've got 1 listing that matches what you're looking for! \U0001F447",
-            ]
-        else:
-            property_phrases = [
-                f" I found {count} properties you might like! \U0001F447",
-                f" Here are {count} options that match what you're looking for! \U0001F447",
-                f" I've got {count} listings that could work for you! \U0001F447",
-            ]
-        human_reply += random.choice(property_phrases)
-    else:
-        no_match_phrases = [
-            " Hmm, I couldn't find exact matches with those criteria. Maybe try adjusting your budget or location?",
-            " Nothing's popping up with those filters. Want to try broadening the search a bit?",
-            " No perfect matches yet. Maybe tweak your requirements slightly? I'm sure we'll find something!",
-        ]
-        human_reply += random.choice(no_match_phrases)
-
-    closings = [
-        " Feel free to ask me anything else!",
-        " Let me know if you need more details!",
-        " What else can I help you with?",
-        " Need anything else? Just ask!",
-    ]
-    human_reply += random.choice(closings)
-
-    return human_reply
+def format_human_response(properties_data, show_search_status=False):
+    count = len(properties_data)
+    if count == 1:
+        return "I found 1 rental that matches your search."
+    if count:
+        return f"Here are {count} rentals that match your search."
+    if show_search_status:
+        return "I couldn't find rentals matching those details. Try another area or a wider rent range."
+    return "Tell me the area, rent range, or home type you want to find."
 
 
 # --- Helper: normalize shorthand numbers like "20k" -> 20000 ---
@@ -2784,12 +2654,14 @@ def normalize_number(text):
     if not text:
         return None
     text = text.lower().replace(",", "").strip()
+    text = re.sub(r"^(?:ksh|kes)\.?\s*", "", text)
     multiplier = 1
-    if text.endswith("k"):
-        multiplier = 1000
-        text = text[:-1]
+    suffix = re.search(r"\s*(k|thousand|m|million)$", text)
+    if suffix:
+        multiplier = 1_000_000 if suffix.group(1) in {"m", "million"} else 1_000
+        text = text[:suffix.start()].strip()
     try:
-        return int(text) * multiplier
+        return int(float(text) * multiplier)
     except ValueError:
         return None
 
@@ -2801,52 +2673,55 @@ def normalize_number(text):
 def extract_rent_filter(lower_msg):
     candidates = []  # (start_index, kind, value_or_tuple)
 
-    for m in re.finditer(
-        r"(?:ksh\.?|kes)?\s*(\d+[kK]?)\s*(?:-|to|and|between)\s*(?:ksh\.?|kes)?\s*(\d+[kK]?)",
-        lower_msg,
-    ):
-        min_rent = normalize_number(m.group(1))
-        max_rent = normalize_number(m.group(2))
-        if min_rent is not None and max_rent is not None:
-            candidates.append((m.start(), "between", (min_rent, max_rent)))
+    amount = r"(?:(?:ksh|kes)\.?\s*)?(?:\d{1,3}(?:,\d{3})+|\d+(?:\.\d+)?)\s*(?:k|thousand|m|million)?"
+    # Explicit ranges. Requiring "between", "from", rent/budget wording,
+    # currency, or a K suffix avoids interpreting room counts as rent.
+    range_patterns = [
+        rf"\bbetween\s+(?P<low>{amount})\s+(?:and|to|[-–—])\s+(?P<high>{amount})",
+        rf"\b(?:rent|budget|price)\s+(?:of\s+|between\s+|from\s+|range\s+)?(?P<low>{amount})\s+(?:to|and|[-–—])\s+(?P<high>{amount})",
+        rf"(?P<low>(?:(?:ksh|kes)\.?\s*)?(?:\d{{1,3}}(?:,\d{{3}})+|\d+(?:\.\d+)?)(?:\s*(?:k|thousand|m|million)))\s*(?:to|[-–—])\s*(?P<high>{amount})",
+        rf"(?P<low>(?:(?:ksh|kes)\.?\s*)?\d{{1,3}}(?:,\d{{3}})+)\s*(?:to|[-–—])\s*(?P<high>{amount})",
+    ]
+    for pattern in range_patterns:
+        for match in re.finditer(pattern, lower_msg):
+            if re.match(r"\s*(?:bedrooms?|beds?|bathrooms?|baths?|rooms?)\b", lower_msg[match.end():]):
+                continue
+            min_rent = normalize_number(match.group("low"))
+            max_rent = normalize_number(match.group("high"))
+            if min_rent is not None and max_rent is not None:
+                candidates.append((match.start(), "between", (min_rent, max_rent)))
 
-    for m in re.finditer(
-        r"(?:below|under|less than|not more than)\s*(?:ksh\.?|kes)?\s*(\d+[kK]?)"
-        r"|(?:ksh\.?|kes)\s*(?:below|under|less than|not more than)\s*(\d+[kK]?)",
-        lower_msg,
-    ):
-        n = m.group(1) or m.group(2)
-        max_rent = normalize_number(n)
-        if max_rent is not None:
-            candidates.append((m.start(), "below", max_rent))
+    single_patterns = [
+        ("below", rf"\b(?:below|under|less than|not more than|up to|at most|max(?:imum)? budget(?: of| is)?|max(?:imum)? (?:rent|price)(?: of| is)?|budget(?: of| is| max(?:imum)?| up to)?|within)\s+(?P<amount>{amount})"),
+        ("above", rf"\b(?:above|over|greater than|at least|min(?:imum)?(?: of| is)?|starting (?:at|from)|from)\s+(?P<amount>{amount})"),
+        ("around", rf"\b(?:exactly|around|about|approximately|roughly|near|close to)\s+(?P<amount>{amount})"),
+    ]
+    for kind, pattern in single_patterns:
+        for match in re.finditer(pattern, lower_msg):
+            if re.match(r"\s*(?:bedrooms?|beds?|bathrooms?|baths?|rooms?)\b", lower_msg[match.end():]):
+                continue
+            value = normalize_number(match.group("amount"))
+            if value is not None:
+                candidates.append((match.start(), kind, value))
 
-    for m in re.finditer(
-        r"(?:above|over|greater than|from)\s*(?:ksh\.?|kes)?\s*(\d+[kK]?)"
-        r"|(?:ksh\.?|kes)\s*(?:above|over|greater than|from)\s*(\d+[kK]?)",
+    # A standalone KES amount after rent/price means the requested target rent;
+    # model it as a modest range instead of silently treating it as a hard cap.
+    for match in re.finditer(
+        rf"\b(?:rent|price)\s+(?:of|is|around|about)?\s*(?P<amount>{amount})",
         lower_msg,
     ):
-        n = m.group(1) or m.group(2)
-        min_rent = normalize_number(n)
-        if min_rent is not None:
-            candidates.append((m.start(), "above", min_rent))
-
-    for m in re.finditer(
-        r"(?:exactly|around|about|near|close to)\s*(?:ksh\.?|kes)?\s*(\d+[kK]?)"
-        r"|(?:ksh\.?|kes)\s*(?:exactly|around|about|near|close to)\s*(\d+[kK]?)",
-        lower_msg,
-    ):
-        n = m.group(1) or m.group(2)
-        target = normalize_number(n)
-        if target is not None:
-            candidates.append((m.start(), "around", target))
+        value = normalize_number(match.group("amount"))
+        if value is not None and not any(
+            start <= match.start() < end
+            for start, end in [(c[0], c[0] + len(match.group(0))) for c in candidates if c[1] == "between"]
+        ):
+            candidates.append((match.start(), "around", value))
 
     if not candidates:
         return None
 
-    # "from" also matches the "above" pattern above; a leading "between ... to ..."
-    # is already captured whole by the first loop, so the "between" match's start
-    # index naturally sorts against the others -- last by position in the raw
-    # text wins, which matches how a human reads "actually, make it X" corrections.
+    # Last-mentioned rent clause wins, matching corrections like “actually,
+    # make it KES 30,000”.
     candidates.sort(key=lambda c: c[0])
     return candidates[-1][1], candidates[-1][2]
 
@@ -2859,21 +2734,62 @@ def apply_rent_filter(qs, lower_msg, context_info):
     kind, value = resolved
     if kind == "between":
         min_rent, max_rent = value
+        if min_rent > max_rent:
+            min_rent, max_rent = max_rent, min_rent
         qs = qs.filter(rent__gte=min_rent, rent__lte=max_rent)
-        context_info.append(f"rent between {min_rent} and {max_rent}")
+        context_info.append(f"rent between KES {min_rent:,} and KES {max_rent:,}")
     elif kind == "below":
         qs = qs.filter(rent__lte=value)
-        context_info.append(f"rent <= {value}")
+        context_info.append(f"rent up to KES {value:,}")
     elif kind == "above":
         qs = qs.filter(rent__gte=value)
-        context_info.append(f"rent >= {value}")
+        context_info.append(f"rent at least KES {value:,}")
     elif kind == "around":
         lower_bound = int(value * 0.85)
         upper_bound = int(value * 1.15)
         qs = qs.filter(rent__gte=lower_bound, rent__lte=upper_bound)
-        context_info.append(f"rent \u2248 {value} (\u00b115%)")
+        context_info.append(f"rent around KES {value:,} (\u00b115%)")
 
     return qs
+
+
+def build_agent_property_context(property_obj):
+    """Build the listing details and review summary shown in chat."""
+    ratings = property_obj.ratings.all()
+    low_rating_reviews = [
+        {"stars": score, "text": review.strip()[:350]}
+        for score, review in ratings.filter(score__lte=2)
+        .exclude(review__isnull=True).exclude(review__exact="")
+        .order_by("-timestamp").values_list("score", "review")[:3]
+    ]
+    recent_rating_reviews = [
+        {"stars": score, "text": review.strip()[:350]}
+        for score, review in ratings.exclude(review__isnull=True).exclude(review__exact="")
+        .order_by("-timestamp").values_list("score", "review")[:5]
+    ]
+    approved_comments = [
+        comment.strip()[:350]
+        for comment in property_obj.comments.filter(is_approved=True)
+        .exclude(content__exact="").order_by("-timestamp")
+        .values_list("content", flat=True)[:5]
+    ]
+    average_rating = ratings.aggregate(average=Avg("score"))["average"]
+    return {
+        "id": property_obj.id,
+        "title": property_obj.title,
+        "rent_kes": str(property_obj.rent),
+        "city": property_obj.city,
+        "estate": property_obj.estate,
+        "bedrooms": property_obj.bedrooms,
+        "bathrooms": property_obj.bathrooms,
+        "property_amenities": list(property_obj.amenities.values_list("name", flat=True)[:5]),
+        "rating_count": ratings.count(),
+        "average_rating": round(average_rating, 1) if average_rating is not None else None,
+        "low_rating_count": ratings.filter(score__lte=2).count(),
+        "low_rating_reviews": low_rating_reviews,
+        "recent_rating_reviews": recent_rating_reviews,
+        "recent_approved_comments": approved_comments,
+    }
 
 
 # --- FIX: bedroom/bathroom extraction ------------------------------------
@@ -2914,23 +2830,8 @@ def extract_bedroom_word_count(lower_msg):
 # --- Main AI Agent View ---
 @csrf_exempt
 def ai_agent(request):
-    session_id = request.COOKIES.get("sessionid", "default")
-
-    if session_id not in conversation_sessions:
-        conversation_sessions[session_id] = [
-            {"role": "system", "content": (
-                "You are XbomaSwift AI, a friendly and helpful rental assistant for Kenya. "
-                "You speak like a knowledgeable human friend who knows about real estate. "
-                "Use natural language, contractions, and occasional emojis to be engaging. "
-                "Help users find apartments, houses, or rooms to rent. "
-                "Be warm, personable, and offer practical advice. "
-                "If no properties match, suggest adjusting filters politely and helpfully. "
-                "Keep responses conversational but informative."
-            )}
-        ]
-
     if request.method == "GET":
-        return JsonResponse({"reply": get_friendly_greeting()})
+        return JsonResponse({"reply": "Tell me the area, rent range, or home type you want to find."})
 
     if request.method != "POST":
         return JsonResponse({"error": "Oops, something went wrong! Try again."}, status=405)
@@ -2940,10 +2841,6 @@ def ai_agent(request):
         user_message = data.get("message", "").strip()
         if not user_message:
             return JsonResponse({"reply": "I'd love to help! What are you looking for in a rental?"})
-
-        conversation_sessions[session_id].append({"role": "user", "content": user_message})
-        if len(conversation_sessions[session_id]) > 20:
-            conversation_sessions[session_id] = conversation_sessions[session_id][-20:]
 
         # --- Base availability + active-subscription filter ---
         qs = Property.objects.filter(is_available=True, is_approved=True)
@@ -2961,10 +2858,17 @@ def ai_agent(request):
         context_info = []
         lower_msg = user_message.lower()
 
-        # City filter
-        if match := re.search(r"\b(nairobi|nakuru|kisumu|mombasa|eldoret)\b", lower_msg):
-            qs = qs.filter(city__icontains=match.group(1))
-            context_info.append(f"city: {match.group(1)}")
+        # Match every city represented by a listing, not a fixed city list.
+        known_cities = sorted(
+            {city.strip() for city in Property.objects.values_list("city", flat=True) if city and city.strip()},
+            key=len,
+            reverse=True,
+        )
+        for city in known_cities:
+            if re.search(rf"(?<![a-z0-9]){re.escape(city.lower())}(?![a-z0-9])", lower_msg):
+                qs = qs.filter(city__icontains=city)
+                context_info.append(f"city: {city}")
+                break
 
         # --- Property Type Filter ---
         PROPERTY_TYPE_SYNONYMS = {
@@ -3074,70 +2978,111 @@ def ai_agent(request):
             context_info.append("featured")
 
         # Amenities
-        amenities = [a for a in AMENITY_KEYWORDS if re.search(rf"\b{re.escape(a)}\b", lower_msg)]
+        amenity_terms = {term.lower().strip() for term in AMENITY_KEYWORDS}
+        amenity_terms.update(
+            term.lower().strip() for term in Amenity.objects.values_list("name", flat=True)
+            if term and term.strip()
+        )
+        matched_amenity_terms = sorted(
+            (
+                term for term in amenity_terms
+                if re.search(rf"(?<![a-z0-9]){re.escape(term)}(?![a-z0-9])", lower_msg)
+            ),
+            key=len,
+            reverse=True,
+        )
+        # Avoid applying a short alias such as “parking” as a second filter
+        # when the user explicitly asked for a more specific “covered parking”.
+        amenities = []
+        for term in matched_amenity_terms:
+            if any(
+                term != chosen and re.search(rf"(?<![a-z0-9]){re.escape(term)}(?![a-z0-9])", chosen)
+                for chosen in amenities
+            ):
+                continue
+            amenities.append(term)
+        social_terms = {
+            "school", "schools", "kindergarten", "university", "college",
+            "hospital", "hospitals", "clinic", "clinics", "pharmacy", "pharmacies",
+            "supermarket", "supermarkets", "market", "markets", "mall", "malls",
+            "bank", "banks", "atm", "restaurant", "restaurants", "cafe", "cafes",
+            "park", "parks", "playground", "playgrounds", "bus stop", "bus stops",
+            "bus station", "bus stations", "church", "churches", "mosque", "mosques",
+            "library", "libraries", "community centre", "community centers",
+        }
+        nearby_relation = bool(re.search(
+            r"\b(?:near(?:by)?|close to|walking distance(?: of| to)?|within\s+\d+\s*(?:m|km)?\s+of)\b",
+            lower_msg,
+        ))
+        social_terms_requested = [
+            term for term in social_terms
+            if re.search(rf"(?<![a-z0-9]){re.escape(term)}(?![a-z0-9])", lower_msg)
+        ]
+        if nearby_relation and social_terms_requested:
+            amenities = [term for term in amenities if term not in social_terms]
+            context_info.append(
+                "nearby facilities requested (distance data unavailable): "
+                + ", ".join(sorted(social_terms_requested))
+            )
         for amenity in amenities:
             qs = qs.filter(amenities__name__icontains=amenity)
         if amenities:
             context_info.append(f"amenities: {', '.join(amenities)}")
 
-        # --- AI or fallback reply ---
-        cache_key = make_cache_key(user_message, ", ".join(context_info))
-        ai_reply = cache.get(cache_key)
+        # Only return listings for a real property search. Otherwise the
+        # unfiltered queryset would make greetings and general questions show
+        # the first properties in the database.
+        mentions_property = re.search(
+            r"\b(house|home|property|properties|apartment|flat|room|bedsitter|"
+            r"villa|rental|rentals|place|listing|listings)\b",
+            lower_msg,
+        )
+        asks_to_search = re.search(
+            r"\b(find|show|search|look(?:ing)? for|recommend|suggest|available)\b",
+            lower_msg,
+        )
+        is_property_search = (
+            bool(context_info)
+            or bool(mentions_property and asks_to_search)
+            or bool(nearby_relation and social_terms_requested)
+        )
+        matched_properties = (
+            list(qs.select_related("property_type").prefetch_related("amenities")[:5])
+            if is_property_search else []
+        )
+        tip_pool = list(GeneralTip.objects.exclude(tip="").values_list("tip", flat=True))
+        properties_data = []
+        for property_obj in matched_properties:
+            image_list = [image.image.url for image in property_obj.images.all()]
+            review_data = build_agent_property_context(property_obj)
+            rating_count = review_data["rating_count"]
+            average_rating = review_data["average_rating"]
+            review_summary = (
+                f"{average_rating}/5 from {rating_count} ratings"
+                if rating_count and average_rating is not None else ""
+            )
+            properties_data.append({
+                "id": property_obj.id,
+                "title": property_obj.title,
+                "rent": str(property_obj.rent),
+                "city": property_obj.city,
+                "estate": property_obj.estate,
+                "bedrooms": property_obj.bedrooms,
+                "bathrooms": property_obj.bathrooms,
+                "has_balcony": property_obj.has_balcony,
+                "amenities": [amenity.name for amenity in property_obj.amenities.all()[:5]],
+                "image_url": image_list[0] if image_list else "",
+                "images": image_list,
+                "review_summary": review_summary,
+                "low_rating_reviews": [item["text"] for item in review_data["low_rating_reviews"]],
+                "review_comments": review_data["recent_approved_comments"][:2],
+                "tip": random.choice(tip_pool) if tip_pool else "",
+            })
 
-        if not ai_reply:
-            try:
-                faq = FAQ.objects.filter(question__icontains=user_message).first()
-                if faq:
-                    ai_reply = f"I know about that! {faq.answer}"
-                else:
-                    if "rent" in lower_msg or "price" in lower_msg:
-                        ai_reply = "In Kenya, rent varies by location, urban areas like Nairobi are higher, while towns like Nakuru or Eldoret offer affordable options."
-                    elif "apartment" in lower_msg or "bedsitter" in lower_msg:
-                        ai_reply = "Apartments and bedsitters are great for convenience. Remember to check for water, security, and proximity to transport."
-                    elif "investment" in lower_msg or "buy" in lower_msg:
-                        ai_reply = "Real estate is a long-term investment. Look for growing neighborhoods and steady rental demand."
-                    elif "verified" in lower_msg:
-                        ai_reply = "Verified properties offer more security and assurance. Always look for the verification badge."
-                    elif "featured" in lower_msg:
-                        ai_reply = "Featured properties are handpicked for quality. They often have better amenities and locations."
-                    else:
-                        ai_reply = f"Here's what I think. {generate_rental_tip(user_message, ', '.join(context_info))}"
-            except Exception:
-                faq = FAQ.objects.filter(question__icontains=user_message).first()
-                if faq:
-                    ai_reply = f"I know about that! {faq.answer}"
-                else:
-                    ai_reply = f"Here's what I think. {generate_rental_tip(user_message, ', '.join(context_info))}"
-
-            cache.set(cache_key, ai_reply, 7200)
-
-        conversation_sessions[session_id].append({"role": "assistant", "content": ai_reply})
-
-        # --- Property results ---
-        qs = qs.only("id", "title", "rent", "city", "estate", "bedrooms", "bathrooms", "has_balcony") \
-               .prefetch_related("amenities", "images")
-
-        properties_data = [{
-            "id": p.id,
-            "title": p.title,
-            "rent": p.rent,
-            "city": p.city,
-            "estate": p.estate,
-            "bedrooms": p.bedrooms,
-            "bathrooms": p.bathrooms,
-            "has_balcony": p.has_balcony,
-            "amenities": [a.name for a in p.amenities.all()[:5]],
-            "image_url": p.images.first().image.url if p.images.exists() else "",
-            "images": [img.image.url for img in p.images.all()],
-        } for p in qs[:10]]
-
-        human_reply = format_human_response(ai_reply, properties_data, user_message)
-
+        human_reply = format_human_response(properties_data, show_search_status=is_property_search)
         return JsonResponse({
             "reply": human_reply,
             "properties": properties_data,
-            "tip": generate_rental_tip(user_message, ", ".join(context_info)),
-            "filters_applied": context_info,  # ADDED: so you can actually see what fired, in dev/staging
         })
 
     except Exception as e:

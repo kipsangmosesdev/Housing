@@ -18,7 +18,7 @@ geographiclib==2.1
 geopy==2.5.0
 h11==0.16.0
 httpcore==1.0.9
-httpx==0.28.1
+httpx==0.27.2
 idna==3.18
 itsdangerous==2.2.0
 jiter==0.16.0
