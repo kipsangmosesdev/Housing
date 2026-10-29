@@ -6,7 +6,7 @@ Vercel detects this Django project from `manage.py` and `myProject.settings`; no
 
 1. Push the project to a Git provider connected to Vercel.
 2. Connect your Neon project to Vercel and set `DATABASE_URL` to Neon's pooled connection string (the hostname contains `-pooler`). The Django settings enforce SSL, disable persistent Django connections and server-side cursors; Neon pooling manages serverless connection reuse. Vercel function storage is temporary, so the checked-in SQLite database is for local development only.
-3. Configure persistent object storage for property uploads. Set `AWS_STORAGE_BUCKET_NAME`, `AWS_S3_REGION_NAME`, `AWS_ACCESS_KEY_ID`, and `AWS_SECRET_ACCESS_KEY` for an S3-compatible bucket. If using a custom asset domain, set `AWS_S3_CUSTOM_DOMAIN`. The bucket must permit the access pattern selected by `AWS_QUERYSTRING_AUTH`.
+3. Configure persistent object storage for property uploads. The project uses `django-storages` with its S3 backend. Set `AWS_STORAGE_BUCKET_NAME`, `AWS_S3_REGION_NAME`, `AWS_ACCESS_KEY_ID`, and `AWS_SECRET_ACCESS_KEY` for your bucket. For an S3-compatible provider, also set `AWS_S3_ENDPOINT_URL` and, if required, `AWS_S3_ADDRESSING_STYLE` (usually `path`). If using a custom asset domain, set `AWS_S3_CUSTOM_DOMAIN`. The bucket must permit the access pattern selected by `AWS_QUERYSTRING_AUTH`.
 4. Add the following Vercel environment variables for Production and Preview as appropriate:
    - `SECRET_KEY`: a newly generated, private Django key.
    - `DEBUG=False`.

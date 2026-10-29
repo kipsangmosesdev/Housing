@@ -270,7 +270,17 @@ if os.getenv("AWS_STORAGE_BUCKET_NAME"):
         "bucket_name": os.getenv("AWS_STORAGE_BUCKET_NAME"),
         "region_name": os.getenv("AWS_S3_REGION_NAME") or None,
         "querystring_auth": env.bool("AWS_QUERYSTRING_AUTH", default=True),
+        "default_acl": None,
+        "file_overwrite": False,
     }
+    if os.getenv("AWS_ACCESS_KEY_ID"):
+        DEFAULT_STORAGE_OPTIONS["access_key"] = os.getenv("AWS_ACCESS_KEY_ID")
+    if os.getenv("AWS_SECRET_ACCESS_KEY"):
+        DEFAULT_STORAGE_OPTIONS["secret_key"] = os.getenv("AWS_SECRET_ACCESS_KEY")
+    if os.getenv("AWS_S3_ENDPOINT_URL"):
+        DEFAULT_STORAGE_OPTIONS["endpoint_url"] = os.getenv("AWS_S3_ENDPOINT_URL")
+    if os.getenv("AWS_S3_ADDRESSING_STYLE"):
+        DEFAULT_STORAGE_OPTIONS["addressing_style"] = os.getenv("AWS_S3_ADDRESSING_STYLE")
     if os.getenv("AWS_S3_CUSTOM_DOMAIN"):
         DEFAULT_STORAGE_OPTIONS["custom_domain"] = os.getenv("AWS_S3_CUSTOM_DOMAIN")
 
