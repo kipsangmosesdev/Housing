@@ -171,6 +171,10 @@ if DATABASE_URL:
         }
     }
 else:
+    if not DEBUG:
+        raise RuntimeError(
+            "Set DATABASE_URL to your Neon PostgreSQL connection string before running in production."
+        )
     DATABASES = {
         "default": {
             "ENGINE": "django.db.backends.sqlite3",
