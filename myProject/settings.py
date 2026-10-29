@@ -97,15 +97,12 @@ INSTALLED_APPS = [
     'accounts',
     'mpesa',
     'django.contrib.humanize',
-    'htmlmin',
     'compressor',  
 ]
 
 
 
 MIDDLEWARE = [
-    'htmlmin.middleware.HtmlMinifyMiddleware',
-    'htmlmin.middleware.MarkRequestMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.middleware.security.SecurityMiddleware',         
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -125,10 +122,6 @@ MIDDLEWARE = [
 #     'compressor.finders.CompressorFinder',
 # ]
 
-
-HTML_MINIFY = True
-# KEEP_COMMENTS_ON_MINIFYING = False
-# EXCLUDE_FROM_MINIFYING = ('^admin/',)  # exclude admin pages
 
 DATA_UPLOAD_MAX_NUMBER_FIELDS = 10000  # Default is 1000
 
