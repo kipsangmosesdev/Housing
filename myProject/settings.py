@@ -122,6 +122,11 @@ STATICFILES_FINDERS = [
     'compressor.finders.CompressorFinder',
 ]
 
+# Vercel's function filesystem is read-only at request time. Keep compressor
+# output generation out of production requests; templates will emit the source
+# static asset tags and Vercel can serve the collected files directly.
+COMPRESS_ENABLED = DEBUG
+
 
 DATA_UPLOAD_MAX_NUMBER_FIELDS = 10000  # Default is 1000
 
