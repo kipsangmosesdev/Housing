@@ -168,6 +168,7 @@ if DATABASE_URL:
             "OPTIONS": database_options,
             "CONN_MAX_AGE": 0,
             "CONN_HEALTH_CHECKS": True,
+            "DISABLE_SERVER_SIDE_CURSORS": True,
         }
     }
 else:
