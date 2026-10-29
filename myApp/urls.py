@@ -3,6 +3,7 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
+    path('service-worker.js', views.service_worker, name='service_worker'),
     
     # Public Pages
     path('', views.tenant_landing_page, name='tenant_landing'),

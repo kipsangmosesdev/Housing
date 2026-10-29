@@ -12,6 +12,12 @@
     <meta name="author" content="XbomaSwift" />
     <meta name="keywords" content="rentals, properties, real estate, Kenya, housing" />
     <meta name="theme-color" content="#0e2a45" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="XbomaSwift" />
+    <link rel="manifest" href="{% static 'myApp/manifest.webmanifest' %}" />
+    <link rel="apple-touch-icon" sizes="180x180" href="{% static 'myApp/images/apple-touch-icon.png' %}" />
 
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="{% static 'myApp/images/marker-gold.png' %}" />
@@ -50,17 +56,29 @@
                    DESIGN SYSTEM — Root Variables (colors unchanged)
                    ============================================================ */
         :root {
-            /* Primary palette (unchanged) */
+            /* Shared XbomaSwift palette */
             --primary-color: #0e2a45;
             --secondary-color: #0a5fa1;
             --accent-color: #c8a173;
-            --success-color: #10b981;
-            --warning-color: #f59e0b;
-            --danger-color: #ef4444;
+            --accent-text-color: #76542f;
+            --success-color: #0f7b4b;
+            --warning-color: #b45309;
+            --danger-color: #b42318;
             --light-color: #f8fafc;
             --dark-color: #1e293b;
             --gray-light: #e2e8f0;
-            --gray-medium: #94a3b8;
+            --gray-medium: #64748b;
+            --bs-primary: #0e2a45;
+            --bs-primary-rgb: 14, 42, 69;
+            --bs-secondary: #0a5fa1;
+            --bs-secondary-rgb: 10, 95, 161;
+            --bs-success: #0f7b4b;
+            --bs-warning: #b45309;
+            --bs-danger: #b42318;
+            --bs-link-color: #0a5fa1;
+            --bs-link-hover-color: #0e2a45;
+            --bs-body-color: #1e293b;
+            --bs-body-bg: #f8fafc;
 
             /* Elevation */
             --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.04);
@@ -237,6 +255,13 @@
         .navbar-toggler-icon {
             background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3E%3Cpath stroke='rgba(255,255,255,0.85)' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2.5' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E");
         }
+
+        .pwa-install-button {
+            border: 0;
+            background: transparent;
+            cursor: pointer;
+        }
+        .pwa-install-button[hidden] { display: none !important; }
 
         /* ============================================================
                    HERO SECTION — elevated, welcoming, with motion
@@ -494,12 +519,16 @@
         }
 
         .badge-verified {
-            background: rgba(16, 185, 129, 0.90);
+            background: var(--secondary-color);
             color: #fff;
         }
 
+        .verified-property-mark {
+            color: var(--secondary-color) !important;
+        }
+
         .badge-featured {
-            background: rgba(200, 161, 115, 0.92);
+            background: var(--accent-text-color);
             color: #fff;
         }
 
@@ -703,15 +732,14 @@
 
         .offcanvas-body .nearby-item .info .title {
             font-weight: 600;
-            font-size: 0.92rem;
+            font-size: 0.8rem;
             color: var(--primary-color);
-            display: -webkit-box;
-            -webkit-line-clamp: 1;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
+            line-height: 1.35;
+            overflow-wrap: anywhere;
         }
 
         .offcanvas-body .nearby-item .info .title a {
+            display: inline;
             color: inherit;
         }
 
@@ -801,6 +829,13 @@
             border-top: 1px solid rgba(255, 255, 255, 0.04);
         }
 
+        footer p,
+        footer li,
+        footer small,
+        footer .text-white-50 {
+            color: rgba(255, 255, 255, 0.65) !important;
+        }
+
         footer h5 {
             color: var(--accent-color);
             font-weight: 700;
@@ -848,7 +883,7 @@
         }
 
         footer ul li a {
-            color: rgba(255, 255, 255, 0.6);
+            color: rgba(255, 255, 255, 0.65) !important;
             font-size: 0.9rem;
             transition: var(--transition-fast);
             display: inline-flex;
@@ -857,7 +892,7 @@
         }
 
         footer ul li a:hover {
-            color: var(--accent-color);
+            color: var(--accent-color) !important;
             transform: translateX(4px);
         }
 
@@ -881,7 +916,7 @@
             height: 40px;
             border-radius: 50%;
             background: rgba(255, 255, 255, 0.05);
-            color: rgba(255, 255, 255, 0.6);
+            color: rgba(255, 255, 255, 0.65) !important;
             transition: var(--transition-fast);
             border: 1px solid rgba(255, 255, 255, 0.04);
         }
@@ -1067,6 +1102,12 @@
                     </a>
                 </li>
                 {% endif %}
+
+                <li class="nav-item">
+                    <button type="button" class="nav-link nav-link-accent pwa-install-button" id="pwaInstallButton" hidden>
+                        <i class="fas fa-download" aria-hidden="true"></i> Install app
+                    </button>
+                </li>
 
             </ul>
         </div>
@@ -1258,7 +1299,7 @@ document.addEventListener("DOMContentLoaded", function() {
                             <div class="title">
                                 <a href="${url}">
                                     ${prop.title}
-                                    ${prop.is_verified ? ' <i class="bi bi-patch-check-fill text-primary" style="font-size:0.75rem;"></i>' : ''}
+                                    ${prop.is_verified ? ' <span title="Verified property" aria-label="Verified property"><i class="bi bi-patch-check-fill verified-property-mark" style="font-size:0.75rem;"></i></span>' : ''}
                                 </a>
                             </div>
                             <div class="details">
@@ -1386,6 +1427,43 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     }
 });
+</script>
+
+<script>
+(() => {
+    if ("serviceWorker" in navigator) {
+        window.addEventListener("load", () => {
+            navigator.serviceWorker.register("/service-worker.js", { scope: "/" }).catch(() => {});
+        });
+    }
+
+    const installButton = document.getElementById("pwaInstallButton");
+    if (!installButton) return;
+
+    let installPrompt = null;
+    const isStandalone = window.matchMedia("(display-mode: standalone)").matches
+        || window.navigator.standalone === true;
+    if (isStandalone) return;
+
+    window.addEventListener("beforeinstallprompt", (event) => {
+        event.preventDefault();
+        installPrompt = event;
+        installButton.hidden = false;
+    });
+
+    installButton.addEventListener("click", async () => {
+        if (!installPrompt) return;
+        installPrompt.prompt();
+        await installPrompt.userChoice;
+        installPrompt = null;
+        installButton.hidden = true;
+    });
+
+    window.addEventListener("appinstalled", () => {
+        installButton.hidden = true;
+        installPrompt = null;
+    });
+})();
 </script>
 
 </body>

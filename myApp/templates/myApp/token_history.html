@@ -4,11 +4,11 @@
 <div class="container py-4">
   <div class="row justify-content-center">
     <div class="col-12">
-      <div class="card border-0 shadow-lg" style="border-top: 4px solid #0a754f; border-radius: 12px;">
+      <div class="card border-0 shadow-lg" style="border-top: 4px solid #0e2a45; border-radius: 12px;">
         
         <!-- Header -->
         <div class="card-header bg-white d-flex justify-content-between align-items-center">
-          <h3 class="mb-0 fw-bold" style="color: #0a754f;">
+          <h3 class="mb-0 fw-bold" style="color: #0e2a45;">
             <i class="fas fa-history me-2"></i> Swifts Purchase History
           </h3>
           <input type="text" id="searchBox" class="form-control form-control-sm w-25" placeholder="🔍 Search transactions">
@@ -31,7 +31,7 @@
               <tbody id="txTable">
                 {% for tx in transactions %}
                 <tr class="tx-row" 
-                    style="border-left: 4px solid {% if tx.transaction_status == 'Completed' %}#0a754f{% else %}#ffb74d{% endif %}; transition: all 0.3s ease;">
+                    style="border-left: 4px solid {% if tx.transaction_status == 'Completed' %}#0f7b4b{% else %}#ffb74d{% endif %}; transition: all 0.3s ease;">
                   <td data-label="Date">{{ tx.timestamp|date:"M d, Y H:i" }}</td>
                   <td data-label="Swifts">{{ tx.tokens_bought }}</td>
                   <td data-label="Amount">{{ tx.amount_paid }}</td>
@@ -42,7 +42,7 @@
                   <td data-label="Status">
                     <!-- status: success, pending and expired -->
                     <span class="badge rounded-pill px-3 py-2 shadow-sm status-badge" 
-                          style="background: {% if tx.transaction_status == 'Success' %}linear-gradient(135deg,#0a754f,#28a745)
+                          style="background: {% if tx.transaction_status == 'Success' %}linear-gradient(135deg,#0f7b4b,#28a745)
                           {% elif tx.transaction_status == 'Pending' %}linear-gradient(135deg,#ffb74d,#ff9800)
                           {% elif tx.transaction_status == 'Expired' %}linear-gradient(135deg,#ff6b6b,#ff3d3d){% endif %};
                                 color: white; transition: transform 0.2s ease;">
@@ -76,8 +76,8 @@
 <style>
   .table th {
     font-weight: 600;
-    color: #0a754f;
-    border-bottom: 2px solid #0a754f;
+    color: #0a5fa1;
+    border-bottom: 2px solid #0a5fa1;
   }
   .tx-row:hover {
     transform: scale(1.01);
@@ -90,7 +90,7 @@
     .table thead { display: none; }
     .table tr { display: block; margin-bottom: 1rem; border-radius: 0.75rem; }
     .table td { display: flex; justify-content: space-between; padding: 0.75rem; }
-    .table td::before { content: attr(data-label); font-weight: 600; color: #0a754f; }
+    .table td::before { content: attr(data-label); font-weight: 600; color: #0a5fa1; }
   }
 </style>
 

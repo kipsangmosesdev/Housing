@@ -6,9 +6,10 @@ from django.contrib import messages
 from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
+from django.contrib.staticfiles.finders import find as find_static_file
 from django.core.mail import send_mail
 from django.db.models import Avg
-from django.http import JsonResponse
+from django.http import Http404, HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.template import context
 from django.utils import timezone
@@ -25,6 +26,19 @@ from .forms import (CommentForm, EditLandlordProfileForm, EditUserEmailForm,
 from .models import (Amenity, GeneralTip, Payment, Property, PropertyImage, PropertyType,
                      PropertyView, Rating, SystemRating, Tenant, Transporter,
                      TransporterSubscription, adminUpdate)
+
+
+def service_worker(request):
+    """Serve the PWA worker at the origin root so it can control the full site."""
+    worker_path = find_static_file("myApp/js/service-worker.js")
+    if not worker_path:
+        raise Http404("Service worker not found")
+
+    with open(worker_path, "rb") as worker_file:
+        response = HttpResponse(worker_file.read(), content_type="application/javascript; charset=utf-8")
+    response["Service-Worker-Allowed"] = "/"
+    response["Cache-Control"] = "no-cache"
+    return response
 
 
 def register_landlord(request):
@@ -2820,6 +2834,7 @@ def build_agent_property_context(property_obj):
     return {
         "id": property_obj.id,
         "title": property_obj.title,
+        "is_verified": property_obj.is_verified,
         "rent_kes": str(property_obj.rent),
         "city": property_obj.city,
         "estate": property_obj.estate,
@@ -3107,6 +3122,7 @@ def ai_agent(request):
             properties_data.append({
                 "id": property_obj.id,
                 "title": property_obj.title,
+                "is_verified": review_data["is_verified"],
                 "rent": str(property_obj.rent),
                 "city": property_obj.city,
                 "estate": property_obj.estate,

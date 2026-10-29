@@ -4,18 +4,18 @@
 {% load tz %}
 
 <style>
-  :root {
-    --primary: #214063;
-    --primary-dark: #082939;
-    --primary-light: #2a6486;
-    --accent: #d4a574;
-    --accent-dark: #b88a5e;
+  .dashboard-container {
+    --primary: #0e2a45;
+    --primary-dark: #091b2c;
+    --primary-light: #0a5fa1;
+    --accent: #c8a173;
+    --accent-dark: #76542f;
     --neutral-dark: #2d3748;
-    --neutral-medium: #718096;
+    --neutral-medium: #64748b;
     --neutral-light: #f7fafc;
-    --success: #38a169;
-    --warning: #d69e2e;
-    --danger: #e53e3e;
+    --success: #0f7b4b;
+    --warning: #b45309;
+    --danger: #b42318;
     --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
     --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
   }
@@ -304,41 +304,41 @@
   }
 
   /* Buttons */
-  .btn {
+  .dashboard-container .btn {
     border-radius: 10px;
     font-weight: 600;
     transition: all 0.3s ease;
     padding: 0.5rem 1.25rem;
   }
 
-  .btn-outline-success {
+  .dashboard-container .btn-outline-success {
     border-color: var(--success);
     color: var(--success);
   }
 
-  .btn-outline-success:hover {
+  .dashboard-container .btn-outline-success:hover {
     background: var(--success);
     border-color: var(--success);
     transform: translateY(-2px);
   }
 
-  .btn-outline-primary {
+  .dashboard-container .btn-outline-primary {
     border-color: var(--primary);
     color: var(--primary);
   }
 
-  .btn-outline-primary:hover {
+  .dashboard-container .btn-outline-primary:hover {
     background: var(--primary);
     border-color: var(--primary);
     transform: translateY(-2px);
   }
 
-  .btn-outline-secondary {
+  .dashboard-container .btn-outline-secondary {
     border-color: var(--neutral-medium);
     color: var(--neutral-medium);
   }
 
-  .btn-outline-secondary:hover {
+  .dashboard-container .btn-outline-secondary:hover {
     background: var(--neutral-medium);
     border-color: var(--neutral-medium);
     transform: translateY(-2px);
@@ -372,7 +372,7 @@
   }
 
   /* Animation */
-  .fade-in {
+  .dashboard-container.fade-in {
     animation: fadeIn 0.6s ease-in-out;
   }
 
@@ -391,7 +391,17 @@
   }
 </style>
 
-<div class="dashboard-container">
+<link rel="stylesheet" href="{% static 'myApp/css/landlord_dashboards.css' %}">
+
+<div class="dashboard-container dashboard-standard">
+  <header class="dashboard-page-heading">
+    <div>
+      <p class="dashboard-eyebrow">Standard landlord workspace</p>
+      <h1>Welcome back, {{ landlord.first_name|default:"there" }}</h1>
+      <p>Manage your property portfolio, track occupancy, and review tenant activity.</p>
+    </div>
+    <a class="btn" href="{% url 'new_property' %}"><i class="fas fa-plus" aria-hidden="true"></i> Post a property</a>
+  </header>
   <div class="container py-4 fade-in">
     <!-- Enhanced Payment Status -->
     <div class="subscription-status-container">
@@ -595,7 +605,7 @@
       labels: ['Available', 'Occupied'],
       datasets: [{
         data: [{{ available_properties }}, {{ occupied_properties }}],
-        backgroundColor: ['#3a8c54', '#d4a574'],
+        backgroundColor: ['#3a8c54', '#c8a173'],
         borderWidth: 0,
         hoverOffset: 15
       }]

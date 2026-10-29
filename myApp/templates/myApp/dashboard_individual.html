@@ -5,18 +5,18 @@
 
 <style>
   /* Custom CSS with Real Estate Color Scheme */
-  :root {
-    --primary: #214063;
-    --primary-dark: #082939;
-    --primary-light: #2a6486;
-    --accent: #d4a574;
-    --accent-dark: #b88a5e;
+  .dashboard-container {
+    --primary: #0e2a45;
+    --primary-dark: #091b2c;
+    --primary-light: #0a5fa1;
+    --accent: #c8a173;
+    --accent-dark: #76542f;
     --neutral-dark: #3c3c3c;
     --neutral-medium: #6c757d;
     --neutral-light: #f8f9fa;
-    --success: #28a745;
-    --warning: #ffc107;
-    --danger: #dc3545;
+    --success: #0f7b4b;
+    --warning: #b45309;
+    --danger: #b42318;
     --shadow: rgba(0, 0, 0, 0.08);
     --shadow-hover: rgba(0, 0, 0, 0.12);
   }
@@ -344,18 +344,18 @@
   
 
   /* Badge Styles */
-  .badge {
+  .dashboard-container .badge {
     padding: 0.4rem 0.8rem;
     border-radius: 50px;
     font-weight: 600;
     font-size: 0.8rem;
   }
   
-  .badge.bg-success {
+  .dashboard-container .badge.bg-success {
     background: linear-gradient(135deg, var(--success) 0%, #20c997 100%) !important;
   }
   
-  .badge.bg-warning {
+  .dashboard-container .badge.bg-warning {
     background: linear-gradient(135deg, var(--warning) 0%, #fd7e14 100%) !important;
   }
   
@@ -385,7 +385,7 @@
   }
 
   /* Animation */
-  .fade-in {
+  .dashboard-container.fade-in {
     animation: fadeIn 0.6s ease-in-out;
   }
   
@@ -410,16 +410,26 @@
   }
   
   /* Text Colors */
-  .text-success {
+  .dashboard-container .text-success {
     color: var(--success) !important;
   }
   
-  .text-muted {
+  .dashboard-container .text-muted {
     color: var(--neutral-medium) !important;
   }
 </style>
 
-<div class="dashboard-container fade-in">
+<link rel="stylesheet" href="{% static 'myApp/css/landlord_dashboards.css' %}">
+
+<div class="dashboard-container dashboard-basic fade-in">
+  <header class="dashboard-page-heading">
+    <div>
+      <p class="dashboard-eyebrow">Basic landlord workspace</p>
+      <h1>Welcome back, {{ landlord.first_name|default:"there" }}</h1>
+      <p>Manage your listings and see how tenants are engaging with them.</p>
+    </div>
+    <a class="btn" href="{% url 'new_property' %}"><i class="fas fa-plus" aria-hidden="true"></i> Post a property</a>
+  </header>
 
   <!-- Status Card -->
   <div class="status-card">
@@ -563,7 +573,7 @@
           labels: ['Available', 'Occupied'],
           datasets: [{
             data: [{{ available_properties }}, {{ occupied_properties }}],
-            backgroundColor: ['#3a8c54', '#d4a574'],
+            backgroundColor: ['#3a8c54', '#c8a173'],
             borderWidth: 0,
             hoverOffset: 15
           }]

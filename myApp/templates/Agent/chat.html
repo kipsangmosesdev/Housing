@@ -1,4 +1,5 @@
 
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,20 +7,27 @@
 <title>XbomaSwift AI Chat</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#0e2a45" />
+<meta name="mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="apple-mobile-web-app-title" content="XbomaSwift" />
+<link rel="manifest" href="{% static 'myApp/manifest.webmanifest' %}" />
+<link rel="apple-touch-icon" sizes="180x180" href="{% static 'myApp/images/apple-touch-icon.png' %}" />
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
 <style>
 /* --- General Styles --- */
 :root {
-  --primary: #007d91;
-  --primary-gradient: linear-gradient(135deg, #103f75, #007d91);
-  --secondary: #25a2d3;
-  --secondary-gradient: linear-gradient(135deg, #113c6e, #174f8e);
-  --accent: #ff914d;
-  --accent-gradient: linear-gradient(135deg, #ff914d, #ff7b2e);
+  --primary: #0e2a45;
+  --primary-gradient: linear-gradient(135deg, #0e2a45, #0e2a45);
+  --secondary: #0a5fa1;
+  --secondary-gradient: linear-gradient(135deg, #0e2a45, #0a5fa1);
+  --accent: #c8a173;
+  --accent-gradient: linear-gradient(135deg, #76542f, #8a6237);
   --light-bg: #f7f9fb;
   --card-bg: #ffffff;
   --text-dark: #2d3748;
-  --text-light: #718096;
+  --text-light: #64748b;
   --shadow-sm: 0 2px 4px rgba(0,0,0,0.05);
   --shadow-md: 0 4px 6px rgba(0,0,0,0.07);
   --shadow-lg: 0 10px 15px rgba(0,0,0,0.1);
@@ -185,6 +193,27 @@ body {
   margin-bottom: 4px;
 }
 
+.property-title-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.property-title-row > strong {
+  margin: 0;
+}
+
+.property-title-row .verified-property-mark {
+  display: inline-flex;
+  align-items: center;
+  color: #0a5fa1 !important;
+  font-size: 1.15rem;
+  line-height: 1;
+  white-space: nowrap;
+}
+
 .view-btn {
   display: inline-flex; 
   align-items: center;
@@ -202,7 +231,7 @@ body {
 }
 
 .view-btn:hover { 
-  background: linear-gradient(135deg, #ff7b2e, #ff914d); 
+  background: linear-gradient(135deg, #a77f51, #c8a173);
   transform: translateY(-2px);
   box-shadow: 0 4px 8px rgba(255, 123, 46, 0.4);
 }
@@ -468,7 +497,7 @@ body {
 .nav-left .brand-name {
   font-weight: 700;
   font-size: 20px;
-  color: #2a5a78;
+  color: #0a5fa1;
   margin: 0;
   letter-spacing: 0.5px;
 }
@@ -497,7 +526,7 @@ body {
 
 /* Home Button (Blue) */
 .xboma-nav-links .home-btn {
-  background-color: #2a5a78;
+  background-color: #0a5fa1;
   color: #fff;
 }
 
@@ -509,13 +538,13 @@ body {
 /* Help Button (Outlined Gold) */
 .xboma-nav-links .help-btn {
   border: 2px solid #c8a173;
-  color: #c8a173;
+  color: #76542f;
   background: transparent;
 }
 
 .xboma-nav-links .help-btn:hover {
   background-color: #c8a173;
-  color: #fff;
+  color: #0e2a45;
   transform: translateY(-2px);
 }
 
@@ -831,7 +860,10 @@ async function displayMessagesSequentially(messages) {
             messageElement.innerHTML = `
                 ${imagesHTML}
                 <div class="property-info">
-                    <strong>${msg.title || 'Property'}</strong>
+                    <div class="property-title-row">
+                        <strong>${msg.title || 'Property'}</strong>
+                        ${msg.is_verified ? '<span class="verified-property-mark" title="Verified property" aria-label="Verified property"><i class="bi bi-patch-check-fill" aria-hidden="true"></i></span>' : ''}
+                    </div>
                     <div class="price-tag">Ksh. ${rentDisplay}</div>
                     <div><i class="fas fa-map-marker-alt"></i> ${msg.city || ''}${msg.city && msg.estate ? ', ' : ''}${msg.estate || ''}</div>
                     <div style="margin-top:6px;">
@@ -1195,6 +1227,13 @@ userInput.addEventListener('keypress', e => { if (e.key === 'Enter') sendMessage
 .bot-msg.message, .user-msg.message, .property-card { transition: all .18s ease; opacity: 0.98; transform: translateY(0); }
 </style>
 
+<script>
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("/service-worker.js", { scope: "/" }).catch(() => {});
+  });
+}
+</script>
 
 </body>
 </html>

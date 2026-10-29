@@ -7,15 +7,15 @@
     <div class="col-lg-8">
       <!-- Header with icon -->
       <div class="text-center mb-5">
-        <div class="icon-circle mb-3" style="background-color: #ffde8a; color: #0a754f;">
+          <div class="icon-circle mb-3" style="background-color: #f4eadb; color: #76542f;">
           <i class="fas fa-star fa-2x"></i>
         </div>
-        <h2 class="fw-bold" style="color: #0a754f;">Rate XbomaSwift</h2>
+        <h2 class="fw-bold" style="color: #0a5fa1;">Rate XbomaSwift</h2>
         <p class="text-muted">Share your experience to help us improve</p>
       </div>
 
       <!-- Rating Form Card -->
-      <div class="card shadow-sm mb-5 border-0" style="border-top: 3px solid #0a754f;">
+      <div class="card shadow-sm mb-5 border-0" style="border-top: 3px solid #0a5fa1;">
         <div class="card-body p-4" style="background-color: #f9f5e9;">
           <form method="post">
             {% csrf_token %}
@@ -23,7 +23,7 @@
 
             <!-- Star Rating -->
             <div class="mb-4">
-              <label class="form-label fw-bold" style="color: #0a754f;">Your Rating:</label>
+              <label class="form-label fw-bold" style="color: #0a5fa1;">Your Rating:</label>
               <div class="d-flex gap-2 mb-2" id="star-rating">
                 {% for i in "54321" reversed %}
                   <i class="fas fa-star star"
@@ -52,7 +52,7 @@
             <!-- Submit Button -->
             <div class="d-grid">
               <button type="submit" class="btn btn-lg fw-bold py-2" 
-                      style="background-color: #0a754f; color: white;">
+                      style="background-color: #0e2a45; color: white;">
                 <i class="fas fa-paper-plane me-2"></i> Submit Feedback
               </button>
             </div>
@@ -62,25 +62,25 @@
 
       <!-- Ratings Summary -->
       <div class="text-center mb-5 p-4 rounded-3" style="background-color: #ffde8a;">
-        <h4 class="fw-bold mb-3" style="color: #0a754f;">Community Feedback</h4>
+        <h4 class="fw-bold mb-3" style="color: #0a5fa1;">Community Feedback</h4>
         <div class="d-flex justify-content-center align-items-center mb-3">
-          <div class="display-4 fw-bold me-3" style="color: #0a754f;">{{ average_score|floatformat:1 }}</div>
+          <div class="display-4 fw-bold me-3" style="color: #0a5fa1;">{{ average_score|floatformat:1 }}</div>
           <div class="text-start">
             <div class="mb-1">
               {% with ''|center:5 as range %}
                 {% for _ in range %}
                   <i class="fas fa-star{% if forloop.counter <= average_score %}{% else %}-half-alt{% endif %}" 
-                     style="color: #0a754f;"></i>
+                     style="color: #c8a173;"></i>
                 {% endfor %}
               {% endwith %}
             </div>
-            <div style="color: #0a754f;">Based on {{ all_ratings.count }} rating{{ all_ratings.count|pluralize }}</div>
+            <div style="color: #0a5fa1;">Based on {{ all_ratings.count }} rating{{ all_ratings.count|pluralize }}</div>
           </div>
         </div>
       </div>
 
       <!-- Ratings List -->
-      <h4 class="fw-bold mb-4 border-bottom pb-2" style="color: #0a754f; border-color: #ffde8a !important;">What others are saying</h4>
+      <h4 class="fw-bold mb-4 border-bottom pb-2" style="color: #0a5fa1; border-color: #ffde8a !important;">What others are saying</h4>
 
       {% for rating in all_ratings %}
       <div class="card mb-3 border-0 shadow-sm" style="border-left: 3px solid #ffde8a;">
@@ -89,7 +89,7 @@
             <!-- User Initials Avatar -->
             <div class="me-3">
               <div class="avatar rounded-circle d-flex align-items-center justify-content-center" 
-                   style="width: 50px; height: 50px; background-color: #0a754f; color: white;">
+                   style="width: 50px; height: 50px; background-color: #0e2a45; color: white;">
                 {% with rating.user.get_full_name|default:rating.user.username as full_name %}
                 {% with full_name.split as name_parts %}
                   {% if name_parts|length >= 2 %}
@@ -106,7 +106,7 @@
               <div class="d-flex justify-content-between mb-2">
                 <div>
                   <strong class="me-2">{{ rating.user.get_full_name|default:rating.user.username }}</strong>
-                  <span style="color: #0a754f;">
+                  <span style="color: #c8a173;">
                     {% with ''|center:rating.score as range %}
                     {% for _ in range %}<i class="fas fa-star"></i>{% endfor %}
                     {% endwith %}
@@ -143,7 +143,7 @@
     const value = parseInt(star.getAttribute('data-value'));
     stars.forEach(s => {
       const sValue = parseInt(s.getAttribute('data-value'));
-      s.style.color = sValue <= value ? '#0a754f' : '#e0e0e0';
+      s.style.color = sValue <= value ? '#c8a173' : '#e0e0e0';
     });
   }
 
@@ -151,7 +151,7 @@
   function resetStars() {
     stars.forEach(s => {
       const sValue = parseInt(s.getAttribute('data-value'));
-      s.style.color = currentRating > 0 && sValue <= currentRating ? '#0a754f' : '#e0e0e0';
+      s.style.color = currentRating > 0 && sValue <= currentRating ? '#c8a173' : '#e0e0e0';
     });
   }
 

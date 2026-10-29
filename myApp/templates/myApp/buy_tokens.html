@@ -4,9 +4,9 @@
 <div class="container py-4">
   <div class="row justify-content-center">
     <div class="col-lg-6">
-      <div class="card border-0 shadow-sm" style="border-top: 3px solid #0a754f;">
+      <div class="card border-0 shadow-sm" style="border-top: 3px solid #0e2a45;">
         <div class="card-header bg-white">
-          <h3 class="mb-0 text-center" style="color: #0a754f;">
+          <h3 class="mb-0 text-center" style="color: #0e2a45;">
             <i class="fas fa-coins me-2"></i>Purchase Tokens
           </h3>
         </div>
@@ -16,7 +16,7 @@
             {% csrf_token %}
             
             <div class="mb-4">
-              <label for="{{ form.token_count.id_for_label }}" class="form-label fw-medium" style="color: #0a754f;">
+              <label for="{{ form.token_count.id_for_label }}" class="form-label fw-medium" style="color: #0e2a45;">
                 {{ form.token_count.label }}
               </label>
               {{ form.token_count }}
@@ -24,7 +24,7 @@
             </div>
 
             <div class="mb-4">
-              <label class="form-label fw-medium" style="color: #0a754f;">Total Amount</label>
+              <label class="form-label fw-medium" style="color: #0e2a45;">Total Amount</label>
               <div class="input-group">
                 <span class="input-group-text bg-light">Ksh</span>
                 <input type="text" id="total_amount" class="form-control" value="20" readonly>
@@ -32,7 +32,7 @@
             </div>
 
             <div class="mb-4">
-              <label for="{{ form.phone_number.id_for_label }}" class="form-label fw-medium" style="color: #0a754f;">
+              <label for="{{ form.phone_number.id_for_label }}" class="form-label fw-medium" style="color: #0e2a45;">
                 {{ form.phone_number.label }}
               </label>
               <div class="input-group">
@@ -43,7 +43,7 @@
             </div>
 
             <div class="d-grid gap-2 mt-4">
-              <button type="submit" class="btn py-2" style="background-color: #0a754f; color: white;">
+              <button type="submit" class="btn py-2" style="background-color: #0e2a45; color: white;">
                 <i class="fas fa-lock me-2"></i> Secure Payment
               </button>
               <a href="{% url 'tenant_dashboard' %}" class="btn btn-outline-secondary py-2">
@@ -90,13 +90,13 @@
   }
 
   .btn-outline-secondary {
-    border-color: #0a754f;
-    color: #0a754f;
+    border-color: #0e2a45;
+    color: #0e2a45;
   }
 
   .btn-outline-secondary:hover {
     background-color: #ffde8a;
-    color: #0a754f;
+    color: #0e2a45;
   }
 
   .card {

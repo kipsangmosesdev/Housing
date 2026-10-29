@@ -12,6 +12,7 @@ django-admin-interface==0.32.0
 django-appconf==1.2.0
 django-colorfield==0.14.0
 django-environ==0.14.0
+django-storages[s3]==1.14.6
 django_compressor==4.6.0
 dotenv==0.9.9
 geographiclib==2.1
@@ -27,6 +28,7 @@ jsonschema-specifications==2025.9.1
 openai==2.53.0
 packaging==26.3
 pillow==12.3.0
+psycopg[binary]==3.2.9
 pydantic==2.13.4
 pydantic_core==2.46.4
 python-dotenv==1.2.2

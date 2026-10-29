@@ -3,67 +3,8 @@
 
 {% block content %}
 
-<!-- Bootstrap CSS -->
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-<!-- Font Awesome -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<!-- Google Fonts for humanized typography -->
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
-
 <style>
-/* --- 1. Variables & Global Styles --- */
-:root {
-    --primary-color: #0e2a45;
-    --secondary-color: #0a5fa1;
-    --accent-color: #c8a173;
-    --success-color: #10b981;
-    --warning-color: #f59e0b;
-    --danger-color: #ef4444;
-    --light-color: #f8fafc;
-    --dark-color: #1e293b;
-    --gray-light: #e2e8f0;
-    --gray-medium: #94a3b8;
-    --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    --shadow-sm: 0 2px 4px rgba(0,0,0,0.05);
-    --shadow-md: 0 4px 12px rgba(0,0,0,0.1);
-}
-
-body {
-    font-family: 'Poppins', sans-serif;
-    background-color: var(--light-color);
-    color: var(--dark-color);
-    padding-top: 70px;
-    line-height: 1.6;
-}
-
-h1, h2, h3, h4, h5, h6 {
-    font-family: 'Karla', sans-serif;
-    font-weight: 700;
-}
-
-/* --- 2. Navbar & Header --- */
-.navbar {
-    background-color: var(--primary-color) !important;
-    backdrop-filter: blur(10px);
-    box-shadow: var(--shadow-md);
-    padding: 0.8rem 0;
-}
-
-.navbar-brand { font-weight: 700; font-size: 1.4rem; letter-spacing: -0.5px; }
-
-.nav-link {
-    font-weight: 500;
-    color: rgba(255,255,255,0.9) !important;
-    transition: var(--transition);
-    padding: 0.5rem 1rem !important;
-    border-radius: 6px;
-}
-
-.nav-link:hover { color: var(--accent-color) !important; background: rgba(255,255,255,0.05); }
-
-.login-link { background: var(--secondary-color); border-radius: 8px; margin-left: 10px; }
-
-/* --- 3. Hero & Landing Page UI --- */
+/* --- Landing page components --- */
 .py-6 { padding-top: 5rem; padding-bottom: 5rem; }
 .py-7 { padding-top: 7rem; padding-bottom: 7rem; }
 
@@ -108,9 +49,7 @@ h1, h2, h3, h4, h5, h6 {
 .hero-note a { color: #f0d3ae !important; font-weight: 600; }
 .photo-credit { color: rgba(255,255,255,.72); font-size: .7rem; }
 .photo-credit a { color: rgba(255,255,255,.9) !important; }
-.section-label { color: #9b744a !important; font-size: .74rem; letter-spacing: .14em; }
-.property-card { border: 1px solid rgba(14,42,69,.07); box-shadow: 0 8px 28px rgba(14,42,69,.07); }
-.property-card:hover { transform: translateY(-5px); box-shadow: 0 16px 34px rgba(14,42,69,.13); }
+.section-label { color: var(--accent-text-color) !important; font-size: .74rem; letter-spacing: .14em; }
 @media (max-width: 767.98px) {
   .hero-section { min-height: 590px; background-position: 57% center; border-radius: 0 0 20px 20px; }
   .hero-overlay { background: linear-gradient(90deg, rgba(8,29,48,.88), rgba(8,29,48,.62)); }
@@ -147,15 +86,7 @@ h1, h2, h3, h4, h5, h6 {
     0% { transform: translateX(100%); } 
     100% { transform: translateX(-100%); } 
 }
-/* --- 5. Property Cards (Optimized for 4 Columns) --- */
-.property-card {
-    border: none; border-radius: 16px; overflow: hidden;
-    background: #ffffff; transition: var(--transition);
-    box-shadow: var(--shadow-sm); height: 100%;
-}
-
-.property-card:hover { transform: translateY(-8px); box-shadow: 0 12px 24px rgba(0,0,0,0.12); }
-
+/* --- 5. Landing page property content --- */
 .property-image-container { position: relative; height: 180px; overflow: hidden; }
 
 .property-image { width: 100%; height: 100%; object-fit: cover; transition: transform 0.6s ease; }
@@ -175,13 +106,13 @@ h1, h2, h3, h4, h5, h6 {
 .kenyan-btn-outline {
     width: 100%; border: 2px solid var(--secondary-color);
     color: var(--secondary-color); font-weight: 600;
-    padding: 8px; border-radius: 10px; transition: var(--transition);
+    padding: 8px; border-radius: 10px; transition: var(--transition-fast);
 }
 
 .kenyan-btn-outline:hover { background-color: var(--secondary-color); color: white; }
 
 /* --- 6. Reviews & Pagination --- */
-.review-card { transition: var(--transition); border: 1px solid var(--gray-light) !important; }
+.review-card { transition: var(--transition-fast); border: 1px solid var(--gray-light) !important; }
 .review-card:hover { border-color: var(--secondary-color) !important; transform: translateY(-5px); }
 
 .pagination-modern .page-link {
@@ -191,16 +122,6 @@ h1, h2, h3, h4, h5, h6 {
 .pagination-modern .page-item.active .page-link { background-color: var(--secondary-color); color: white; }
 
 /* --- 7. Footer & Extras --- */
-footer { background-color: var(--primary-color); color: white; padding: 60px 0 20px 0; margin-top: 80px; }
-footer a { color: var(--gray-light); text-decoration: none; transition: var(--transition); }
-footer a:hover { color: var(--accent-color); padding-left: 4px; }
-
-.bg-info.bg-gradient {
-    background: linear-gradient(45deg, var(--primary-color), var(--secondary-color)) !important;
-    border-radius: 40px; margin: 20px;
-}
-
-html { scroll-behavior: smooth; }
 </style>
 <!-- ========================= -->
 <!-- ANNOUNCEMENT / UPDATES -->
@@ -429,11 +350,13 @@ html { scroll-behavior: smooth; }
     right: 28px;
     bottom: 26px;
     z-index: 1050;
-    display: inline-flex;
+    display: flex;
     align-items: center;
-    gap: 11px;
-    min-height: 58px;
-    padding: 8px 20px 8px 9px;
+    justify-content: center;
+    gap: 10px;
+    min-width: 62px;
+    height: 62px;
+    padding: 0 18px;
     border: 0;
     border-radius: 999px;
     color: #fff;
@@ -454,19 +377,22 @@ html { scroll-behavior: smooth; }
   }
   .home-ai-launcher-icon {
     display: grid;
-    width: 41px;
-    height: 41px;
+    width: 28px;
+    height: 28px;
     place-items: center;
-    border: 1px solid rgba(255,255,255,.28);
     border-radius: 50%;
-    background: rgba(255,255,255,.14);
-    font-size: 18px;
+    font-size: 23px;
+  }
+  .home-ai-launcher-label {
+    white-space: nowrap;
   }
   .home-ai-launcher-dot {
-    width: 9px;
-    height: 9px;
-    margin-left: 1px;
-    border: 2px solid #0e2a45;
+    position: absolute;
+    right: 3px;
+    bottom: 3px;
+    width: 13px;
+    height: 13px;
+    border: 2px solid #fff;
     border-radius: 50%;
     background: #48d597;
   }
@@ -478,7 +404,7 @@ html { scroll-behavior: smooth; }
     display: flex;
     width: min(390px, calc(100vw - 32px));
     height: min(590px, calc(100dvh - 130px));
-    min-height: 400px;
+    min-height: min(400px, calc(100dvh - 130px));
     flex-direction: column;
     overflow: hidden;
     border: 1px solid rgba(14,42,69,.12);
@@ -629,6 +555,25 @@ html { scroll-behavior: smooth; }
   }
   .home-ai-property-body { display: block; padding: 10px 12px 12px; }
   .home-ai-property strong { display: block; margin-bottom: 4px; color: #0e2a45; font-size: 13px; }
+  .home-ai-property .home-ai-property-title {
+    display: flex !important;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0 5px;
+    margin-bottom: 4px;
+  }
+  .home-ai-property .home-ai-property-title strong {
+    display: inline;
+    margin: 0;
+  }
+  .home-ai-property .home-ai-verified-mark {
+    display: inline-flex !important;
+    flex: 0 0 auto;
+    align-items: center;
+    color: #0a5fa1 !important;
+    font-size: 13px;
+    line-height: 1;
+  }
   .home-ai-property span { display: block; color: #68798a; }
   .home-ai-property b { display: block; margin-top: 5px; color: #145782; }
   .home-ai-property-section { margin-top: 9px; }
@@ -707,13 +652,13 @@ html { scroll-behavior: smooth; }
   }
   .home-ai-send:disabled { opacity: .55; }
   @media (max-width: 575.98px) {
-    .home-ai-launcher { right: 16px; bottom: 16px; min-height: 54px; }
+    .home-ai-launcher { right: 16px; bottom: 16px; min-width: 56px; height: 56px; padding: 0 15px; }
     .home-ai-panel {
       right: 10px;
       bottom: 82px;
       width: calc(100vw - 20px);
       height: min(650px, calc(100dvh - 100px));
-      min-height: 360px;
+      min-height: min(360px, calc(100dvh - 100px));
       border-radius: 19px;
     }
   }
@@ -725,13 +670,14 @@ html { scroll-behavior: smooth; }
 
 <section class="home-ai-widget" aria-label="Rental search assistant">
   <button class="home-ai-launcher" id="homeAiLauncher" type="button"
+          aria-label="Open Nyumba assistant" title="Open Nyumba assistant"
           aria-controls="homeAiPanel" aria-expanded="false">
     <span class="home-ai-launcher-icon"><i class="fas fa-sparkles" aria-hidden="true"></i></span>
-    <span>Nyumba assistant</span>
-    <span class="home-ai-launcher-dot" aria-label="Online"></span>
+    <span class="home-ai-launcher-label">Nyumba assistant</span>
+    <span class="home-ai-launcher-dot" aria-hidden="true"></span>
   </button>
 
-  <div class="home-ai-panel" id="homeAiPanel" role="dialog" aria-label="Nyumba assistant" aria-modal="false">
+  <div class="home-ai-panel" id="homeAiPanel" role="dialog" aria-label="Nyumba assistant" aria-modal="false" aria-hidden="true" inert>
     <div class="home-ai-header">
       <div class="home-ai-avatar"><i class="fas fa-house-chimney" aria-hidden="true"></i></div>
       <div class="home-ai-heading">
@@ -769,8 +715,11 @@ html { scroll-behavior: smooth; }
 
   const setOpen = (open) => {
     panel.classList.toggle('is-open', open);
+    panel.setAttribute('aria-hidden', String(!open));
+    panel.inert = !open;
     launcher.setAttribute('aria-expanded', String(open));
     if (open) window.setTimeout(() => input.focus(), 100);
+    else launcher.focus();
   };
   const addMessage = (text, isUser = false, typewriter = false) => {
     const row = document.createElement('div');
@@ -908,6 +857,20 @@ html { scroll-behavior: smooth; }
     body.className = 'home-ai-property-body';
     const title = document.createElement('strong');
     title.textContent = property.title || 'Rental property';
+    const titleRow = document.createElement('span');
+    titleRow.className = 'home-ai-property-title';
+    titleRow.appendChild(title);
+    if (property.is_verified) {
+      const verified = document.createElement('span');
+      verified.className = 'home-ai-verified-mark';
+      verified.title = 'Verified property';
+      verified.setAttribute('aria-label', 'Verified property');
+      const verifiedIcon = document.createElement('i');
+      verifiedIcon.className = 'bi bi-patch-check-fill';
+      verifiedIcon.setAttribute('aria-hidden', 'true');
+      verified.appendChild(verifiedIcon);
+      titleRow.appendChild(verified);
+    }
     const details = document.createElement('span');
     details.textContent = [property.estate, property.city, `${Number(property.bedrooms) || 0} bed`]
       .filter(Boolean).join(' · ');
@@ -932,9 +895,9 @@ html { scroll-behavior: smooth; }
         amenityList.appendChild(chip);
       });
       amenitySection.appendChild(amenityList);
-      body.append(title, details, rent, amenitySection);
+      body.append(titleRow, details, rent, amenitySection);
     } else {
-      body.append(title, details, rent);
+      body.append(titleRow, details, rent);
     }
     if (property.review_summary) {
       const reviewSummary = document.createElement('span');

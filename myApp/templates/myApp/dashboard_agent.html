@@ -4,18 +4,18 @@
 {% load tz %}
 
 <style>
-  :root {
-    --primary: #214063;
-    --primary-dark: #082939;
-    --primary-light: #2a6486;
-    --accent: #d4a574;
-    --accent-dark: #b88a5e;
+  .dashboard-container {
+    --primary: #0e2a45;
+    --primary-dark: #091b2c;
+    --primary-light: #0a5fa1;
+    --accent: #c8a173;
+    --accent-dark: #76542f;
     --neutral-dark: #3c3c3c;
     --neutral-medium: #6c757d;
     --neutral-light: #f8f9fa;
-    --success: #28a745;
-    --warning: #ffc107;
-    --danger: #dc3545;
+    --success: #0f7b4b;
+    --warning: #b45309;
+    --danger: #b42318;
     --shadow: rgba(0, 0, 0, 0.08);
     --shadow-hover: rgba(0, 0, 0, 0.12);
   }
@@ -394,41 +394,41 @@
   }
 
   /* Badges */
-  .badge {
+  .dashboard-container .badge {
     padding: 0.6rem 1rem;
     border-radius: 50px;
     font-weight: 600;
     font-size: 0.85rem;
   }
 
-  .badge.bg-primary {
+  .dashboard-container .badge.bg-primary {
     background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%) !important;
   }
 
-  .badge.bg-secondary {
+  .dashboard-container .badge.bg-secondary {
     background: linear-gradient(135deg, var(--neutral-medium) 0%, #868e96 100%) !important;
   }
 
   /* Buttons */
-  .btn {
+  .dashboard-container .btn {
     border-radius: 10px;
     font-weight: 600;
     transition: all 0.3s ease;
   }
 
-  .btn-outline-success {
+  .dashboard-container .btn-outline-success {
     border-color: var(--success);
     color: var(--success);
   }
 
-  .btn-outline-success:hover {
+  .dashboard-container .btn-outline-success:hover {
     background: var(--success);
     border-color: var(--success);
     transform: translateY(-2px);
   }
 
   /* Section Headers */
-  h4 {
+  .dashboard-container h4 {
     color: var(--primary);
     font-weight: 700;
     margin-bottom: 1.5rem;
@@ -472,7 +472,7 @@
   }
 
   /* Animation */
-  .fade-in {
+  .dashboard-container.fade-in {
     animation: fadeIn 0.6s ease-in-out;
   }
 
@@ -482,7 +482,17 @@
   }
 </style>
 
-<div class="dashboard-container fade-in">
+<link rel="stylesheet" href="{% static 'myApp/css/landlord_dashboards.css' %}">
+
+<div class="dashboard-container dashboard-agent fade-in">
+  <header class="dashboard-page-heading">
+    <div>
+      <p class="dashboard-eyebrow">Premium landlord workspace</p>
+      <h1>Welcome back, {{ landlord.first_name|default:"there" }}</h1>
+      <p>Track your portfolio, tenant interest, and listing performance.</p>
+    </div>
+    <a class="btn" href="{% url 'new_property' %}"><i class="fas fa-plus" aria-hidden="true"></i> Post a property</a>
+  </header>
   <!-- Status Cards -->
   <div class="row g-4 mb-4">
     <div class="col-md-7">
@@ -711,7 +721,7 @@
       labels: ['Available', 'Occupied'],
       datasets: [{
         data: [{{ available_properties }}, {{ occupied_properties }}],
-        backgroundColor: ['#3a8c54', '#d4a574'],
+        backgroundColor: ['#3a8c54', '#c8a173'],
         borderWidth: 0,
         hoverOffset: 15
       }]
@@ -755,10 +765,10 @@
             label: 'Property Views',
             data: {{ chart_data|safe }},
             backgroundColor: 'rgba(33, 64, 99, 0.1)',   // primary color (translucent)
-            borderColor: '#214063',                     // primary color
+            borderColor: '#0e2a45',                     // primary color
             borderWidth: 3,
-            pointBackgroundColor: '#d4a574',            // accent (gold-like)
-            pointBorderColor: '#214063',                // primary
+            pointBackgroundColor: '#c8a173',            // accent (gold-like)
+            pointBorderColor: '#0e2a45',                // primary
             pointBorderWidth: 2,
             pointRadius: 5,
             pointHoverRadius: 7,

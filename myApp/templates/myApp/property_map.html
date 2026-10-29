@@ -358,7 +358,7 @@
 
       const availability = prop.is_available ? "Vacant" : "Occupied";
       const availabilityClass = prop.is_available ? "bg-success" : "bg-danger";
-      const verifiedBadge = prop.is_verified ? '<i class="bi bi-patch-check-fill text-primary fs-7"></i>' : '';
+      const verifiedBadge = prop.is_verified ? '<i class="bi bi-patch-check-fill verified-property-mark fs-7"></i>' : '';
       const markerIcon = prop.is_available ? VACANT_MARKER_URL : OCCUPIED_MARKER_URL;
 
       // DO NOT pass `map: map` here so MarkerClusterer handles map attachment

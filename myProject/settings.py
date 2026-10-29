@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 import os
 import certifi
 from pathlib import Path
+from urllib.parse import parse_qsl, unquote, urlparse
 import environ
 
 env = environ.Env()
@@ -33,25 +34,31 @@ os.environ['REQUESTS_CA_BUNDLE'] = certifi.where()
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.getenv('SECRET_KEY')
-
-# SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env.bool("DEBUG", default=False)
+SECRET_KEY = os.getenv("SECRET_KEY", "")
+if not SECRET_KEY and not DEBUG:
+    raise RuntimeError("Set SECRET_KEY in the environment before running with DEBUG=False.")
+if not SECRET_KEY:
+    SECRET_KEY = "django-insecure-local-development-key-change-me"
 
-ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '').split(',')
+ALLOWED_HOSTS = [host.strip() for host in os.getenv(
+    "ALLOWED_HOSTS", "localhost,127.0.0.1,.vercel.app"
+).split(",") if host.strip()]
 
-CSRF_TRUSTED_ORIGINS = os.getenv('CSRF_TRUSTED_ORIGINS', '').split(',')
+CSRF_TRUSTED_ORIGINS = [origin.strip() for origin in os.getenv(
+    "CSRF_TRUSTED_ORIGINS", "https://*.vercel.app"
+).split(",") if origin.strip()]
 
 # --- Django Security Hardening ---
 SECURE_BROWSER_XSS_FILTER = True
 SECURE_CONTENT_TYPE_NOSNIFF = True
 
-SECURE_SSL_REDIRECT = False
+SECURE_SSL_REDIRECT = env.bool("SECURE_SSL_REDIRECT", default=not DEBUG)
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 
-SESSION_COOKIE_SECURE = False
+SESSION_COOKIE_SECURE = env.bool("SESSION_COOKIE_SECURE", default=not DEBUG)
 SESSION_COOKIE_HTTPONLY = True
-CSRF_COOKIE_SECURE = False
+CSRF_COOKIE_SECURE = env.bool("CSRF_COOKIE_SECURE", default=not DEBUG)
 CSRF_COOKIE_HTTPONLY = True
 CSRF_COOKIE_SAMESITE = "Lax"
 SESSION_COOKIE_SAMESITE = "Lax"
@@ -150,12 +157,33 @@ WSGI_APPLICATION = 'myProject.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+DATABASE_URL = os.getenv("DATABASE_URL")
+if DATABASE_URL:
+    database_url = urlparse(DATABASE_URL)
+    if database_url.scheme not in ("postgres", "postgresql"):
+        raise ValueError("DATABASE_URL must use the postgres:// or postgresql:// scheme.")
+    database_options = dict(parse_qsl(database_url.query))
+    database_options.setdefault("sslmode", "require")
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.postgresql",
+            "NAME": unquote(database_url.path.lstrip("/")),
+            "USER": unquote(database_url.username or ""),
+            "PASSWORD": unquote(database_url.password or ""),
+            "HOST": database_url.hostname or "",
+            "PORT": database_url.port or "5432",
+            "OPTIONS": database_options,
+            "CONN_MAX_AGE": 0,
+            "CONN_HEALTH_CHECKS": True,
+        }
     }
-}
+else:
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": BASE_DIR / "db.sqlite3",
+        }
+    }
 
 # Databases
 # DATABASES = {
@@ -170,14 +198,17 @@ DATABASES = {
 # }
 
 # Email Configuration
-EMAIL_BACKEND = os.getenv('EMAIL_BACKEND')
-EMAIL_HOST = os.getenv('EMAIL_HOST')
-EMAIL_PORT = int(os.getenv('EMAIL_PORT'))
-EMAIL_USE_TLS = os.getenv('EMAIL_USE_TLS', 'True') == 'True'
-EMAIL_USE_SSL = os.getenv('EMAIL_USE_SSL', 'False') == 'True'
-EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
-EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
-DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+EMAIL_BACKEND = os.getenv("EMAIL_BACKEND") or (
+    "django.core.mail.backends.smtp.EmailBackend" if os.getenv("EMAIL_HOST")
+    else "django.core.mail.backends.console.EmailBackend"
+)
+EMAIL_HOST = os.getenv("EMAIL_HOST", "")
+EMAIL_PORT = env.int("EMAIL_PORT", default=587)
+EMAIL_USE_TLS = env.bool("EMAIL_USE_TLS", default=True)
+EMAIL_USE_SSL = env.bool("EMAIL_USE_SSL", default=False)
+EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER", "")
+EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD", "")
+DEFAULT_FROM_EMAIL = os.getenv("DEFAULT_FROM_EMAIL", EMAIL_HOST_USER or "webmaster@localhost")
 
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
@@ -225,6 +256,30 @@ STATIC_URL = '/static/'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
+DEFAULT_FILE_STORAGE_BACKEND = (
+    "storages.backends.s3.S3Storage"
+    if os.getenv("AWS_STORAGE_BUCKET_NAME")
+    else "django.core.files.storage.FileSystemStorage"
+)
+DEFAULT_STORAGE_OPTIONS = {}
+if os.getenv("AWS_STORAGE_BUCKET_NAME"):
+    DEFAULT_STORAGE_OPTIONS = {
+        "bucket_name": os.getenv("AWS_STORAGE_BUCKET_NAME"),
+        "region_name": os.getenv("AWS_S3_REGION_NAME") or None,
+        "querystring_auth": env.bool("AWS_QUERYSTRING_AUTH", default=True),
+    }
+    if os.getenv("AWS_S3_CUSTOM_DOMAIN"):
+        DEFAULT_STORAGE_OPTIONS["custom_domain"] = os.getenv("AWS_S3_CUSTOM_DOMAIN")
+
+STORAGES = {
+    "default": {
+        "BACKEND": DEFAULT_FILE_STORAGE_BACKEND,
+        "OPTIONS": DEFAULT_STORAGE_OPTIONS,
+    },
+    "staticfiles": {
+        "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
+    },
+}
 
 
 # Default primary key field type
@@ -255,10 +310,6 @@ GOOGLE_MAPS_API_KEY = os.getenv("GOOGLE_MAPS_API_KEY")
 import os
 from pathlib import Path
 
-# Auto-create logs directory
-LOG_DIR = BASE_DIR / 'logs'
-LOG_DIR.mkdir(exist_ok=True)
-
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
@@ -273,28 +324,8 @@ LOGGING = {
 
     # Handlers
     'handlers': {
-
-        # Django error logs
-        'django_error_file': {
-            'level': 'ERROR',
-            'class': 'logging.FileHandler',
-            'filename': LOG_DIR / 'django_error.log',
-            'formatter': 'verbose',
-        },
-
-        # Token expiry logs
-        'token_expiry_file': {
-            'level': 'INFO',
-            'class': 'logging.FileHandler',
-            'filename': LOG_DIR / 'token_expiry.log',
-            'formatter': 'verbose',
-        },
-
-        # Login attempts logs
-        'login_attempts_file': {
-            'level': 'INFO',
-            'class': 'logging.FileHandler',
-            'filename': LOG_DIR / 'login_attempts.log',
+        'console': {
+            'class': 'logging.StreamHandler',
             'formatter': 'verbose',
         },
     },
@@ -304,21 +335,21 @@ LOGGING = {
 
         # Django system errors
         'django': {
-            'handlers': ['django_error_file'],
+            'handlers': ['console'],
             'level': 'ERROR',
             'propagate': True,
         },
 
         # Token expiry logic (your myApp views/models)
         'myApp.token_expiry': {
-            'handlers': ['token_expiry_file'],
+            'handlers': ['console'],
             'level': 'INFO',
             'propagate': False,
         },
 
         # Login attempts logger
         'myApp.login': {
-            'handlers': ['login_attempts_file'],
+            'handlers': ['console'],
             'level': 'INFO',
             'propagate': False,
         },

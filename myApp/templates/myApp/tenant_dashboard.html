@@ -3,12 +3,12 @@
 {% block content %}
 <style>
   :root {
-    --primary: #1a3a5c; /* Navy Blue */
+    --primary: #0e2a45; /* Navy Blue */
     --primary-light: #c8a173; /* Warm Taupe (Kenyan Gold) */
-    --secondary: #2a5a78; /* Lighter Navy Blue */
-    --success: #4cc9f0;
-    --warning: #f8961e;
-    --danger: #f94144;
+    --secondary: #0a5fa1; /* Lighter Navy Blue */
+    --success: #0f7b4b;
+    --warning: #b45309;
+    --danger: #b42318;
     --dark: #212529;
     --light: #f8f9fa;
     --glass-bg: rgba(255, 255, 255, 0.85);
@@ -118,7 +118,7 @@
   }
 
   .activity-header:hover {
-    background: linear-gradient(135deg, #ba936a 0%, #c8a173 100%);
+    background: linear-gradient(135deg, #c8a173 0%, #c8a173 100%);
   }
 
   .activity-content {
@@ -416,7 +416,7 @@ input:checked + .slider:before {
         <!-- Swifts expiry section -->
         {% if token_balance > 0 and token_expiry_date %}
           <div class="alert alert-success d-flex align-items-center mb-3">
-            <i class="fas fa-clock me-3 fs-5" style="color: #0a754f;"></i>
+            <i class="fas fa-clock me-3 fs-5" style="color: #0a5fa1;"></i>
             <div>
               <strong>{{ token_balance }}</strong> active Swifts
               <div class="date_expiry">

@@ -5,16 +5,16 @@
 <div class="container py-4">
   <div class="row justify-content-center">
     <div class="col-xl-8 col-lg-10 col-md-12">
-      <div class="card shadow-sm border-0" style="border-top: 4px solid #0F3C4C;">
+      <div class="card shadow-sm border-0" style="border-top: 4px solid #0e2a45;">
         <div class="card-body p-4 p-md-5" style="background-color: #F8F9FA;">
 
           <!-- Header -->
-          <h2 class="mb-4 text-center" style="color: #D9A441;">Landlord Registration</h2>
-          <p class="text-center mb-4" style="color: #1E566B;">
+          <h2 class="mb-4 text-center" style="color: #76542f;">Landlord Registration</h2>
+          <p class="text-center mb-4" style="color: #0a5fa1;">
             View our <a style="color:blue; text-decoration: underline;" href="{% url 'pricing' %}">subscription plans</a> before creating an account.
           </p>
 
-          <hr class="my-4" style="border-color: #D9A441;">
+          <hr class="my-4" style="border-color: #c8a173;">
 
           <!-- Registration Form -->
           <form method="POST" enctype="multipart/form-data" novalidate>
@@ -22,7 +22,7 @@
 
             <!-- Account Information -->
             <section class="mb-4">
-              <h5 class="mb-3 d-flex align-items-center" style="color: #0F3C4C;">
+              <h5 class="mb-3 d-flex align-items-center" style="color: #0e2a45;">
                 <span class="me-2"><i class="fa fa-address-card text-accent"></i></span> Account Information
               </h5>
               <div class="row g-3">
@@ -45,7 +45,7 @@
 
             <!-- Landlord Profile -->
             <section class="mb-4">
-              <h5 class="mb-3 d-flex align-items-center" style="color: #0F3C4C;">
+              <h5 class="mb-3 d-flex align-items-center" style="color: #0e2a45;">
                 <span class="me-2"><i class="fa fa-user-cog text-accent"></i></span> Landlord Profile
               </h5>
               <div class="row g-3">
@@ -66,7 +66,7 @@
 
             <!-- Terms and Conditions -->
             <section class="mb-4">
-              <h5 class="mb-3 d-flex align-items-center" style="color: #0F3C4C;">
+              <h5 class="mb-3 d-flex align-items-center" style="color: #0e2a45;">
                 <span class="me-2"><i class="fa fa-balance-scale text-accent"></i></span> Terms and Conditions
               </h5>
               <div class="terms-container mb-3">
@@ -105,9 +105,10 @@
 <!-- Styling -->
 <style>
   :root {
-    --primary-color: #0F3C4C;
-    --secondary-color: #1E566B;
-    --accent-color: #D9A441;
+    --primary-color: #0e2a45;
+    --secondary-color: #0a5fa1;
+    --accent-color: #c8a173;
+    --accent-text-color: #76542f;
     --light-bg: #F8F9FA;
   }
 
@@ -152,7 +153,7 @@
   }
 
   .text-accent {
-    color: var(--accent-color);
+    color: var(--accent-text-color);
   }
 
   .invalid-feedback {
