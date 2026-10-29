@@ -42,6 +42,7 @@ Thumbs.db
 
 # Virtual environment
 .env
+.env.example
 
 # myProject/
 # settings.py
