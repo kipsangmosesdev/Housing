@@ -226,6 +226,7 @@
       
     </div>
   </div>
+  <div id="mapLocationStatus" class="small text-muted mb-2" role="status" aria-live="polite">Finding available rooms near you…</div>
 
   <!-- Map -->
   <div class="card border-0 shadow-sm mb-4">
@@ -242,6 +243,7 @@
 
 <script>
   let map, userMarker, userPosition = null, markerCluster;
+  let locationReady = false;
   const markerMap = new Map(); // Cache loaded markers by property ID
   let activeInfoWindow = null;
   let fetchDebounceTimeout = null;
@@ -254,8 +256,8 @@
   function initMap() {
     // Initialize Map
     map = new google.maps.Map(document.getElementById("map"), {
-      center: { lat: -1.2921, lng: 36.8219 },
-      zoom: 11,
+      center: { lat: 0, lng: 0 },
+      zoom: 2,
       mapTypeId: "roadmap",
       mapTypeControl: true,
       mapTypeControlOptions: {
@@ -275,51 +277,58 @@
 
     // Listen for map movements to fetch properties within bounds dynamically
     map.addListener("idle", () => {
+      if (!locationReady) return;
       clearTimeout(fetchDebounceTimeout);
       fetchDebounceTimeout = setTimeout(fetchPropertiesInBounds, 400);
     });
 
-    // Locate Me Button
-    document.getElementById("locateMe").addEventListener("click", () => {
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition((pos) => {
-          userPosition = { lat: pos.coords.latitude, lng: pos.coords.longitude };
-          if (userMarker) userMarker.setMap(null);
-
-          userMarker = new google.maps.Marker({
-            position: userPosition,
-            map: map,
-            icon: {
-              url: USER_MARKER_URL,
-              scaledSize: new google.maps.Size(30, 35),
-              labelOrigin: new google.maps.Point(12, -10)
-            },
-            label: {
-              text: "You are here",
-              color: "#fff",
-              fontSize: "11px",
-              fontWeight: "bold",
-              className: "user-location-label"
-            },
-            title: "You are here"
-          });
-
-          map.setCenter(userPosition);
-          map.setZoom(13);
-        });
-      } else {
-        alert("Geolocation is not supported by your browser.");
-      }
-    });
+    // Ask for the visitor's location on page load, then fetch vacant listings there.
+    document.getElementById("locateMe").addEventListener("click", locateUser);
+    locateUser();
 
     // Reset View
     document.getElementById("resetView").addEventListener("click", () => {
-      map.setCenter({ lat: -1.2921, lng: 36.8219 });
-      map.setZoom(11);
+      if (userPosition) {
+        map.setCenter(userPosition);
+        map.setZoom(13);
+      } else {
+        locateUser();
+      }
       if (typeof clearDirections === "function") {
         clearDirections();
       }
     });
+  }
+
+  function locateUser() {
+    const status = document.getElementById("mapLocationStatus");
+    if (!navigator.geolocation) {
+      status.textContent = "Your browser does not support location. Use Locate Me in a supported browser to find nearby vacant rooms.";
+      return;
+    }
+    status.textContent = "Finding available rooms near you…";
+    navigator.geolocation.getCurrentPosition((pos) => {
+      userPosition = { lat: pos.coords.latitude, lng: pos.coords.longitude };
+      if (userMarker) userMarker.setMap(null);
+      userMarker = new google.maps.Marker({
+        position: userPosition,
+        map: map,
+        icon: { url: USER_MARKER_URL, scaledSize: new google.maps.Size(30, 35), labelOrigin: new google.maps.Point(12, -10) },
+        label: { text: "You are here", color: "#fff", fontSize: "11px", fontWeight: "bold", className: "user-location-label" },
+        title: "You are here"
+      });
+      locationReady = true;
+      status.textContent = "Showing vacant rooms near your location. Pan or zoom to explore more.";
+      map.setCenter(userPosition);
+      map.setZoom(13);
+      fetchPropertiesInBounds();
+    }, (error) => {
+      locationReady = false;
+      const reason = error.code === error.PERMISSION_DENIED
+        ? "Location access was blocked. Allow location access in your browser, then select Locate Me."
+        : "Could not determine your location. Check your device location settings, then select Locate Me.";
+      status.textContent = reason;
+    }, { enableHighAccuracy: true, timeout: 12000, maximumAge: 300000 });
   }
 
   // Fetch visible properties from backend via bounding box coordinates
@@ -330,7 +339,7 @@
     const ne = bounds.getNorthEast();
     const sw = bounds.getSouthWest();
 
-    const fetchUrl = `{% url 'property_map' %}?ne_lat=${ne.lat()}&ne_lng=${ne.lng()}&sw_lat=${sw.lat()}&sw_lng=${sw.lng()}`;
+    const fetchUrl = `{% url 'property_map' %}?ne_lat=${ne.lat()}&ne_lng=${ne.lng()}&sw_lat=${sw.lat()}&sw_lng=${sw.lng()}&available_only=1`;
 
     fetch(fetchUrl)
       .then((response) => {
@@ -340,6 +349,11 @@
       .then((data) => {
         if (data.properties) {
           updateMapMarkers(data.properties);
+          if (locationReady) {
+            document.getElementById("mapLocationStatus").textContent = data.properties.length
+              ? `${data.properties.length} vacant room${data.properties.length === 1 ? "" : "s"} visible in this area. Pan or zoom to explore more.`
+              : "No vacant rooms are listed in this area yet. Pan or zoom to explore nearby areas.";
+          }
         }
       })
       .catch((error) => console.error("Error loading properties:", error));
@@ -407,7 +421,7 @@
   // Show directions helper
   function showDirections(destLat, destLng, title) {
     if (!userPosition) {
-      alert("Please click 'Locate Me' first.");
+      alert("Allow location access so directions can start from your location.");
       return;
     }
 

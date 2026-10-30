@@ -1024,6 +1024,10 @@ def property_map_view(request):
         except (TypeError, ValueError):
             return JsonResponse({'error': 'Invalid coordinates'}, status=400)
 
+        # The map is a room-finding view: return vacant listings for its visible area.
+        if request.GET.get('available_only') == '1':
+            properties = properties.filter(is_available=True)
+
         # Handle dateline wrapping if needed
         if sw_lng <= ne_lng:
             lng_filter = Q(longitude__gte=sw_lng, longitude__lte=ne_lng)
@@ -1044,7 +1048,7 @@ def property_map_view(request):
         data = []
         for prop in properties:
             first_img = prop.images.first()
-            img_url = first_img.image.url if first_img else '/static/images/default.jpg'
+            img_url = first_img.image.url if first_img else '/static/myApp/images/lycs-architecture-kUdbEEMcRwE-unsplash.jpg'
 
             data.append({
                 'id': prop.id,

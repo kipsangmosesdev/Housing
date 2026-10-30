@@ -747,6 +747,40 @@
             color: var(--secondary-color);
         }
 
+        .offcanvas-body .nearby-item .property-link {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.4rem;
+            margin-top: 0.55rem;
+            padding: 0.38rem 0.7rem;
+            border: 1px solid var(--primary-color);
+            border-radius: var(--radius-sm);
+            background: var(--primary-color);
+            font-size: 0.74rem;
+            font-weight: 600;
+            line-height: 1.2;
+            color: #fff;
+            text-decoration: none;
+            transition: background-color 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease;
+        }
+
+        .offcanvas-body .nearby-item .property-link:hover {
+            background: var(--secondary-color);
+            border-color: var(--secondary-color);
+            color: #fff;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.14);
+        }
+
+        .offcanvas-body .nearby-item .property-link:focus-visible {
+            outline: 3px solid rgba(59, 130, 246, 0.35);
+            outline-offset: 2px;
+        }
+
+        .offcanvas-body .nearby-item .property-link i {
+            font-size: 0.68rem;
+        }
+
         .offcanvas-body .nearby-item .info .details {
             font-size: 0.78rem;
             color: var(--gray-medium);
@@ -1297,7 +1331,7 @@ document.addEventListener("DOMContentLoaded", function() {
                         </div>
                         <div class="info">
                             <div class="title">
-                                <a href="${url}">
+                                <a href="${url}" target="_blank" rel="noopener noreferrer">
                                     ${prop.title}
                                     ${prop.is_verified ? ' <span title="Verified property" aria-label="Verified property"><i class="bi bi-patch-check-fill verified-property-mark" style="font-size:0.75rem;"></i></span>' : ''}
                                 </a>
@@ -1308,6 +1342,9 @@ document.addEventListener("DOMContentLoaded", function() {
                                 <span><i class="fas fa-tag"></i> Ksh ${prop.rent.toLocaleString()}</span>
                                 <span><i class="fas fa-map-pin"></i> ${prop.estate}</span>
                             </div>
+                            <a class="property-link" href="${url}" target="_blank" rel="noopener noreferrer">
+                                View property <i class="fas fa-arrow-up-right-from-square" aria-hidden="true"></i>
+                            </a>
                         </div>
                         <span class="distance-badge">${dist}</span>
                     </div>
