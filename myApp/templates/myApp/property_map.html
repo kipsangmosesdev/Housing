@@ -339,7 +339,7 @@
     const ne = bounds.getNorthEast();
     const sw = bounds.getSouthWest();
 
-    const fetchUrl = `{% url 'property_map' %}?ne_lat=${ne.lat()}&ne_lng=${ne.lng()}&sw_lat=${sw.lat()}&sw_lng=${sw.lng()}&available_only=1`;
+    const fetchUrl = `{% url 'property_map' %}?ne_lat=${ne.lat()}&ne_lng=${ne.lng()}&sw_lat=${sw.lat()}&sw_lng=${sw.lng()}`;
 
     fetch(fetchUrl)
       .then((response) => {
@@ -350,9 +350,11 @@
         if (data.properties) {
           updateMapMarkers(data.properties);
           if (locationReady) {
-            document.getElementById("mapLocationStatus").textContent = data.properties.length
-              ? `${data.properties.length} vacant house${data.properties.length === 1 ? "" : "s"} visible in this area. Zoom in or out to explore more.`
-              : "No vacant houses are listed in this area yet. Zoom in or out to explore nearby areas.";
+            const vacantCount = data.properties.filter((property) => property.is_available).length;
+            const propertyCount = data.properties.length;
+            document.getElementById("mapLocationStatus").textContent = propertyCount
+              ? `${propertyCount} house${propertyCount === 1 ? "" : "s"} visible in this area (${vacantCount} vacant, ${propertyCount - vacantCount} unavailable). Zoom in or out to explore more.`
+              : "No houses are listed in this area yet. Zoom in or out to explore nearby areas.";
           }
         }
       })
