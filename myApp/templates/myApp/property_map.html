@@ -351,8 +351,8 @@
           updateMapMarkers(data.properties);
           if (locationReady) {
             document.getElementById("mapLocationStatus").textContent = data.properties.length
-              ? `${data.properties.length} vacant room${data.properties.length === 1 ? "" : "s"} visible in this area. Pan or zoom to explore more.`
-              : "No vacant rooms are listed in this area yet. Pan or zoom to explore nearby areas.";
+              ? `${data.properties.length} vacant house${data.properties.length === 1 ? "" : "s"} visible in this area. Zoom in or out to explore more.`
+              : "No vacant houses are listed in this area yet. Zoom in or out to explore nearby areas.";
           }
         }
       })
