@@ -492,16 +492,15 @@ def property_detail(request, pk):
     user_rating = None
     is_favorite = False
 
+    # Record every rendered property-detail visit, including visitors without
+    # an account. Views are events, so repeated visits create separate rows.
+    if request.method == 'GET':
+        tenant = request.user.tenant if request.user.is_authenticated and hasattr(request.user, 'tenant') else None
+        PropertyView.objects.create(tenant=tenant, property=property_obj)
+
     if request.user.is_authenticated:
         if hasattr(request.user, 'tenant'):
             tenant = request.user.tenant
-
-            # Track property view
-            PropertyView.objects.update_or_create(
-                tenant=tenant,
-                property=property_obj,
-                defaults={'viewed_on': timezone.now()}
-            )
 
             # Check if it's a favorite
             is_favorite = FavoriteProperty.objects.filter(

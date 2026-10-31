@@ -569,7 +569,7 @@
                 {% for view in recent_property_views %}
                 <tr>
                   <td class="fw-semibold">{{ view.property.title }}</td>
-                  <td>{{ view.tenant.user.first_name }} {{ view.tenant.user.last_name }}</td>
+                  <td>{% if view.tenant %}{{ view.tenant.user.first_name }} {{ view.tenant.user.last_name }}{% else %}Anonymous visitor{% endif %}</td>
                   <td>{{ view.viewed_on|date:"M d, Y H:i" }}</td>
                   <td>
                     <a href="{% url 'property_detail' view.property.id %}" class="btn btn-outline-primary btn-sm">
@@ -585,7 +585,7 @@
           <div class="text-center py-5">
             <i class="fas fa-eye-slash fa-4x text-muted mb-3"></i>
             <p class="text-muted fs-5">No recent property views found</p>
-            <p class="text-muted">Property views will appear here when tenants view your listings</p>
+            <p class="text-muted">Property views will appear here when visitors view your listings</p>
           </div>
         {% endif %}
       </div>

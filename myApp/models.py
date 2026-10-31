@@ -436,19 +436,19 @@ class FavoriteProperty(models.Model):
 
 # Recent property 
 class PropertyView(models.Model):
-    tenant = models.ForeignKey(Tenant, on_delete=models.CASCADE)
+    tenant = models.ForeignKey(Tenant, on_delete=models.SET_NULL, null=True, blank=True)
     property = models.ForeignKey(Property, on_delete=models.CASCADE)
     viewed_on = models.DateTimeField(auto_now=True)
 
     class Meta:
-        unique_together = ('tenant', 'property')
         ordering = ['-viewed_on']
         
         verbose_name = "Views"
         verbose_name_plural = "Views"
 
     def __str__(self):
-        return f"{self.tenant.user.username} viewed {self.property.title}"
+        viewer = self.tenant.user.username if self.tenant_id else "Anonymous visitor"
+        return f"{viewer} viewed {self.property.title}"
 
 
 # TenantPayment model
@@ -927,4 +927,3 @@ class GeneralTip(models.Model):
         ordering = ['-created_at']
         verbose_name = "General Tip"
         verbose_name_plural = "General Tips"
-    
