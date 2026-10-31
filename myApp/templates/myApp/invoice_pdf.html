@@ -1,27 +1,39 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
   <meta charset="utf-8">
+  <title>Payment Receipt #{{ payment.id }}</title>
   <style>
-    body { font-family: "Arial", sans-serif; padding: 30px; }
-    h2 { color: #333; }
-    .info { margin-bottom: 10px; }
-    .label { font-weight: bold; width: 180px; display: inline-block; }
-    hr { margin: 20px 0; }
+    @page { size: A4; margin: 18mm; }
+    body { margin: 0; color: #263746; font: 12px Arial, sans-serif; }
+    .receipt { max-width: 620px; margin: 25px auto; padding: 28px 32px; border: 1px solid #e0e6eb; }
+    .top, .line, .total { display: flex; justify-content: space-between; align-items: center; }
+    .top { padding-bottom: 20px; border-bottom: 1px solid #e3e8ed; }
+    .brand { color: #0e2a45; font-size: 15px; font-weight: 700; }
+    .label { color: #788797; font-size: 9px; letter-spacing: 1px; text-transform: uppercase; }
+    h1 { margin: 22px 0 5px; color: #0e2a45; font-size: 20px; }
+    .status { color: {% if payment.is_successful %}#19724c{% else %}#95651e{% endif %}; font-size: 11px; font-weight: 700; }
+    .section { display: flex; justify-content: space-between; gap: 24px; padding: 17px 0; border-bottom: 1px dashed #dce3e9; }
+    .section div { display: grid; gap: 5px; }
+    .section strong, .line strong { font-size: 11px; }
+    .muted { color: #788797; font-size: 10px; }
+    .line { padding: 13px 0; border-bottom: 1px solid #edf0f3; }
+    .total { padding: 14px 0; border-bottom: 1px solid #dfe5ea; font-weight: 700; }
+    .total strong { color: #0e2a45; font-size: 17px; }
+    footer { padding-top: 18px; color: #718092; font-size: 10px; text-align: center; }
+    @media print { .receipt { margin: 0 auto; border: 0; } }
   </style>
 </head>
 <body>
-  <h2>Payment Invoice</h2>
-  <hr>
-  <div class="info"><span class="label">Landlord:</span> {{ payment.landlord.first_name }}</div>
-  <div class="info"><span class="label">Email:</span> {{ payment.landlord.user.email }}</div>
-  <div class="info"><span class="label">Phone:</span> {{ payment.landlord.phone_number }}</div>
-  <div class="info"><span class="label">Amount:</span> Ksh {{ payment.amount }}</div>
-  <div class="info"><span class="label">Payment Method:</span> {{ payment.get_payment_method_display }}</div>
-  <div class="info"><span class="label">Transaction ID:</span> {{ payment.transaction_id }}</div>
-  <div class="info"><span class="label">Status:</span>
-    {% if payment.is_successful %} Successful {% else %} Pending {% endif %}
-  </div>
-  <div class="info"><span class="label">Date:</span> {{ payment.timestamp|date:"M d, Y H:i A" }}</div>
+  <article class="receipt">
+    <header class="top"><div class="brand">XbomaSwift</div><div style="text-align:right"><div class="label">Payment receipt</div><strong>#{{ payment.id }}</strong></div></header>
+    <h1>Ksh {{ payment.amount|floatformat:2 }}</h1>
+    <div class="status">{% if payment.is_successful %}Payment received{% else %}Payment pending{% endif %}</div>
+    <section class="section"><div><span class="label">Received from</span><strong>{{ payment.landlord.first_name }} {{ payment.landlord.last_name }}</strong><span class="muted">{{ payment.landlord.user.email }}</span><span class="muted">{{ payment.landlord.phone_number }}</span></div><div><span class="label">Payment date</span><strong>{{ payment.timestamp|date:"M d, Y" }}</strong><span class="muted">{{ payment.timestamp|date:"h:i A" }}</span></div></section>
+    <div class="line"><div><strong>XbomaSwift subscription</strong><br><span class="muted">{{ payment.get_subscription_type_display }} plan · M-Pesa</span></div><strong>Ksh {{ payment.amount|floatformat:2 }}</strong></div>
+    <div class="total"><span>Total</span><strong>Ksh {{ payment.amount|floatformat:2 }}</strong></div>
+    <section class="section"><div><span class="label">M-Pesa receipt</span><strong>{{ payment.mpesa_receipt|default:"—" }}</strong></div><div><span class="label">Transaction reference</span><strong>{{ payment.transaction_id|default:"—" }}</strong></div></section>
+    <footer>Keep this receipt for your records · xbomaswift.com</footer>
+  </article>
 </body>
 </html>

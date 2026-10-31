@@ -232,18 +232,14 @@ def landlord_dashboard(request):
         PropertyView.objects
         .filter(property__in=landlord_properties)
         .select_related('tenant__user', 'property')
-        .order_by('-viewed_on')[:20]
+        .order_by('-viewed_on')[:5]
     )
 
     # -------------------------------
     # 6. Template selection
     # -------------------------------
-    template_map = {
-        'individual': 'myApp/dashboard_individual.html',
-        'company': 'myApp/dashboard_company.html',
-        'agent': 'myApp/dashboard_agent.html',
-    }
-    template = template_map.get(landlord.landlord_type, 'myApp/dashboard_default.html')
+    # All landlord types share one dashboard layout so navigation and analytics stay consistent.
+    template = 'myApp/dashboard_landlord.html'
 
     # -------------------------------
     # 7. Render response

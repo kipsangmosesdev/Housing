@@ -9,20 +9,20 @@
     </a>
   </div>
 
-  <!-- Invoices Card -->
+  <!-- Payment receipt history -->
   <div class="card border-0 shadow-sm">
     <div class="card-body p-0">
       <!-- Card Header -->
       <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center p-4 border-bottom">
         <h2 class="mb-3 mb-md-0">
-          <i class="fas fa-receipt text-primary me-2"></i>Payment History
+          <i class="fas fa-receipt text-primary me-2"></i>Payment Receipts
         </h2>
         <div class="d-flex">
-          <input type="text" class="form-control form-control-sm" placeholder="Search invoices..." id="invoiceSearch">
+          <input type="text" class="form-control form-control-sm" placeholder="Search receipts..." id="invoiceSearch" aria-label="Search payment receipts">
         </div>
       </div>
 
-      <!-- Invoices Table -->
+      <!-- Receipt records -->
       {% if invoices %}
       <div class="table-responsive">
         <table class="table table-hover align-middle mb-0" id="invoicesTable">
@@ -50,7 +50,7 @@
               <td>
                 <span class="badge bg-light text-dark">
                   <i class="fas fa-credit-card me-1 text-muted"></i>
-                  {{ invoice.get_payment_method_display }}
+                  M-Pesa
                 </span>
               </td>
               <td>

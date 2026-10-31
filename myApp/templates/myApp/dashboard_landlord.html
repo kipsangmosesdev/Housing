@@ -1,0 +1,157 @@
+{% extends 'myApp/base.html' %}
+{% load static %}
+{% load tz %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'myApp/css/landlord_dashboards.css' %}">
+
+<main class="landlord-dashboard dashboard-container">
+  <!-- Page heading and primary action -->
+  <header class="dashboard-header">
+    <div>
+      <p class="dashboard-eyebrow">{{ landlord.get_landlord_type_display }} workspace</p>
+      <h1>Analytics</h1>
+      <p class="dashboard-intro">Portfolio reach and listing performance for {{ landlord.first_name|default:"your account" }}.</p>
+    </div>
+    <div class="dashboard-header-actions">
+      <fieldset class="appearance-control" aria-label="Dashboard appearance">
+        <legend>Appearance</legend>
+        <button type="button" data-theme-choice="light" aria-pressed="false">Light</button>
+        <button type="button" data-theme-choice="dark" aria-pressed="false">Dark</button>
+        <button type="button" data-theme-choice="system" aria-pressed="true">System</button>
+      </fieldset>
+      <a class="dashboard-primary-action" href="{% url 'new_property' %}"><i class="fas fa-plus" aria-hidden="true"></i> Add property</a>
+    </div>
+  </header>
+
+  <!-- Analytics tabs mirror X's Overview, Audience, and Content navigation pattern. -->
+  <nav class="dashboard-toolbar analytics-tabs" aria-label="Analytics sections">
+    <a class="toolbar-link is-current" href="#overview"><span>Overview</span></a>
+    <a class="toolbar-link" href="{% url 'my_properties' %}"><span>Properties</span></a>
+    <a class="toolbar-link" href="#activity"><span>Audience activity</span></a>
+    <a class="toolbar-link" href="#account"><span>Account</span></a>
+  </nav>
+
+  <!-- Portfolio summary cards -->
+  <section class="dashboard-section" id="overview" aria-labelledby="portfolio-heading">
+    <div class="section-heading">
+      <div><p class="section-kicker">At a glance</p><h2 id="portfolio-heading">Portfolio overview</h2></div>
+      <a class="subtle-link" href="{% url 'my_properties' %}">Manage properties <i class="fas fa-arrow-right" aria-hidden="true"></i></a>
+    </div>
+    <div class="metric-grid">
+      <article class="metric-card metric-card-navy"><div class="metric-top"><span>Total properties</span><i class="fas fa-building" aria-hidden="true"></i></div><strong>{{ total_properties }}</strong><small>In your portfolio</small></article>
+      <article class="metric-card"><div class="metric-top"><span>Available</span><i class="fas fa-door-open" aria-hidden="true"></i></div><strong>{{ available_properties }}</strong><small>Ready for tenants</small></article>
+      <article class="metric-card"><div class="metric-top"><span>Occupied</span><i class="fas fa-key" aria-hidden="true"></i></div><strong>{{ occupied_properties }}</strong><small>Currently occupied</small></article>
+      <article class="metric-card metric-card-gold"><div class="metric-top"><span>Listing views</span><i class="fas fa-eye" aria-hidden="true"></i></div><strong>{{ total_views }}</strong><small>All time</small></article>
+    </div>
+  </section>
+
+  <!-- Performance charts and account snapshot -->
+  <section class="dashboard-section" id="performance" aria-label="Performance and account">
+    <div class="analytics-grid">
+      <article class="panel chart-panel chart-panel-wide">
+        <div class="panel-heading"><div><p class="section-kicker">Engagement</p><h2>Property views</h2></div><span class="panel-icon"><i class="fas fa-chart-line" aria-hidden="true"></i></span></div>
+        <div class="chart-area"><canvas id="propertyViewChart" aria-label="Property views by listing" role="img"></canvas></div>
+      </article>
+      <article class="panel chart-panel">
+        <div class="panel-heading"><div><p class="section-kicker">Availability</p><h2>Property status</h2></div><span class="panel-icon"><i class="fas fa-chart-pie" aria-hidden="true"></i></span></div>
+        <div class="chart-area chart-area-doughnut"><canvas id="propertyChart" aria-label="Available and occupied property count" role="img"></canvas></div>
+      </article>
+    </div>
+  </section>
+
+  <!-- Recent tenant activity with direct links to viewed listings -->
+  <section class="dashboard-section panel activity-panel" id="activity" aria-labelledby="activity-heading">
+    <div class="panel-heading activity-heading"><div><p class="section-kicker">Latest engagement</p><h2 id="activity-heading">Recent property views</h2></div><span class="activity-count">{{ recent_property_views|length }} recent</span></div>
+    {% if recent_property_views %}
+      <div class="activity-list">
+        {% for view in recent_property_views %}
+          <article class="activity-row">
+            <span class="activity-avatar"><i class="fas fa-home" aria-hidden="true"></i></span>
+            <div class="activity-detail"><a href="{% url 'property_detail' view.property.id %}">{{ view.property.title }}</a><span>{% if view.tenant %}{{ view.tenant.user.first_name }} {{ view.tenant.user.last_name }}{% else %}Anonymous visitor{% endif %}</span></div>
+            <time datetime="{{ view.viewed_on|date:'c' }}">{{ view.viewed_on|date:"M d, Y · H:i" }}</time>
+            <a class="activity-open" href="{% url 'property_detail' view.property.id %}" aria-label="View {{ view.property.title }}"><i class="fas fa-arrow-up-right-from-square" aria-hidden="true"></i></a>
+          </article>
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="empty-activity"><span><i class="fas fa-eye-slash" aria-hidden="true"></i></span><h3>No views yet</h3><p>When someone views one of your listings, their activity will appear here.</p></div>
+    {% endif %}
+  </section>
+
+  <!-- Subscription, billing, and account-specific summary -->
+  <section class="dashboard-section account-grid" id="account" aria-label="Account and subscription">
+    <article class="panel subscription-panel">
+      <div class="panel-heading"><div><p class="section-kicker">Account</p><h2>Subscription</h2></div><span class="subscription-state {% if landlord.is_paid %}state-active{% elif landlord.is_free_trial %}state-trial{% else %}state-inactive{% endif %}">{% if landlord.is_paid %}Active{% elif landlord.is_free_trial %}Free trial{% else %}Inactive{% endif %}</span></div>
+      <div class="subscription-details"><div><span>Plan</span><strong>{{ landlord.get_landlord_type_display }}</strong></div><div><span>Subscription fee</span><strong>Ksh. {{ amount }}</strong></div>{% if expiry_date %}<div><span>Next expiry</span><strong>{{ expiry_date|date:"M j, Y, g:i a" }}</strong></div>{% endif %}</div>
+      {% if not landlord.is_paid and not landlord.is_free_trial %}<p class="subscription-note">Your subscription is inactive. Renew to continue using all landlord services.</p>{% endif %}
+    </article>
+    <article class="panel account-panel">
+      <div class="panel-heading"><div><p class="section-kicker">Account activity</p><h2>Portfolio signals</h2></div><span class="panel-icon"><i class="fas fa-signal" aria-hidden="true"></i></span></div>
+      <div class="signal-list"><div><span><i class="fas fa-calendar-check" aria-hidden="true"></i> Views in last 30 days</span><strong>{{ recent_views }}</strong></div><div><span><i class="fas fa-file-invoice" aria-hidden="true"></i> Receipts</span><strong>{{ total_invoices }}</strong></div><div><span><i class="fas fa-comments" aria-hidden="true"></i> Reviews</span><strong>{{ total_comments }}</strong></div><div><span><i class="fas fa-star" aria-hidden="true"></i> Average rating</span><strong>{{ average_rating|default:"0" }}<small>/5</small></strong></div></div>
+      <div class="account-links"><a href="{% url 'property_map' %}">Map view</a><a href="{% url 'invoice_list' %}">Receipts</a><a href="{% url 'landlord_profile' %}">Profile settings</a></div>
+    </article>
+  </section>
+</main>
+
+<!-- Chart.js is loaded once in the shared base template. -->
+<script>
+  // Use the same navy, blue, and warm gold palette as the rest of KaoProX.
+  document.addEventListener('DOMContentLoaded', function () {
+    // Persist the landlord's appearance choice and let System follow the OS preference.
+    const themeButtons = document.querySelectorAll('[data-theme-choice]');
+    const themePreference = window.matchMedia('(prefers-color-scheme: dark)');
+    const chartColors = { navy: '#0e2a45', blue: '#0a5fa1', gold: '#c8a173', grid: '#e2e8f0', muted: '#708091' };
+    const analyticsCharts = [];
+    const storedTheme = localStorage.getItem('landlord-dashboard-theme') || 'system';
+    function applyDashboardTheme(choice) {
+      const isDark = choice === 'dark' || (choice === 'system' && themePreference.matches);
+      document.body.classList.toggle('ld-dark', isDark);
+      chartColors.grid = isDark ? 'rgba(174, 194, 211, .13)' : '#e2e8f0';
+      chartColors.muted = isDark ? '#a8b6c3' : '#708091';
+      analyticsCharts.forEach(chart => {
+        if (chart.options.plugins.legend.labels) chart.options.plugins.legend.labels.color = chartColors.muted;
+        if (chart.options.scales) {
+          ['x', 'y'].forEach(axis => {
+            if (!chart.options.scales[axis]) return;
+            if (chart.options.scales[axis].ticks) chart.options.scales[axis].ticks.color = chartColors.muted;
+            if (chart.options.scales[axis].grid && chart.options.scales[axis].grid.display !== false) chart.options.scales[axis].grid.color = chartColors.grid;
+          });
+        }
+        chart.update('none');
+      });
+      themeButtons.forEach(button => button.setAttribute('aria-pressed', String(button.dataset.themeChoice === choice)));
+    }
+    applyDashboardTheme(storedTheme);
+    themeButtons.forEach(button => button.addEventListener('click', function () {
+      const choice = this.dataset.themeChoice;
+      localStorage.setItem('landlord-dashboard-theme', choice);
+      applyDashboardTheme(choice);
+    }));
+    themePreference.addEventListener('change', function () {
+      if ((localStorage.getItem('landlord-dashboard-theme') || 'system') === 'system') applyDashboardTheme('system');
+    });
+
+    const propertyCanvas = document.getElementById('propertyChart');
+    const viewsCanvas = document.getElementById('propertyViewChart');
+
+    // Compare available and occupied homes at a glance.
+    if (propertyCanvas) {
+      analyticsCharts.push(new Chart(propertyCanvas, {
+        type: 'doughnut',
+        data: { labels: ['Available', 'Occupied'], datasets: [{ data: [{{ available_properties }}, {{ occupied_properties }}], backgroundColor: [chartColors.blue, chartColors.gold], borderColor: '#fff', borderWidth: 4, hoverOffset: 5 }] },
+        options: { responsive: true, maintainAspectRatio: false, cutout: '72%', plugins: { legend: { position: 'bottom', labels: { usePointStyle: true, padding: 22, color: chartColors.muted } } } }
+      }));
+    }
+
+    // Show listing engagement in descending order from the dashboard view data.
+    if (viewsCanvas) {
+      analyticsCharts.push(new Chart(viewsCanvas, {
+        type: 'bar',
+        data: { labels: {{ chart_labels|safe }}, datasets: [{ label: 'Views', data: {{ chart_data|safe }}, backgroundColor: chartColors.blue, hoverBackgroundColor: chartColors.gold, borderRadius: 6, maxBarThickness: 34 }] },
+        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false }, tooltip: { callbacks: { label: context => `${context.parsed.y} views` } } }, scales: { x: { grid: { display: false }, ticks: { color: chartColors.muted, maxRotation: 35, minRotation: 0 } }, y: { beginAtZero: true, ticks: { precision: 0, color: chartColors.muted }, grid: { color: chartColors.grid } } } }
+      }));
+    }
+  });
+</script>
+{% endblock %}

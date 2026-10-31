@@ -1,130 +1,86 @@
 {% extends 'myApp/base.html' %}
 {% block content %}
-
-<div class="container py-4">
-  <!-- Back Navigation -->
-  <div class="mb-4">
-    <a href="{% url 'landlord_dashboard' %}" class="btn btn-outline-secondary">
-      <i class="fas fa-arrow-left me-2"></i> Back to Dashboard
-    </a>
+<main class="receipt-page">
+  <!-- Navigation and print action stay outside the printable receipt. -->
+  <div class="receipt-actions">
+    <a href="{% url 'invoice_list' %}" class="btn btn-sm btn-outline-secondary"><i class="fas fa-arrow-left me-1" aria-hidden="true"></i>Payment history</a>
+    <button onclick="window.print()" class="btn btn-sm btn-outline-primary"><i class="fas fa-print me-1" aria-hidden="true"></i>Print receipt</button>
   </div>
 
-  <!-- Invoice Card -->
-  <div class="card border-0 shadow-sm" style="max-width: 650px; margin: 0 auto;">
-    <div class="card-body p-4 p-md-5">
-      <!-- Invoice Header -->
-      <div class="d-flex justify-content-between align-items-center mb-4">
-        <div>
-          <h2 class="mb-0">
-            <i class="fas fa-file-invoice-dollar text-secondary me-2"></i>Payment Invoice
-          </h2>
-          <small class="text-muted">Invoice #{{ payment.id }}</small>
-        </div>
-        <div class="badge bg-light text-dark">
-          {% if payment.is_successful %}
-            <i class="fas fa-check-circle text-success me-1"></i> Paid
-          {% else %}
-            <i class="fas fa-exclamation-circle text-warning me-1"></i> Pending
-          {% endif %}
-        </div>
-      </div>
+  <!-- Receipt details use a compact paper-style layout for print and screen. -->
+  <article class="payment-receipt">
+    <header class="receipt-header">
+      <div class="receipt-brand"><span class="receipt-brand-icon"><i class="fas fa-house" aria-hidden="true"></i></span><div><strong>XbomaSwift</strong><small>PROPERTY MANAGEMENT</small></div></div>
+      <div class="receipt-label"><span>PAYMENT RECEIPT</span><strong>#{{ payment.id }}</strong></div>
+    </header>
 
-      <hr class="my-4">
-
-      <!-- Landlord Information -->
-      <div class="row mb-4">
-        <div class="col-md-6">
-          <h5 class="text-muted mb-3">Billed To</h5>
-          <p class="mb-1"><strong>{{ payment.landlord.first_name }} {{ payment.landlord.last_name }}</strong></p>
-          <p class="mb-1 text-muted">{{ payment.landlord.user.email }}</p>
-          <p class="mb-0 text-muted">{{ payment.landlord.phone_number }}</p>
-        </div>
-        <div class="col-md-6 text-md-end">
-          <h5 class="text-muted mb-3">Payment Details</h5>
-          <p class="mb-1"><strong>Date:</strong> {{ payment.timestamp|date:"M d, Y" }}</p>
-          <p class="mb-1"><strong>Time:</strong> {{ payment.timestamp|date:"h:i A" }}</p>
-          <p class="mb-0"><strong>Method:</strong> M-Pesa</p>
-        </div>
-      </div>
-
-      <!-- Payment Summary -->
-      <div class="table-responsive mb-4">
-        <table class="table">
-          <thead class="bg-light">
-            <tr>
-              <th>Description</th>
-              <th class="text-end">Amount</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>
-                <strong>XbomaSwift Subscription</strong><br>
-                <small class="text-muted">Mpesa Code: {{ payment.mpesa_receipt }}</small>
-              </td>
-              <td class="text-end">Ksh {{ payment.amount|floatformat:2 }}</td>
-            </tr>
-            <tr>
-              <td class="border-0"></td>
-              <td class="border-0 text-end">
-                <strong>Total: Ksh {{ payment.amount|floatformat:2 }}</strong>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-
-      <hr class="my-4">
-
-      <!-- Payment Status -->
-      <div class="alert {% if payment.is_successful %}alert-success{% else %}alert-warning{% endif %}">
-        <div class="d-flex align-items-center">
-          <i class="fas {% if payment.is_successful %}fa-check-circle{% else %}fa-exclamation-circle{% endif %} me-3"></i>
-          <div>
-            <strong>Payment Status:</strong>
-            {% if payment.is_successful %}
-              This payment was successfully processed on {{ payment.timestamp|date:"M d, Y" }}.
-            {% else %}
-              This payment is currently being processed. Please allow 1-2 business days for verification.
-            {% endif %}
-          </div>
-        </div>
-      </div>
-
-      <!-- Actions -->
-      <div class="d-flex justify-content-between mt-4">
-        <button onclick="window.print()" class="btn btn-outline-secondary">
-          <i class="fas fa-print me-2"></i> Print Invoice
-        </button>
-        <a href="{% url 'invoice_list' %}" class="btn btn-primary">
-          <i class="fas fa-list me-2"></i> View All Invoices
-        </a>
-      </div>
+    <div class="receipt-status-row">
+      <div><span class="receipt-caption">Payment date</span><strong>{{ payment.timestamp|date:"M d, Y" }} <small>{{ payment.timestamp|date:"h:i A" }}</small></strong></div>
+      <span class="receipt-status {% if payment.is_successful %}receipt-paid{% else %}receipt-pending{% endif %}">{% if payment.is_successful %}<i class="fas fa-check-circle" aria-hidden="true"></i> Paid{% else %}<i class="fas fa-clock" aria-hidden="true"></i> Pending{% endif %}</span>
     </div>
-  </div>
-</div>
+
+    <section class="receipt-parties" aria-label="Payer and payment details">
+      <div><span class="receipt-caption">Received from</span><strong>{{ payment.landlord.first_name }} {{ payment.landlord.last_name }}</strong><small>{{ payment.landlord.user.email }}</small><small>{{ payment.landlord.phone_number }}</small></div>
+      <div><span class="receipt-caption">Payment method</span><strong>M-Pesa</strong><small>Subscription payment</small></div>
+    </section>
+
+    <div class="receipt-line-items">
+      <div class="receipt-line-heading"><span>Description</span><span>Amount</span></div>
+      <div class="receipt-line"><div><strong>XbomaSwift subscription</strong><small>{% if payment.subscription_type %}{{ payment.get_subscription_type_display }} plan{% else %}Landlord plan{% endif %}</small></div><strong>Ksh {{ payment.amount|floatformat:2 }}</strong></div>
+    </div>
+
+    <div class="receipt-total"><span>{% if payment.is_successful %}Total paid{% else %}Payment total{% endif %}</span><strong>Ksh {{ payment.amount|floatformat:2 }}</strong></div>
+
+    <section class="receipt-reference" aria-label="Payment references">
+      <div><span class="receipt-caption">M-Pesa receipt</span><strong>{{ payment.mpesa_receipt|default:"—" }}</strong></div>
+      <div><span class="receipt-caption">Transaction reference</span><strong>{{ payment.transaction_id|default:"—" }}</strong></div>
+      {% if payment.expiry_date %}<div><span class="receipt-caption">Subscription valid through</span><strong>{{ payment.expiry_date|date:"M d, Y" }}</strong></div>{% endif %}
+    </section>
+
+    <footer class="receipt-footer"><span>{% if payment.is_successful %}Thank you. Your payment has been received.{% else %}This payment is awaiting confirmation.{% endif %}</span><small>Keep this receipt for your records · xbomaswift.com</small></footer>
+  </article>
+</main>
 
 <style>
-  @media print {
-    body * {
-      visibility: hidden;
-    }
-    .card, .card * {
-      visibility: visible;
-    }
-    .card {
-      position: absolute;
-      left: 0;
-      top: 0;
-      width: 100%;
-      max-width: 100%;
-      box-shadow: none;
-      border: none;
-    }
-    .btn {
-      display: none !important;
-    }
-  }
+  /* The compact type scale mirrors standard business receipts and prints cleanly. */
+  .receipt-page { max-width: 760px; margin: 0 auto; padding: 25px 18px 48px; color: #253647; }
+  .receipt-actions { display: flex; justify-content: space-between; margin-bottom: 14px; }
+  .receipt-actions .btn { font-size: .76rem; }
+  .payment-receipt { max-width: 620px; margin: 0 auto; padding: 32px 38px 25px; border: 1px solid #e3e8ed; border-radius: 5px; background: #fff; box-shadow: 0 12px 35px rgba(14,42,69,.09); font-family: 'Karla', 'Segoe UI', sans-serif; font-size: 12px; }
+  .receipt-header, .receipt-brand, .receipt-status-row, .receipt-line-heading, .receipt-line, .receipt-total { display: flex; align-items: center; justify-content: space-between; }
+  .receipt-header { padding-bottom: 22px; border-bottom: 1px solid #e8edf1; }
+  .receipt-brand { justify-content: flex-start; gap: 10px; }
+  .receipt-brand-icon { display: grid; width: 34px; height: 34px; place-items: center; border-radius: 9px; background: #0e2a45; color: #fff; font-size: 14px; }
+  .receipt-brand strong { display: block; color: #0e2a45; font-family: 'Poppins', sans-serif; font-size: 13px; font-weight: 700; }
+  .receipt-brand small { display: block; margin-top: 2px; color: #8391a0; font-size: 8px; letter-spacing: .13em; }
+  .receipt-label { display: grid; gap: 4px; text-align: right; }
+  .receipt-label span, .receipt-caption { color: #788797; font-size: 9px; font-weight: 650; letter-spacing: .07em; text-transform: uppercase; }
+  .receipt-label strong { color: #0e2a45; font-size: 11px; }
+  .receipt-status-row { padding: 18px 0; border-bottom: 1px dashed #dce3e9; }
+  .receipt-status-row > div { display: grid; gap: 5px; }
+  .receipt-status-row > div > strong { color: #253647; font-size: 11px; }
+  .receipt-status-row > div > strong small { color: #788797; font-size: 10px; font-weight: 400; }
+  .receipt-status { padding: 5px 9px; border-radius: 20px; font-size: 10px; font-weight: 650; }
+  .receipt-paid { background: #eaf5ee; color: #19724c; }
+  .receipt-pending { background: #fbf2e4; color: #95651e; }
+  .receipt-parties { display: grid; grid-template-columns: 1.3fr 1fr; gap: 22px; padding: 19px 0; border-bottom: 1px dashed #dce3e9; }
+  .receipt-parties > div, .receipt-reference > div { display: grid; align-content: start; gap: 5px; }
+  .receipt-parties strong { color: #253647; font-size: 11px; font-weight: 650; }
+  .receipt-parties small { color: #718092; font-size: 10px; overflow-wrap: anywhere; }
+  .receipt-line-items { padding: 16px 0 12px; }
+  .receipt-line-heading { padding-bottom: 8px; color: #788797; font-size: 9px; font-weight: 650; text-transform: uppercase; }
+  .receipt-line { align-items: flex-start; padding: 11px 0; border-top: 1px solid #edf0f3; }
+  .receipt-line > div { display: grid; gap: 4px; }
+  .receipt-line strong { color: #253647; font-size: 11px; font-weight: 650; }
+  .receipt-line small { color: #788797; font-size: 10px; }
+  .receipt-total { padding: 13px 0; border-top: 1px solid #dfe5ea; border-bottom: 1px solid #dfe5ea; }
+  .receipt-total span { color: #526273; font-size: 11px; font-weight: 600; }
+  .receipt-total strong { color: #0e2a45; font-family: 'Poppins', sans-serif; font-size: 16px; font-weight: 700; }
+  .receipt-reference { display: grid; grid-template-columns: 1fr 1fr; gap: 15px 20px; padding: 18px 0; }
+  .receipt-reference strong { color: #405162; font-size: 10px; font-weight: 550; overflow-wrap: anywhere; }
+  .receipt-footer { display: grid; gap: 5px; padding-top: 14px; border-top: 1px dashed #dce3e9; color: #526273; font-size: 10px; text-align: center; }
+  .receipt-footer small { color: #8995a2; font-size: 9px; }
+  @media (max-width: 520px) { .payment-receipt { padding: 23px 19px 20px; } .receipt-parties { grid-template-columns: 1fr; gap: 15px; } }
+  @media print { @page { size: A4; margin: 15mm; } body { background: #fff !important; } body * { visibility: hidden !important; } .payment-receipt, .payment-receipt * { visibility: visible !important; } .payment-receipt { position: absolute; top: 0; left: 50%; width: 100%; max-width: 620px; transform: translateX(-50%); border: 0; border-radius: 0; box-shadow: none; } .receipt-page { max-width: none; padding: 0; } .receipt-actions { display: none !important; } }
 </style>
-
 {% endblock %}
